@@ -210,4 +210,97 @@
   } else {
     initSliders();
   }
+
+  // Slider "peek": immagine centrale con anteprima della precedente e della successiva.
+  // Script classico. Senza JS resta visibile la prima foto. Su mobile: una foto per volta, swipe.
+  function initPeek() {
+    var reduce = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    Array.prototype.forEach.call(document.querySelectorAll("[data-peek]"), function (root) {
+      var slides = Array.prototype.slice.call(root.querySelectorAll(".ais-peek__slide"));
+      var n = slides.length;
+      if (n < 3) return;
+      var stage = root.querySelector(".ais-peek__stage") || root;
+      var prevBtn = root.querySelector(".ais-peek__btn--prev");
+      var nextBtn = root.querySelector(".ais-peek__btn--next");
+      var dotsBox = root.querySelector(".ais-peek__dots");
+      var delay = parseInt(root.getAttribute("data-autoplay"), 10) || 0;
+      var idx = 0, dots = [], paused = false, visible = true, resumeT = null;
+
+      function rel(i) {
+        var r = (((i - idx) % n) + n) % n;
+        if (r > n / 2) r -= n;
+        return r;
+      }
+      function render() {
+        stage.scrollLeft = 0;
+        slides.forEach(function (s, i) {
+          var r = rel(i);
+          s.className = "ais-peek__slide" +
+            (r === 0 ? " is-active" : r === -1 ? " is-prev" : r === 1 ? " is-next" : r < 0 ? " is-far-l" : " is-far-r");
+          s.setAttribute("aria-hidden", r === 0 ? "false" : "true");
+        });
+        dots.forEach(function (d, i) {
+          if (i === idx) d.setAttribute("aria-current", "true"); else d.removeAttribute("aria-current");
+        });
+      }
+      function go(i) { idx = ((i % n) + n) % n; render(); }
+      function pause(ms) {
+        paused = true;
+        clearTimeout(resumeT);
+        if (ms) resumeT = setTimeout(function () { paused = false; }, ms);
+      }
+
+      if (dotsBox) {
+        for (var k = 0; k < n; k++) {
+          (function (j) {
+            var b = document.createElement("button");
+            b.type = "button";
+            b.className = "ais-peek__dot";
+            b.setAttribute("aria-label", "Vai all\u2019immagine " + (j + 1));
+            b.addEventListener("click", function () { pause(9000); go(j); });
+            dotsBox.appendChild(b);
+            dots.push(b);
+          })(k);
+        }
+      }
+      slides.forEach(function (s, i) {
+        s.addEventListener("click", function () {
+          var r = rel(i);
+          if (r === -1 || r === 1) { pause(9000); go(idx + r); }
+        });
+      });
+      if (prevBtn) prevBtn.addEventListener("click", function () { pause(9000); go(idx - 1); });
+      if (nextBtn) nextBtn.addEventListener("click", function () { pause(9000); go(idx + 1); });
+
+      var sx = 0, sy = 0;
+      stage.addEventListener("touchstart", function (e) {
+        var t = e.touches[0]; sx = t.clientX; sy = t.clientY; pause(9000);
+      }, { passive: true });
+      stage.addEventListener("touchend", function (e) {
+        var t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy;
+        if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) go(idx + (dx < 0 ? 1 : -1));
+      }, { passive: true });
+      stage.addEventListener("keydown", function (e) {
+        if (e.key === "ArrowLeft") { pause(9000); go(idx - 1); }
+        else if (e.key === "ArrowRight") { pause(9000); go(idx + 1); }
+      });
+
+      root.classList.add("ais-peek--js");
+      render();
+
+      if (delay && !reduce) {
+        root.addEventListener("mouseenter", function () { pause(0); });
+        root.addEventListener("mouseleave", function () { paused = false; });
+        if ("IntersectionObserver" in window) {
+          new IntersectionObserver(function (es) { visible = es[0].isIntersecting; }, { threshold: 0.3 }).observe(root);
+        }
+        setInterval(function () { if (!paused && visible && !document.hidden) go(idx + 1); }, delay);
+      }
+    });
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initPeek);
+  } else {
+    initPeek();
+  }
 })();
