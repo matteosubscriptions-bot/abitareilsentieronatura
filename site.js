@@ -30,7 +30,47 @@
     );
   }
 
+  // Menu / footer: le esperienze con "mostra nel menu" (admin.html) compaiono nel menu a tendina,
+  // nel menu mobile e nel footer. Il markup statico resta come riserva.
+  function renderMenu() {
+    var D = getData();
+    if (!D || !D.experiences) return;
+    var keys = Object.keys(D.experiences);
+    if (!keys.some(function (k) { return typeof D.experiences[k].menu === "boolean"; })) return;
+    var list = keys.filter(function (k) { return D.experiences[k].menu === true && D.experiences[k].url; });
+    var urls = keys.map(function (k) { return D.experiences[k].url; });
+    function esc(t) { return String(t == null ? "" : t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+    var dm = document.getElementById("exp-menu");
+    if (dm) {
+      dm.innerHTML = list.map(function (k) { return '<a href="' + esc(D.experiences[k].url) + '">' + esc(D.experiences[k].name) + "</a>"; }).join("") +
+        '<a href="esperienze.html" class="nav-dropdown-all">Tutte le esperienze &rarr;</a>';
+    }
+    var mm = document.getElementById("mobile-menu");
+    if (mm) {
+      Array.prototype.forEach.call(mm.querySelectorAll("a"), function (a) { if (urls.indexOf(a.getAttribute("href")) >= 0) a.remove(); });
+      var all = mm.querySelector('a[href="esperienze.html"]');
+      list.slice().reverse().forEach(function (k) {
+        var a = document.createElement("a");
+        a.href = D.experiences[k].url; a.textContent = D.experiences[k].name;
+        if (all) all.insertAdjacentElement("afterend", a); else mm.insertBefore(a, mm.firstChild);
+      });
+    }
+    var ft = document.querySelector("footer");
+    if (ft) {
+      var tutte = Array.prototype.filter.call(ft.querySelectorAll('a[href="esperienze.html"]'), function (a) { return /^Tutte/.test(a.textContent.trim()); })[0];
+      if (tutte) {
+        Array.prototype.forEach.call(ft.querySelectorAll("a"), function (a) { if (urls.indexOf(a.getAttribute("href")) >= 0) a.remove(); });
+        list.forEach(function (k) {
+          var a = tutte.cloneNode(false);
+          a.href = D.experiences[k].url; a.textContent = D.experiences[k].name;
+          tutte.parentNode.insertBefore(a, tutte);
+        });
+      }
+    }
+  }
+
   function initNav() {
+    renderMenu();
     // Sfondo dell'header allo scroll. Sulle pagine senza hero a tutto schermo
     // (es. privacy, cookie) l'header resta sempre solido, così il menu è leggibile.
     var header = document.getElementById("site-header");
@@ -424,6 +464,96 @@
   //  data-events="experience"  -> le date future di una sola esperienza (data-exp)
   // data-cta="link" (vai alla pagina) | "book" (WhatsApp). Se events.js manca resta l'HTML statico.
 
+
+  // Testimonianze gestite da admin.html: video (file / YouTube / Vimeo), citazioni, recensioni.
+  function parseVideo(u) {
+    u = String(u || "").trim();
+    if (!u) return null;
+    var m = u.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/|v\/))([\w-]{11})/i);
+    if (m) return { type: "yt", id: m[1], embed: "https://www.youtube-nocookie.com/embed/" + m[1] + "?autoplay=1&rel=0", poster: "https://i.ytimg.com/vi/" + m[1] + "/hqdefault.jpg" };
+    m = u.match(/vimeo\.com\/(?:video\/)?(\d+)/i);
+    if (m) return { type: "vimeo", id: m[1], embed: "https://player.vimeo.com/video/" + m[1] + "?autoplay=1", poster: "" };
+    if (/\.(mp4|webm|mov|m4v)(\?.*)?$/i.test(u)) return { type: "file", src: u };
+    return null;
+  }
+  function initTestimonials() {
+    var D = getData();
+    if (!D || !D.testimonials) return;
+    function esc(t) { return String(t == null ? "" : t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+    var done = [];
+    Array.prototype.forEach.call(document.querySelectorAll("[data-testimonials]"), function (node) {
+      var kind = node.getAttribute("data-testimonials"), scope = node.getAttribute("data-scope"), exp = node.getAttribute("data-exp");
+      var items = D.testimonials.filter(function (t) {
+        return scope === "home" ? t.home : scope === "page" ? t.page : (t.exps || []).indexOf(exp) >= 0;
+      });
+      var html = "", n = 0;
+      if (kind === "video") {
+        items.forEach(function (t) {
+          var v = parseVideo(t.video);
+          if (!v) return;
+          n++;
+          var media;
+          if (v.type === "file") {
+            media = '<video controls preload="metadata" playsinline' + (t.poster ? ' poster="' + esc(t.poster) + '"' : "") + ' src="' + esc(v.src) + '"></video>';
+          } else {
+            var po = t.poster || v.poster;
+            media = '<button type="button" class="ais-yt" data-embed="' + esc(v.embed) + '" data-title="' + esc("Video di " + (t.name || "")) + '" aria-label="' + esc("Guarda il video di " + (t.name || "")) + '"' +
+              (po ? ' style="background-image:url(\'' + esc(po) + '\')"' : "") + '><span class="ais-yt__play" aria-hidden="true"></span></button>';
+          }
+          html += '<article class="ais-vtest__card"><div class="ais-vtest__media">' + media + '</div><div class="ais-vtest__body"><p class="ais-vtest__name">' + esc(t.name) + "</p>" +
+            (t.label ? '<p class="ais-vtest__exp">' + esc(t.label) + "</p>" : "") + (t.text ? '<p class="ais-vtest__cap">\u201c' + esc(t.text) + "\u201d</p>" : "") + "</div></article>";
+        });
+      } else {
+        items.forEach(function (t) {
+          if (t.video && parseVideo(t.video) || !t.text) return;
+          n++;
+          var who = esc(t.name) + (t.label ? ", " + esc(t.label) : "");
+          if (kind === "reviews") {
+            html += '<div class="ais-review"><div class="ais-review__stars">\u2605\u2605\u2605\u2605\u2605</div>' + (t.title ? "<h3>" + esc(t.title) + "</h3>" : "") + "<p>" + esc(t.text) + "</p><cite>\u2014 " + who + "</cite></div>";
+          } else {
+            html += '<blockquote class="ais-quote"><p>' + esc(t.text) + "</p><cite>\u2014 " + who + "</cite></blockquote>";
+          }
+        });
+      }
+      // se il contenuto \u00e8 gi\u00e0 uguale non lo ridisegno (evita di ricaricare i video)
+      var tmp = document.createElement("div");
+      tmp.innerHTML = html;
+      function sig(el2) {
+        return el2.textContent.replace(/\s+/g, " ").trim() + "|" +
+          Array.prototype.map.call(el2.querySelectorAll("video,[data-embed]"), function (v) { return v.getAttribute("src") || v.getAttribute("data-embed"); }).join(",");
+      }
+      if (sig(tmp) !== sig(node)) node.innerHTML = html;
+      node.setAttribute("data-testimonials-ready", "true");
+      done.push({ node: node, n: n, kind: kind });
+    });
+    // sezioni senza contenuti: nascoste; il suggerimento "scorri" solo con 2+ video
+    var secs = [];
+    done.forEach(function (d) { var s = d.node.closest("section"); if (s && secs.indexOf(s) < 0) secs.push(s); });
+    secs.forEach(function (sec) {
+      var mine = done.filter(function (d) { return d.node.closest("section") === sec; });
+      sec.hidden = !mine.some(function (d) { return d.n > 0; });
+      var hint = sec.querySelector("[data-testi-hint]");
+      if (hint) hint.hidden = !mine.some(function (d) { return d.kind === "video" && d.n > 1; });
+    });
+  }
+  // YouTube/Vimeo: il player si carica solo al click (nessun cookie prima)
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest && e.target.closest(".ais-yt");
+    if (!b) return;
+    var f = document.createElement("iframe");
+    f.src = b.getAttribute("data-embed");
+    f.title = b.getAttribute("data-title") || "Video";
+    f.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
+    f.setAttribute("allowfullscreen", "");
+    f.className = "ais-yt__frame";
+    b.parentNode.replaceChild(f, b);
+  });
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initTestimonials);
+  } else {
+    initTestimonials();
+  }
+
   // CTA fissa (pagina Escape): compare dopo l'hero, si nasconde sulle sezioni date/contatto
   function initStickyCta() {
     var bar = document.querySelector("[data-sticky-cta]");
@@ -636,6 +766,27 @@
       var x = D.experiences[node.getAttribute("data-exp")];
       var kind = node.getAttribute("data-content");
       if (!x) return;
+      if (kind === "related") {
+        if (!x.related) return;
+        var TP = { soglia: "Soglia", avventura: "Avventura", immersione: "Immersione" };
+        var rel = x.related.filter(function (sl) { return D.experiences[sl]; });
+        var secR = node.closest("section");
+        if (!rel.length) { if (secR) secR.hidden = true; return; }
+        if (secR) secR.hidden = false;
+        node.classList.toggle("ais-catalog--2", rel.length !== 3);
+        node.innerHTML = rel.map(function (sl) {
+          var y = D.experiences[sl];
+          var im = y.img || (y.media && y.media.hero && y.media.hero.img) || "";
+          return '<article class="ais-ecard"><div class="ais-ecard__media"><img alt="' + esc(y.name) + '" src="' + esc(im) + '" loading="lazy"/>' +
+            (y.badge ? '<span class="ais-ecard__badge">' + esc(y.badge) + "</span>" : "") + '</div><div class="ais-ecard__body"><span class="ais-ecard__tag">' +
+            esc((TP[y.type] || "") + (y.duration ? " \u00b7 " + y.duration : "")) + '</span><h3 class="ais-ecard__t">' + esc(y.name) + "</h3>" +
+            (y.blurb ? '<p class="ais-ecard__d">' + esc(y.blurb) + "</p>" : "") + '<div class="ais-ecard__meta"><span>' + ico("clock") + "<b>" + esc(y.duration || "") + "</b></span>" +
+            (y.group ? "<span>" + ico("users") + esc(y.group) + "</span>" : "") + (y.place ? "<span>" + ico("pin") + esc(y.place) + "</span>" : "") +
+            '</div><a class="ais-ecard__cta" href="' + esc(y.url) + '">Scopri di pi\u00f9 ' + ico("arrow") + "</a></div></article>";
+        }).join("");
+        node.setAttribute("data-content-ready", "true");
+        return;
+      }
       var list = x[kind];
       if (!list || !list.length) return;
       var html = "";

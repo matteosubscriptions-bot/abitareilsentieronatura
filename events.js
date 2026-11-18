@@ -12,6 +12,10 @@
    - info: righe "Info utili" [{ k, v, ico? }]    - faq: [{ q, a }]
    - learn: card "Cosa impari" [{ img, icon, title, chips[] }]
    - media: { hero: { img, video? }, slider: [{ img, cap }], gallery: [img, ...] }
+   - menu: true = compare nel menu (e nel footer);  blurb, group, badge = testi della card;
+     related: [slug, slug, slug?] = le 2-3 esperienze collegate ("Altri corsi ed esperienze")
+   Testimonianze (testimonials): [{ id, name, label, title?, text?, video?, poster?, home, page, exps[] }]
+     video = link YouTube / Vimeo oppure file (videos/nome.mp4); home/page/exps = dove compare.
    Libreria foto (media): [{ src, alt }] — le foto si caricano da admin.html (cartella images/).
    Nei testi: **grassetto**, [testo da completare] (evidenziato), {early} {regular} {days} (dal prezzo).
    Per ogni data (events): exp, start, end?, place? (luogo di quella data), note?  — formato date AAAA-MM-GG.
@@ -203,7 +207,301 @@ window.AIS_DATA = {
           "images/cammino-giorno2.jpg",
           "images/mappa-viaggio.jpg"
         ]
-      }
+      },
+      "menu": true,
+      "blurb": "Due giorni nel selvatico, da sabato mattina a domenica pranzo: cammino, orientamento, fuoco, notte nel bosco. Il weekend di punta.",
+      "group": "6–10",
+      "badge": "Esperienza di punta",
+      "related": [
+        "elementi-di-convivenza",
+        "orienteering-sensoriale"
+      ]
+    },
+    "orienteering-sensoriale": {
+      "name": "Orienteering sensoriale",
+      "type": "avventura",
+      "duration": "6 ore",
+      "place": "Appennino",
+      "img": "images/mappa-viaggio.jpg",
+      "url": "orienteering-sensoriale.html",
+      "active": true,
+      "info": [
+        {
+          "k": "Durata",
+          "v": "6 ore — mezza giornata."
+        },
+        {
+          "k": "Dove",
+          "v": "Appennino, all’aperto. [punto di ritrovo da completare]"
+        },
+        {
+          "k": "Gruppo",
+          "v": "Piccolo — 6–10 persone."
+        },
+        {
+          "k": "Esperienza richiesta",
+          "v": "Nessuna: si parte da zero."
+        },
+        {
+          "k": "Cosa portare",
+          "v": "Scarpe comode, abbigliamento adatto a stare fuori, acqua. [pranzo al sacco — da completare]"
+        },
+        {
+          "k": "Investimento",
+          "v": "Scrivimi per il prezzo e le modalità. [da definire]"
+        },
+        {
+          "k": "Come prenotare",
+          "v": "Scrivimi su WhatsApp: ci sentiamo prima, così capiamo se fa per te."
+        }
+      ],
+      "faq": [
+        {
+          "q": "Quanto costa?",
+          "a": "Scrivimi: ti dico il prezzo e cosa è incluso in base alla data. Gruppi piccoli, posti limitati."
+        },
+        {
+          "q": "Serve esperienza?",
+          "a": "No. È pensato anche per chi non ha mai usato una mappa o una bussola."
+        },
+        {
+          "q": "È una gara?",
+          "a": "No. Non conta la velocità: conta l’attenzione. Si cammina lento, per osservare."
+        },
+        {
+          "q": "Devo saper usare la bussola?",
+          "a": "No. Imparerai durante l’esperienza, con le mani."
+        }
+      ],
+      "learn": [
+        {
+          "img": "images/full-avventura.jpg",
+          "icon": "compass",
+          "title": "Lettura del territorio",
+          "chips": [
+            "Forme",
+            "Direzioni",
+            "Segni"
+          ]
+        },
+        {
+          "img": "images/hero-forest.jpg",
+          "icon": "eye",
+          "title": "I sensi",
+          "chips": [
+            "Vista",
+            "Udito",
+            "Tatto"
+          ]
+        },
+        {
+          "img": "images/full-bosco.jpg",
+          "icon": "sparkles",
+          "title": "Attenzione",
+          "chips": [
+            "Dettagli",
+            "Ritmo lento"
+          ]
+        },
+        {
+          "img": "images/cammino-cerchio.jpg",
+          "icon": "hand",
+          "title": "Fiducia",
+          "chips": [
+            "Ciò che percepisci",
+            "Meno schermo"
+          ]
+        }
+      ],
+      "media": {
+        "hero": {
+          "img": "images/mappa-viaggio.jpg"
+        },
+        "slider": [
+          {
+            "img": "images/mappa-viaggio.jpg",
+            "cap": "Leggere dove sei"
+          },
+          {
+            "img": "images/full-avventura.jpg",
+            "cap": "Camminare lenti"
+          },
+          {
+            "img": "images/full-bosco.jpg",
+            "cap": "Il bosco"
+          },
+          {
+            "img": "images/cammino-giorno2.jpg",
+            "cap": "Il rifugio"
+          },
+          {
+            "img": "images/hero-forest.jpg",
+            "cap": "La luce tra gli alberi"
+          }
+        ],
+        "gallery": [
+          "images/mappa-viaggio.jpg",
+          "images/hero-forest.jpg",
+          "images/full-bosco.jpg",
+          "images/cammino-cerchio.jpg",
+          "images/accendi-fuoco.jpg",
+          "images/full-avventura.jpg",
+          "images/escape-the-city.jpg",
+          "images/cammino-giorno2.jpg"
+        ]
+      },
+      "menu": true,
+      "blurb": "Orientarsi coi sensi, non col GPS: leggere il territorio, le tracce, i suoni. Una giornata per imparare dove sei.",
+      "group": "6–10",
+      "related": [
+        "accendi-il-tuo-fuoco",
+        "escape-the-city"
+      ]
+    },
+    "accendi-il-tuo-fuoco": {
+      "name": "Accendi il tuo Fuoco",
+      "type": "soglia",
+      "duration": "3 ore",
+      "place": "Toscana",
+      "img": "images/accendi-fuoco.jpg",
+      "url": "accendi-il-tuo-fuoco.html",
+      "active": true,
+      "info": [
+        {
+          "k": "Durata",
+          "v": "3 ore, un pomeriggio."
+        },
+        {
+          "k": "Dove",
+          "v": "Toscana / Emilia-Romagna, all’aperto."
+        },
+        {
+          "k": "Gruppo",
+          "v": "Piccolo — 6-8 persone, per dare spazio a ciascuno."
+        },
+        {
+          "k": "Esperienza richiesta",
+          "v": "Nessuna: si parte da zero, insieme."
+        },
+        {
+          "k": "Cosa portare",
+          "v": "Abbigliamento comodo e voglia di sporcarti le mani."
+        },
+        {
+          "k": "Investimento",
+          "v": "Scrivimi per il prezzo e le modalità dell’edizione. [da definire]"
+        },
+        {
+          "k": "Come prenotare",
+          "v": "Scrivimi su WhatsApp: ci sentiamo prima, così capiamo se fa per te."
+        }
+      ],
+      "faq": [
+        {
+          "q": "Quanto costa?",
+          "a": "Scrivimi: ti dico il prezzo e cosa è incluso in base alla data. Sono gruppi piccoli, i posti sono pochi."
+        },
+        {
+          "q": "Serve esperienza?",
+          "a": "No. È pensato anche per chi non ha mai acceso un fuoco senza fiammiferi."
+        },
+        {
+          "q": "È un workshop o un corso?",
+          "a": "No: niente slide né modelli. C’è un’esperienza fisica e la riflessione che ne nasce."
+        },
+        {
+          "q": "È coaching?",
+          "a": "No. Non ti do risposte da coach: ti offro un’esperienza e uno spazio per osservare come reagisci."
+        },
+        {
+          "q": "Imparerò il bushcraft?",
+          "a": "L’archetto è lo strumento, non il fine: non è un corso di sopravvivenza."
+        }
+      ],
+      "learn": [
+        {
+          "img": "images/hero-forest.jpg",
+          "icon": "eye",
+          "title": "Osservazione",
+          "chips": [
+            "Attenzione",
+            "Nessun giudizio"
+          ]
+        },
+        {
+          "img": "images/accendi-fuoco.jpg",
+          "icon": "fire",
+          "title": "L’archetto",
+          "chips": [
+            "Pazienza",
+            "Ascolto",
+            "Tecnica antica"
+          ]
+        },
+        {
+          "img": "images/cammino-cerchio.jpg",
+          "icon": "idea",
+          "title": "Riconoscimento",
+          "chips": [
+            "Come reagisci",
+            "Il primo passo"
+          ]
+        },
+        {
+          "img": "images/full-avventura.jpg",
+          "icon": "hand",
+          "title": "Azione concreta",
+          "chips": [
+            "Una scelta tua",
+            "Un passo preciso"
+          ]
+        }
+      ],
+      "media": {
+        "hero": {
+          "img": "images/accendi-fuoco.jpg",
+          "video": "videos/accendi-fuoco.mp4"
+        },
+        "slider": [
+          {
+            "img": "images/accendi-fuoco.jpg",
+            "cap": "Accendere il fuoco"
+          },
+          {
+            "img": "images/cammino-cerchio.jpg",
+            "cap": "Il cerchio"
+          },
+          {
+            "img": "images/escape-the-city.jpg",
+            "cap": "Una notte nel bosco"
+          },
+          {
+            "img": "images/full-bosco.jpg",
+            "cap": "Il bosco"
+          },
+          {
+            "img": "images/hero-forest.jpg",
+            "cap": "La luce tra gli alberi"
+          }
+        ],
+        "gallery": [
+          "images/accendi-fuoco.jpg",
+          "images/hero-forest.jpg",
+          "images/full-bosco.jpg",
+          "images/cammino-cerchio.jpg",
+          "images/full-avventura.jpg",
+          "images/escape-the-city.jpg",
+          "images/cammino-giorno2.jpg",
+          "images/mappa-viaggio.jpg"
+        ]
+      },
+      "menu": true,
+      "blurb": "L’archetto come specchio: guardi come reagisci quando qualcosa non viene subito. Torni con un’azione, non un’idea.",
+      "group": "6–8",
+      "related": [
+        "orienteering-sensoriale",
+        "escape-the-city"
+      ]
     },
     "elementi-di-convivenza": {
       "name": "Elementi di Convivenza",
@@ -370,279 +668,14 @@ window.AIS_DATA = {
           "images/cammino-giorno2.jpg",
           "images/mappa-viaggio.jpg"
         ]
-      }
-    },
-    "orienteering-sensoriale": {
-      "name": "Orienteering sensoriale",
-      "type": "avventura",
-      "duration": "6 ore",
-      "place": "Appennino",
-      "img": "images/mappa-viaggio.jpg",
-      "url": "orienteering-sensoriale.html",
-      "active": true,
-      "info": [
-        {
-          "k": "Durata",
-          "v": "6 ore — mezza giornata."
-        },
-        {
-          "k": "Dove",
-          "v": "Appennino, all’aperto. [punto di ritrovo da completare]"
-        },
-        {
-          "k": "Gruppo",
-          "v": "Piccolo — 6–10 persone."
-        },
-        {
-          "k": "Esperienza richiesta",
-          "v": "Nessuna: si parte da zero."
-        },
-        {
-          "k": "Cosa portare",
-          "v": "Scarpe comode, abbigliamento adatto a stare fuori, acqua. [pranzo al sacco — da completare]"
-        },
-        {
-          "k": "Investimento",
-          "v": "Scrivimi per il prezzo e le modalità. [da definire]"
-        },
-        {
-          "k": "Come prenotare",
-          "v": "Scrivimi su WhatsApp: ci sentiamo prima, così capiamo se fa per te."
-        }
-      ],
-      "faq": [
-        {
-          "q": "Quanto costa?",
-          "a": "Scrivimi: ti dico il prezzo e cosa è incluso in base alla data. Gruppi piccoli, posti limitati."
-        },
-        {
-          "q": "Serve esperienza?",
-          "a": "No. È pensato anche per chi non ha mai usato una mappa o una bussola."
-        },
-        {
-          "q": "È una gara?",
-          "a": "No. Non conta la velocità: conta l’attenzione. Si cammina lento, per osservare."
-        },
-        {
-          "q": "Devo saper usare la bussola?",
-          "a": "No. Imparerai durante l’esperienza, con le mani."
-        }
-      ],
-      "learn": [
-        {
-          "img": "images/full-avventura.jpg",
-          "icon": "compass",
-          "title": "Lettura del territorio",
-          "chips": [
-            "Forme",
-            "Direzioni",
-            "Segni"
-          ]
-        },
-        {
-          "img": "images/hero-forest.jpg",
-          "icon": "eye",
-          "title": "I sensi",
-          "chips": [
-            "Vista",
-            "Udito",
-            "Tatto"
-          ]
-        },
-        {
-          "img": "images/full-bosco.jpg",
-          "icon": "sparkles",
-          "title": "Attenzione",
-          "chips": [
-            "Dettagli",
-            "Ritmo lento"
-          ]
-        },
-        {
-          "img": "images/cammino-cerchio.jpg",
-          "icon": "hand",
-          "title": "Fiducia",
-          "chips": [
-            "Ciò che percepisci",
-            "Meno schermo"
-          ]
-        }
-      ],
-      "media": {
-        "hero": {
-          "img": "images/mappa-viaggio.jpg"
-        },
-        "slider": [
-          {
-            "img": "images/mappa-viaggio.jpg",
-            "cap": "Leggere dove sei"
-          },
-          {
-            "img": "images/full-avventura.jpg",
-            "cap": "Camminare lenti"
-          },
-          {
-            "img": "images/full-bosco.jpg",
-            "cap": "Il bosco"
-          },
-          {
-            "img": "images/cammino-giorno2.jpg",
-            "cap": "Il rifugio"
-          },
-          {
-            "img": "images/hero-forest.jpg",
-            "cap": "La luce tra gli alberi"
-          }
-        ],
-        "gallery": [
-          "images/mappa-viaggio.jpg",
-          "images/hero-forest.jpg",
-          "images/full-bosco.jpg",
-          "images/cammino-cerchio.jpg",
-          "images/accendi-fuoco.jpg",
-          "images/full-avventura.jpg",
-          "images/escape-the-city.jpg",
-          "images/cammino-giorno2.jpg"
-        ]
-      }
-    },
-    "accendi-il-tuo-fuoco": {
-      "name": "Accendi il tuo Fuoco",
-      "type": "soglia",
-      "duration": "3 ore",
-      "place": "Toscana",
-      "img": "images/accendi-fuoco.jpg",
-      "url": "accendi-il-tuo-fuoco.html",
-      "active": true,
-      "info": [
-        {
-          "k": "Durata",
-          "v": "3 ore, un pomeriggio."
-        },
-        {
-          "k": "Dove",
-          "v": "Toscana / Emilia-Romagna, all’aperto."
-        },
-        {
-          "k": "Gruppo",
-          "v": "Piccolo — 6-8 persone, per dare spazio a ciascuno."
-        },
-        {
-          "k": "Esperienza richiesta",
-          "v": "Nessuna: si parte da zero, insieme."
-        },
-        {
-          "k": "Cosa portare",
-          "v": "Abbigliamento comodo e voglia di sporcarti le mani."
-        },
-        {
-          "k": "Investimento",
-          "v": "Scrivimi per il prezzo e le modalità dell’edizione. [da definire]"
-        },
-        {
-          "k": "Come prenotare",
-          "v": "Scrivimi su WhatsApp: ci sentiamo prima, così capiamo se fa per te."
-        }
-      ],
-      "faq": [
-        {
-          "q": "Quanto costa?",
-          "a": "Scrivimi: ti dico il prezzo e cosa è incluso in base alla data. Sono gruppi piccoli, i posti sono pochi."
-        },
-        {
-          "q": "Serve esperienza?",
-          "a": "No. È pensato anche per chi non ha mai acceso un fuoco senza fiammiferi."
-        },
-        {
-          "q": "È un workshop o un corso?",
-          "a": "No: niente slide né modelli. C’è un’esperienza fisica e la riflessione che ne nasce."
-        },
-        {
-          "q": "È coaching?",
-          "a": "No. Non ti do risposte da coach: ti offro un’esperienza e uno spazio per osservare come reagisci."
-        },
-        {
-          "q": "Imparerò il bushcraft?",
-          "a": "L’archetto è lo strumento, non il fine: non è un corso di sopravvivenza."
-        }
-      ],
-      "learn": [
-        {
-          "img": "images/hero-forest.jpg",
-          "icon": "eye",
-          "title": "Osservazione",
-          "chips": [
-            "Attenzione",
-            "Nessun giudizio"
-          ]
-        },
-        {
-          "img": "images/accendi-fuoco.jpg",
-          "icon": "fire",
-          "title": "L’archetto",
-          "chips": [
-            "Pazienza",
-            "Ascolto",
-            "Tecnica antica"
-          ]
-        },
-        {
-          "img": "images/cammino-cerchio.jpg",
-          "icon": "idea",
-          "title": "Riconoscimento",
-          "chips": [
-            "Come reagisci",
-            "Il primo passo"
-          ]
-        },
-        {
-          "img": "images/full-avventura.jpg",
-          "icon": "hand",
-          "title": "Azione concreta",
-          "chips": [
-            "Una scelta tua",
-            "Un passo preciso"
-          ]
-        }
-      ],
-      "media": {
-        "hero": {
-          "img": "images/accendi-fuoco.jpg",
-          "video": "videos/accendi-fuoco.mp4"
-        },
-        "slider": [
-          {
-            "img": "images/accendi-fuoco.jpg",
-            "cap": "Accendere il fuoco"
-          },
-          {
-            "img": "images/cammino-cerchio.jpg",
-            "cap": "Il cerchio"
-          },
-          {
-            "img": "images/escape-the-city.jpg",
-            "cap": "Una notte nel bosco"
-          },
-          {
-            "img": "images/full-bosco.jpg",
-            "cap": "Il bosco"
-          },
-          {
-            "img": "images/hero-forest.jpg",
-            "cap": "La luce tra gli alberi"
-          }
-        ],
-        "gallery": [
-          "images/accendi-fuoco.jpg",
-          "images/hero-forest.jpg",
-          "images/full-bosco.jpg",
-          "images/cammino-cerchio.jpg",
-          "images/full-avventura.jpg",
-          "images/escape-the-city.jpg",
-          "images/cammino-giorno2.jpg",
-          "images/mappa-viaggio.jpg"
-        ]
-      }
+      },
+      "menu": true,
+      "blurb": "Fuoco, acqua, terra, riparo, cibo, buio: sei elementi come porte per guardarti dentro. Dal venerdì pomeriggio alla domenica.",
+      "group": "6–8",
+      "related": [
+        "escape-the-city",
+        "accendi-il-tuo-fuoco"
+      ]
     },
     "tribu-del-bosco": {
       "name": "Tribù del bosco",
@@ -774,7 +807,14 @@ window.AIS_DATA = {
           "images/cammino-giorno2.jpg",
           "images/mappa-viaggio.jpg"
         ]
-      }
+      },
+      "menu": false,
+      "blurb": "Una giornata per tornare a fare gruppo come una piccola tribù: gioco, fuoco, collaborazione, cura del luogo.",
+      "group": "6–12",
+      "related": [
+        "escape-the-city",
+        "orienteering-sensoriale"
+      ]
     },
     "guardiani-del-fuoco": {
       "name": "Guardiani del Fuoco",
@@ -915,7 +955,14 @@ window.AIS_DATA = {
           "images/cammino-giorno2.jpg",
           "images/mappa-viaggio.jpg"
         ]
-      }
+      },
+      "menu": false,
+      "blurb": "Custodire il fuoco per una notte: accenderlo, mantenerlo a turni, il cerchio al buio, dormire nel bosco. Dalle 18 alle 12.",
+      "group": "6–10",
+      "related": [
+        "escape-the-city",
+        "accendi-il-tuo-fuoco"
+      ]
     },
     "la-mappa-del-tuo-viaggio": {
       "name": "La Mappa del tuo Viaggio",
@@ -1052,7 +1099,14 @@ window.AIS_DATA = {
           "images/escape-the-city.jpg",
           "images/cammino-giorno2.jpg"
         ]
-      }
+      },
+      "menu": false,
+      "blurb": "Disegni la mappa del tuo percorso con mappa e bussola come metafore. Un oggetto concreto da portare a casa.",
+      "group": "6–8",
+      "related": [
+        "accendi-il-tuo-fuoco",
+        "escape-the-city"
+      ]
     },
     "via-degli-dei": {
       "name": "Via degli Dei",
@@ -1203,7 +1257,14 @@ window.AIS_DATA = {
           "images/escape-the-city.jpg",
           "images/mappa-viaggio.jpg"
         ]
-      }
+      },
+      "menu": false,
+      "blurb": "Un giorno e una notte sul sentiero storico tra Bologna e Firenze: bivacco nel bosco e visita a un ecovillaggio.",
+      "group": "8–12",
+      "related": [
+        "escape-the-city",
+        "orienteering-sensoriale"
+      ]
     },
     "cammino": {
       "name": "Il Cammino",
@@ -1352,7 +1413,14 @@ window.AIS_DATA = {
           "images/cammino-giorno2.jpg",
           "images/mappa-viaggio.jpg"
         ]
-      }
+      },
+      "menu": false,
+      "blurb": "Quattro giorni zaino in spalla. Ogni tappa è una fase del viaggio: la chiamata, la sfida, la visione, il ritorno.",
+      "group": "6–8",
+      "related": [
+        "escape-the-city",
+        "orienteering-sensoriale"
+      ]
     }
   },
   "events": [
@@ -1544,6 +1612,214 @@ window.AIS_DATA = {
     {
       "src": "images/via-degli-dei.jpg",
       "alt": "Via degli Dei"
+    }
+  ],
+  "testimonials": [
+    {
+      "id": "t1",
+      "name": "Giulia",
+      "label": "Escape the City",
+      "text": "La prima notte nel bosco non la scordo. Ci torno con la mente ancora adesso.",
+      "video": "videos/testimonial-1.mp4",
+      "poster": "images/testimonial-1.jpg",
+      "home": true,
+      "page": true,
+      "exps": []
+    },
+    {
+      "id": "t2",
+      "name": "Davide",
+      "label": "La Mappa del tuo Viaggio",
+      "text": "Ho iniziato a notare cose che di solito non vedo. È rimasto un modo diverso di guardare.",
+      "video": "videos/testimonial-2.mp4",
+      "poster": "images/testimonial-2.jpg",
+      "home": true,
+      "page": true,
+      "exps": []
+    },
+    {
+      "id": "t3",
+      "name": "Marta",
+      "label": "Escape the City",
+      "text": "Sono arrivata da sola, senza conoscere nessuno. Sono tornata con un gruppo.",
+      "video": "videos/testimonial-3.mp4",
+      "poster": "images/testimonial-3.jpg",
+      "home": true,
+      "page": true,
+      "exps": []
+    },
+    {
+      "id": "t4",
+      "name": "Luca",
+      "label": "Accendi il tuo Fuoco",
+      "text": "Il fuoco non prendeva. Poi ho capito che stavo forzando. Vale anche fuori dal bosco.",
+      "video": "videos/testimonial-4.mp4",
+      "poster": "images/testimonial-4.jpg",
+      "home": true,
+      "page": true,
+      "exps": []
+    },
+    {
+      "id": "t5",
+      "name": "Andrea",
+      "label": "Escape the City",
+      "text": "Due giorni senza telefono e senza dover produrre niente. Non mi capitava da anni.",
+      "video": "videos/testimonial-5.mp4",
+      "poster": "images/testimonial-5.jpg",
+      "home": true,
+      "page": true,
+      "exps": [
+        "escape-the-city"
+      ]
+    },
+    {
+      "id": "t6",
+      "name": "Elena",
+      "label": "dopo Escape the City",
+      "title": "Due giorni che ricordo ancora",
+      "text": "Pensavo fosse un corso di sopravvivenza. Era un modo per tornare a fare esperienza con tutto il corpo.",
+      "home": false,
+      "page": true,
+      "exps": [
+        "escape-the-city"
+      ]
+    },
+    {
+      "id": "t7",
+      "name": "Paolo",
+      "label": "dopo Escape the City",
+      "title": "Il sit spot, da solo nel bosco",
+      "text": "Il momento in cui mi sono seduto da solo, al buio, è stato il più potente. Nessuno mi diceva cosa sentire.",
+      "home": false,
+      "page": true,
+      "exps": [
+        "escape-the-city"
+      ]
+    },
+    {
+      "id": "t8",
+      "name": "Giulia",
+      "label": "dopo Accendi il tuo Fuoco",
+      "title": "Ho smesso di forzare",
+      "text": "L’archetto mi ha mostrato, con le mani, che spingevo troppo. Me lo sono portato a casa.",
+      "home": false,
+      "page": true,
+      "exps": []
+    },
+    {
+      "id": "t9",
+      "name": "Roberta",
+      "label": "dopo La Mappa del tuo Viaggio",
+      "title": "Una mappa sopra la scrivania",
+      "text": "La mappa che ho disegnato è appesa dove la vedo ogni giorno. Mi ricorda dove voglio andare.",
+      "home": false,
+      "page": true,
+      "exps": []
+    },
+    {
+      "id": "t10",
+      "name": "Giulia",
+      "label": "Escape · edizione di marzo",
+      "text": "La notte nel bosco mi faceva paura. È diventata la parte che ricordo di più.",
+      "video": "videos/testimonial-1.mp4",
+      "poster": "images/testimonial-1.jpg",
+      "home": false,
+      "page": false,
+      "exps": [
+        "escape-the-city"
+      ]
+    },
+    {
+      "id": "t11",
+      "name": "Marta",
+      "label": "Escape · edizione di giugno",
+      "text": "Sono arrivata da sola senza conoscere nessuno. Sono tornata con un gruppo.",
+      "video": "videos/testimonial-3.mp4",
+      "poster": "images/testimonial-3.jpg",
+      "home": false,
+      "page": false,
+      "exps": [
+        "escape-the-city"
+      ]
+    },
+    {
+      "id": "t12",
+      "name": "Davide",
+      "label": "Escape · edizione di marzo",
+      "text": "Accendere il fuoco con le mani mi ha insegnato più sulla pazienza di tanti libri.",
+      "video": "videos/testimonial-2.mp4",
+      "poster": "images/testimonial-2.jpg",
+      "home": false,
+      "page": false,
+      "exps": [
+        "escape-the-city"
+      ]
+    },
+    {
+      "id": "t14",
+      "name": "Elena",
+      "label": "34, Firenze",
+      "text": "3 ore che hanno cambiato il mio approccio ai problemi.",
+      "home": false,
+      "page": false,
+      "exps": [
+        "accendi-il-tuo-fuoco"
+      ]
+    },
+    {
+      "id": "t15",
+      "name": "Giulia",
+      "label": "41, Torino",
+      "text": "L’archetto mi ha mostrato che forzavo troppo.",
+      "home": false,
+      "page": false,
+      "exps": [
+        "accendi-il-tuo-fuoco"
+      ]
+    },
+    {
+      "id": "t16",
+      "name": "Chiara",
+      "label": "32, Roma",
+      "text": "Ho portato a casa una decisione per il mio progetto. Non un consiglio: una scelta.",
+      "home": false,
+      "page": false,
+      "exps": [
+        "accendi-il-tuo-fuoco"
+      ]
+    },
+    {
+      "id": "t17",
+      "name": "Roberta",
+      "label": "38, Bologna",
+      "text": "La mappa che ho disegnato è appesa sopra la scrivania. Mi ricorda dove voglio andare.",
+      "home": false,
+      "page": false,
+      "exps": [
+        "la-mappa-del-tuo-viaggio"
+      ]
+    },
+    {
+      "id": "t18",
+      "name": "Filippo",
+      "label": "33, Firenze",
+      "text": "Disegnare la mappa del mio percorso è stato più utile di mesi di coaching.",
+      "home": false,
+      "page": false,
+      "exps": [
+        "la-mappa-del-tuo-viaggio"
+      ]
+    },
+    {
+      "id": "t19",
+      "name": "Marco",
+      "label": "45, Milano",
+      "text": "Ho portato il mio team. Siamo tornati con una direzione condivisa che non sapevamo di avere.",
+      "home": false,
+      "page": false,
+      "exps": [
+        "la-mappa-del-tuo-viaggio"
+      ]
     }
   ]
 };

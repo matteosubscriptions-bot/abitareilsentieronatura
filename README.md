@@ -63,6 +63,12 @@ Per ogni esperienza gestisci: **generale** (nome, tipologia, durata, luogo di ba
 `events.js` (fonte unica) e le pagine si aggiornano da sole.
 - **Libreria media**: carichi le foto (JPG, PNG, WebP; si ridimensionano a max 2200 px e si salvano in `images/`), dai una descrizione (alt)
   e le scegli da ogni esperienza. Le foto nuove restano "da pubblicare" finché non pubblichi.
+- **Menu**: la casella "Mostra nel menu" decide se l'esperienza compare nel menu a tendina, nel menu mobile e nel footer.
+- **Collegate**: scegli 2 o 3 esperienze per la sezione "Altri corsi ed esperienze" in fondo a ogni pagina (testi card: descrizione breve, partecipanti, etichetta).
+- **Testimonianze** (voce in alto nella colonna a sinistra): testo, titolo, etichetta, **video** (link YouTube/Vimeo oppure file `videos/…mp4`) e
+  anteprima opzionale; per ognuna decidi se compare in home, nella pagina Testimonianze e/o nelle pagine delle esperienze. Con un video va nei
+  caroselli video, solo testo come citazione/recensione. YouTube/Vimeo si caricano solo al click (player senza cookie prima del play).
+  Le pagine esperienza senza testimonianze nascondono la sezione.
 - **Anteprima**: il pulsante apre la pagina con `?preview=1` e mostra la bozza (le foto appena caricate si vedono dopo la pubblicazione).
 - **Pubblica sul sito**: scrive nel repository (prima le foto nuove, poi `events.js`) via API GitHub. Serve un *fine-grained token* con permesso
   **Contents: Read and write** solo su questo repository (GitHub → Settings → Developer settings). Il token si può ricordare solo su questo browser.
