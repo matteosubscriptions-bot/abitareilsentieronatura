@@ -2225,6 +2225,53 @@ window.AIS_DATA = {
           "images/accendi-fuoco.jpg"
         ]
       }
+    },
+    "chi-sono": {
+      "media": {
+        "hero": {
+          "img": "images/hero-forest.jpg"
+        },
+        "slider": [
+          {
+            "img": "images/full-bosco.jpg",
+            "cap": "Il bosco, da sempre"
+          },
+          {
+            "img": "images/accendi-fuoco.jpg",
+            "cap": "Le mani sul fuoco"
+          },
+          {
+            "img": "images/cammino-giorno2.jpg",
+            "cap": "In cammino"
+          },
+          {
+            "img": "images/mappa-viaggio.jpg",
+            "cap": "La mappa"
+          },
+          {
+            "img": "images/team-mani-terra.jpg",
+            "cap": "La terra"
+          },
+          {
+            "img": "images/team-fuoco-scintille.jpg",
+            "cap": "Scintille"
+          },
+          {
+            "img": "images/escape-the-city.jpg",
+            "cap": "Una notte nel bosco"
+          }
+        ],
+        "gallery": [
+          "images/team-mani-terra.jpg",
+          "images/accendi-fuoco.jpg",
+          "images/team-ascolto-bosco.jpg",
+          "images/cammino-cerchio.jpg",
+          "images/full-avventura.jpg",
+          "images/team-impronta.jpg",
+          "images/mappa-viaggio.jpg",
+          "images/team-land-art.jpg"
+        ]
+      }
     }
   }
 };

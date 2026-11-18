@@ -1230,3 +1230,17 @@ mark.ais-hl{background:linear-gradient(transparent 56%,rgba(176,84,45,.26) 56%);
   .site-header .nav-logo{font-size:19px;}
   .site-header .nav-cta{padding:10px 16px;font-size:13px;}
 }
+
+/* Chi sono: numeri, liste formazione, testo card */
+.ais-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:34px auto 0;max-width:860px;}
+.ais-stats .ais-stat{background:#fff;border:1px solid var(--ais-line);border-radius:16px;padding:20px 16px;text-align:center;}
+.ais-stats .ais-stat b{display:block;font-family:"Cormorant Garamond",Georgia,serif;font-size:clamp(30px,4.4vw,44px);line-height:1;color:var(--ais-terracotta,#b0542d);font-weight:600;}
+.ais-stats .ais-stat span{display:block;margin-top:8px;font-size:14px;line-height:1.35;color:var(--ais-muted,#5c6656);}
+.ais-tlist{list-style:none;margin:0;padding:0;display:grid;gap:9px;}
+.ais-tlist li{font-size:14.5px;line-height:1.35;padding-left:16px;position:relative;color:var(--ais-forest-deep);}
+.ais-tlist li::before{content:"";position:absolute;left:0;top:.55em;width:6px;height:6px;border-radius:50%;background:var(--ais-ochre);}
+.ais-tlist em{display:block;font-style:normal;font-size:12.5px;color:var(--ais-muted,#5c6656);}
+.ais-pcard__p{margin:0;font-size:15px;line-height:1.5;color:var(--ais-muted,#4b5646);}
+.ais-pgrid--4{grid-template-columns:repeat(4,1fr);}
+@media(max-width:1000px){.ais-pgrid--4{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:520px){.ais-stats{grid-template-columns:1fr;}.ais-pgrid--4{grid-template-columns:1fr;}}

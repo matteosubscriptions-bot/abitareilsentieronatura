@@ -21,7 +21,7 @@ orienteering-sensoriale.html · tribu-del-bosco.html · guardiani-del-fuoco.html
 accendi-il-tuo-fuoco.html · la-mappa-del-tuo-viaggio.html · via-degli-dei.html · elementi-di-convivenza.html · cammino.html
 scuole-gruppi.html         → Scuole & Gruppi · aziende.html → Aziende (scuole-team.html rimanda alla prima)
 testimonianze.html         → Video + recensioni scritte + "lascia la tua"
-chi-sono.html              → Matteo Mancini (storia/timeline, metodo)
+chi-sono.html              → Matteo Mancini: hero, slider, storia in 6 tappe (foto + "cosa è successo / cosa mi ha lasciato"), formazione, galleria. Foto e testi modificabili da admin → Pagine del sito → Chi sono
 privacy.html · cookie-policy.html
 partials/header.html · partials/footer.html   → testata (con barra annunci) e footer, UNICI
 config.js · site.js · cookies.js · forms.js · styles.css · images/ · videos/ · downloads/

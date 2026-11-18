@@ -1250,7 +1250,7 @@ dialog#pick{width:min(860px,96vw)}
         el("div", {}, [el("h2", { text: p[1] }), el("p", { class: "sub", text: p[2] + " · testi e foto della pagina" })]),
         el("div", { class: "row" }, [el("button", { class: "btn sm", type: "button", text: "Anteprima di questa pagina", onclick: function () { preview(p[2]); } })])
       ]));
-      if (p[0] === "scuole-gruppi" || p[0] === "aziende" || p[0] === "metodologia") {
+      if (p[0] === "scuole-gruppi" || p[0] === "aziende" || p[0] === "metodologia" || p[0] === "chi-sono") {
         if (!data.pagemedia[p[0]]) data.pagemedia[p[0]] = { media: {} };
         var md = el("details", { class: "pgrp", open: true }, [el("summary", { text: "Media: header, slider sotto l’header e galleria" })]);
         md.appendChild(el("div", { class: "pf" }, [tabMedia(data.pagemedia[p[0]])]));
