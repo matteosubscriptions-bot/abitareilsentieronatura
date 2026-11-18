@@ -334,6 +334,7 @@ dialog#pick{width:min(860px,96vw)}
     if (!PUBLISHED.media) PUBLISHED.media = [];
     if (!PUBLISHED.testimonials) PUBLISHED.testimonials = [];
     if (!PUBLISHED.pages) PUBLISHED.pages = {};
+    if (!PUBLISHED.pagemedia) PUBLISHED.pagemedia = {};
     var data = clone(PUBLISHED);
     var cur = Object.keys(data.experiences)[0];
     var tab = "generale";
@@ -343,7 +344,7 @@ dialog#pick{width:min(860px,96vw)}
 
     try {
       var d0 = JSON.parse(localStorage.getItem(DRAFT_KEY) || "null");
-      if (d0 && d0.experiences && d0.events) { data = d0; restored = true; if (!data.media) data.media = []; if (!data.testimonials) data.testimonials = []; if (!data.pages) data.pages = {}; }
+      if (d0 && d0.experiences && d0.events) { data = d0; restored = true; if (!data.media) data.media = []; if (!data.testimonials) data.testimonials = []; if (!data.pages) data.pages = {}; if (!data.pagemedia) data.pagemedia = {}; }
     } catch (e) {}
     if (!data.experiences[cur]) cur = Object.keys(data.experiences)[0];
 
@@ -419,6 +420,17 @@ dialog#pick{width:min(860px,96vw)}
           if (!Object.keys(m).length) delete e.media;
         }
       });
+      var pmo = {};
+      Object.keys(x.pagemedia || {}).sort().forEach(function (slug) {
+        var m = ((x.pagemedia[slug] || {}).media) || {};
+        if (m.hero) { if (!m.hero.video) delete m.hero.video; if (!m.hero.img) delete m.hero; }
+        m.slider = (m.slider || []).map(function (s2) { var r = { img: s2.img }; if (s2.cap) r.cap = s2.cap; return r; });
+        if (!m.slider.length) delete m.slider;
+        m.gallery = (m.gallery || []).filter(Boolean);
+        if (!m.gallery.length) delete m.gallery;
+        if (Object.keys(m).length) pmo[slug] = { media: m };
+      });
+      x.pagemedia = pmo;
       var pg = {};
       Object.keys(x.pages || {}).sort().forEach(function (slug) {
         var src = x.pages[slug], out = {};
@@ -473,6 +485,13 @@ dialog#pick{width:min(860px,96vw)}
         var m = e.media || {};
         if (m.slider && m.slider.length > 0 && m.slider.length < 3) errs.push(n + ": lo slider ha bisogno di almeno 3 foto (o svuotalo)");
         var used = [e.img, m.hero && m.hero.img].concat((m.slider || []).map(function (x) { return x.img; })).concat(m.gallery || []).concat((e.learn || []).map(function (c) { return c.img; }));
+        var missing = used.filter(function (u) { return u && !inLib(u); });
+        if (missing.length) errs.push(n + ": foto non presente nella libreria (" + missing[0] + ")");
+      });
+      Object.keys(data.pagemedia || {}).forEach(function (slug) {
+        var m = (data.pagemedia[slug] || {}).media || {}, n = "Pagina " + slug;
+        if (m.slider && m.slider.length > 0 && m.slider.length < 3) errs.push(n + ": lo slider ha bisogno di almeno 3 foto (o svuotalo)");
+        var used = [m.hero && m.hero.img].concat((m.slider || []).map(function (x) { return x.img; })).concat(m.gallery || []);
         var missing = used.filter(function (u) { return u && !inLib(u); });
         if (missing.length) errs.push(n + ": foto non presente nella libreria (" + missing[0] + ")");
       });
@@ -572,6 +591,10 @@ dialog#pick{width:min(860px,96vw)}
         if (where.length) out.push((e.name || s) + " (" + where.join(", ") + ")");
       });
       if (data.testimonials.some(function (t) { return t.poster === src; })) out.push("Testimonianze");
+      Object.keys(data.pagemedia || {}).forEach(function (slug) {
+        var m = (data.pagemedia[slug] || {}).media || {};
+        if ((m.hero && m.hero.img === src) || (m.slider || []).some(function (x) { return x.img === src; }) || (m.gallery || []).indexOf(src) >= 0) out.push("Media pagina " + slug);
+      });
       Object.keys(data.pages || {}).forEach(function (slug) {
         var p = data.pages[slug];
         if (Object.keys(p).some(function (k) { return /^i\d+$/.test(k) && p[k] === src; })) out.push("Pagina " + (slug === "_global" ? "globale" : slug));
@@ -1208,6 +1231,12 @@ dialog#pick{width:min(860px,96vw)}
         el("div", {}, [el("h2", { text: p[1] }), el("p", { class: "sub", text: p[2] + " · testi e foto della pagina" })]),
         el("div", { class: "row" }, [el("button", { class: "btn sm", type: "button", text: "Anteprima di questa pagina", onclick: function () { preview(p[2]); } })])
       ]));
+      if (p[0] === "scuole-gruppi" || p[0] === "aziende") {
+        if (!data.pagemedia[p[0]]) data.pagemedia[p[0]] = { media: {} };
+        var md = el("details", { class: "pgrp", open: true }, [el("summary", { text: "Media: header, slider sotto l’header e galleria" })]);
+        md.appendChild(el("div", { class: "pf" }, [tabMedia(data.pagemedia[p[0]])]));
+        panel.appendChild(md);
+      }
       panel.appendChild(viewPageEditor(p[2], p[0], "page"));
       return panel;
     }
@@ -1379,6 +1408,7 @@ dialog#pick{width:min(860px,96vw)}
           if (!o.media) o.media = [];
           if (!o.testimonials) o.testimonials = [];
           if (!o.pages) o.pages = {};
+          if (!o.pagemedia) o.pagemedia = {};
           data = o; touch(); render(); toast("File importato");
         } catch (e) { toast("File non valido: usa un events.js scaricato da questa pagina", true); }
         $("file").value = "";

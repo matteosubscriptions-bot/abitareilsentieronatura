@@ -286,7 +286,7 @@
     function esc(t) { return String(t == null ? "" : t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
     var PATTERN = ["g-wide g-tall", "", "", "", "", "g-wide", "", ""];
     Array.prototype.forEach.call(document.querySelectorAll("[data-media]"), function (node) {
-      var x = D.experiences[node.getAttribute("data-exp")];
+      var x = D.experiences[node.getAttribute("data-exp")] || (D.pagemedia && D.pagemedia[node.getAttribute("data-exp")]);
       var m = x && x.media;
       var kind = node.getAttribute("data-media");
       if (!m) return;
@@ -697,12 +697,12 @@
     var hide = {};
     function update() {
       var past = window.pageYOffset > 520;
-      var busy = hide.date || hide.parliamone || hide.footer;
+      var busy = hide.date || hide.parliamone || hide.richiesta || hide.contatto || hide.footer;
       bar.classList.toggle("is-on", past && !busy);
     }
     window.addEventListener("scroll", update, { passive: true });
     if ("IntersectionObserver" in window) {
-      [["date", "#date"], ["parliamone", "#parliamone"], ["footer", "#contatti"]].forEach(function (p) {
+      [["date", "#date"], ["parliamone", "#parliamone"], ["richiesta", "#richiesta"], ["contatto", "#contatto"], ["footer", "#contatti"]].forEach(function (p) {
         var el = document.querySelector(p[1]);
         if (!el) return;
         new IntersectionObserver(function (en) { hide[p[0]] = en[0].isIntersecting; update(); }).observe(el);

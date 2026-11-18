@@ -83,6 +83,8 @@ Per ogni esperienza gestisci: **generale** (nome, tipologia, durata, luogo di ba
 ## Pagine nuove
 - **Scuole & Gruppi** (`scuole-gruppi.html`): scuole, centri estivi e famiglie — metodologia, proposte per target (schede), come collaboriamo, FAQ e richiesta di proposta
   che compone il messaggio per WhatsApp/email. I campi `[tra parentesi]` sono dati da completare (tesserino, assicurazione, prezzi…). `scuole-team.html` rimanda qui.
+- Le due pagine seguono il **template delle esperienze**: hero con chip, **slider sotto l'header**, banda CTA, galleria e barra fissa "Richiedi/Contattami".
+  Foto di header, slider e galleria si gestiscono dall'admin (Pagine del sito → pagina → *Media*, dati in `pagemedia`).
 - **Aziende** (`aziende.html`): "Sulla stessa traccia", costruita sulla struttura **ACORN** (Ascolto, Coesione, Orientamento, Resilienza, Nuove idee: una mia
   interpretazione, modificabile), attività in forma di idea, come funziona, location (Canyon Park Bagni di Lucca, Parco Avventura Il Gigante) e contatto.
   Le foto `images/team-*.jpg` sono ritagli del PDF "Formazione esperienziale outdoor".

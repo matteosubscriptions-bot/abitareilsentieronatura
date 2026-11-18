@@ -16,6 +16,7 @@
      related: [slug, slug, slug?] = le 2-3 esperienze collegate ("Altri corsi ed esperienze")
    Testimonianze (testimonials): [{ id, name, label, title?, text?, video?, poster?, home, page, exps[] }]
      video = link YouTube / Vimeo oppure file (videos/nome.mp4); home/page/exps = dove compare.
+   Media di pagine non-esperienza (pagemedia): { "scuole-gruppi": { media: { hero, slider, gallery } }, "aziende": {...} }
    Testi e foto delle pagine (pages): { "<pagina>": { "<chiave>": "testo o percorso foto", ... }, "_global": {...} }
      chiavi: eN = testo (eN@href = link), iN = foto (iN.alt = descrizione), @title / @description = SEO.
      Nei testi: **grassetto**  //corsivo//  ==evidenziato==  [da completare]
@@ -1873,5 +1874,101 @@ window.AIS_DATA = {
       ]
     }
   ],
-  "pages": {}
+  "pages": {},
+  "pagemedia": {
+    "scuole-gruppi": {
+      "media": {
+        "hero": {
+          "img": "images/full-bosco.jpg"
+        },
+        "slider": [
+          {
+            "img": "images/full-bosco.jpg",
+            "cap": "Il bosco, aula a cielo aperto"
+          },
+          {
+            "img": "images/team-mani-terra.jpg",
+            "cap": "Mani nella terra"
+          },
+          {
+            "img": "images/accendi-fuoco.jpg",
+            "cap": "Il fuoco, con le regole"
+          },
+          {
+            "img": "images/mappa-viaggio.jpg",
+            "cap": "Orientarsi con la mappa"
+          },
+          {
+            "img": "images/cammino-giorno2.jpg",
+            "cap": "Il rifugio"
+          },
+          {
+            "img": "images/hero-forest.jpg",
+            "cap": "La luce tra gli alberi"
+          },
+          {
+            "img": "images/team-fuoco-scintille.jpg",
+            "cap": "Scintille"
+          }
+        ],
+        "gallery": [
+          "images/team-mani-terra.jpg",
+          "images/accendi-fuoco.jpg",
+          "images/full-bosco.jpg",
+          "images/mappa-viaggio.jpg",
+          "images/cammino-giorno2.jpg",
+          "images/hero-forest.jpg",
+          "images/team-tenda-bushcraft.jpg",
+          "images/team-ascolto-bosco.jpg"
+        ]
+      }
+    },
+    "aziende": {
+      "media": {
+        "hero": {
+          "img": "images/cammino-cerchio.jpg"
+        },
+        "slider": [
+          {
+            "img": "images/cammino-cerchio.jpg",
+            "cap": "Il cerchio"
+          },
+          {
+            "img": "images/team-archetto.jpg",
+            "cap": "L’archetto"
+          },
+          {
+            "img": "images/team-codice-carte.jpg",
+            "cap": "Il Codice della Foresta"
+          },
+          {
+            "img": "images/team-mappa-zaino.jpg",
+            "cap": "La mappa del viaggio"
+          },
+          {
+            "img": "images/team-scarpe-bussola.jpg",
+            "cap": "Fuori sentiero"
+          },
+          {
+            "img": "images/team-land-art.jpg",
+            "cap": "Architetti di mondi"
+          },
+          {
+            "img": "images/escape-the-city.jpg",
+            "cap": "Una notte nel bosco"
+          }
+        ],
+        "gallery": [
+          "images/cammino-cerchio.jpg",
+          "images/team-fuoco-scintille.jpg",
+          "images/team-appunti-mani.jpg",
+          "images/team-impronta.jpg",
+          "images/full-avventura.jpg",
+          "images/team-mani-terra.jpg",
+          "images/hero-forest.jpg",
+          "images/team-tenda-bushcraft.jpg"
+        ]
+      }
+    }
+  }
 };
