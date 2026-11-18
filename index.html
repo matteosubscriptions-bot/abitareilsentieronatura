@@ -46,7 +46,7 @@
 </defs></svg>
 <!-- header condiviso (fonte: partials/header.html) -->
 <div class="ais-topbar"><div class="ais-topbar__in">
-<span><span class="ais-topbar__hide"><strong>Escape the City 2027</strong> &middot; </span><strong class="ais-topbar__hide">Promo Natale:</strong> <b>€115</b> fino al 31 dicembre &middot; <a href="escape-the-city.html#date">prenota &rarr;</a></span>
+<span><strong>Escape the City<span class="ais-topbar__hide"> 2027</span></strong> &middot; <strong class="ais-topbar__hide">Promo Natale:</strong> <b>&euro;115</b> fino al 31 <span class="ais-topbar__hide">dicembre</span><span class="ais-topbar__short">dic.</span> &middot; <a href="escape-the-city.html#date">prenota &rarr;</a></span>
 </div></div>
 <header class="site-header fixed top-0 left-0 right-0 z-50 h-[72px]" id="site-header">
 <div class="content-max-width h-full flex items-center justify-between">
@@ -103,10 +103,10 @@
     <div class="ais-hero__bg"><video autoplay="" loop="" muted="" playsinline="" poster="images/hero-forest.jpg" src="videos/hero.mp4"></video></div>
     <div class="ais-hero__scrim"></div>
     <div class="ais-hero__inner">
-      <span class="ais-eyebrow ais-hero__eyebrow">Esperienze nel selvatico &middot; per adulti</span>
+      <span class="ais-eyebrow ais-hero__eyebrow">Esperienze di connessione con il selvatico</span>
       <h1 class="ais-hero__title">Abitare il Sentiero</h1>
-      <p class="ais-hero__sub">Torna a sentirti parte del mondo vivente.</p>
-      <p class="ais-hero__lead">Esperienze nel selvatico per rallentare, esplorare e tornare in relazione con ci&ograve; che ti circonda. Dalle poche ore al weekend di punta, Escape the City.</p>
+      <p class="ais-hero__sub">Impara tecniche, rallenta, torna ad abitare con ci&ograve; che ti circonda.</p>
+      <p class="ais-microrow">avventura &middot; natura &middot; consapevolezza</p>
       <div class="ais-cta-row">
         <a class="ais-btn-ochre" href="#percorso">Scegli il tuo percorso</a>
         <a class="ais-hero__play" href="#testimonianze"><span class="dot"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>Guarda le esperienze</a>
@@ -114,6 +114,14 @@
       <div class="ais-scrollcue" aria-hidden="true"><svg class="ais-ico"><use href="#i-chevron"></use></svg></div>
     </div>
   </section>
+
+  <!-- SLIDER FOTO (subito dopo l'hero, contenuto: no due full-image di fila) -->
+  <section class="ais-sec ais-sec--sand" style="padding:56px 0 64px">
+    <div class="ais-wrap">
+<div class="ais-slider ais-slider--wide" data-slider data-autoplay="5500" role="region" aria-roledescription="carousel" aria-label="Foto delle esperienze"><div class="ais-slider__track"><figure class="ais-slider__slide"><img alt="Gruppo attorno al fuoco davanti alle tende" src="images/escape-the-city.jpg"/><figcaption class="ais-slider__cap">Una notte nel bosco</figcaption></figure><figure class="ais-slider__slide"><img alt="Mani che accendono il fuoco con l&rsquo;archetto" src="images/accendi-fuoco.jpg" loading="lazy"/><figcaption class="ais-slider__cap">Accendere il fuoco con le mani</figcaption></figure><figure class="ais-slider__slide"><img alt="Persona sul sentiero all&rsquo;alba tra la nebbia" src="images/full-avventura.jpg" loading="lazy"/><figcaption class="ais-slider__cap">Camminare lenti</figcaption></figure><figure class="ais-slider__slide"><img alt="Mappa e bussola su un tavolo di legno" src="images/mappa-viaggio.jpg" loading="lazy"/><figcaption class="ais-slider__cap">Leggere dove sei</figcaption></figure><figure class="ais-slider__slide"><img alt="Cerchio attorno al fuoco sotto le stelle" src="images/cammino-cerchio.jpg" loading="lazy"/><figcaption class="ais-slider__cap">Il cerchio</figcaption></figure><figure class="ais-slider__slide"><img alt="Luce tra gli alberi del bosco" src="images/full-bosco.jpg" loading="lazy"/><figcaption class="ais-slider__cap">Il bosco</figcaption></figure><figure class="ais-slider__slide"><img alt="Baita di pietra e sentiero in montagna" src="images/cammino-giorno2.jpg" loading="lazy"/><figcaption class="ais-slider__cap">Il rifugio</figcaption></figure><figure class="ais-slider__slide"><img alt="Furgone nel bosco al tramonto" src="images/furgone.jpg" loading="lazy"/><figcaption class="ais-slider__cap">Case in cammino</figcaption></figure></div><button class="ais-slider__btn ais-slider__btn--prev" type="button" aria-label="Immagine precedente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button><button class="ais-slider__btn ais-slider__btn--next" type="button" aria-label="Immagine successiva"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button><div class="ais-slider__dots"></div></div>
+    </div>
+  </section>
+
 
   <!-- SCEGLI IL TUO PERCORSO: Soglia / Avventura / Immersione -->
   <section class="ais-sec ais-sec--cream" id="percorso">
@@ -150,7 +158,7 @@
     <div class="ais-wrap">
       <div class="ais-narrow"><span class="ais-eyebrow">Il weekend di punta</span><h2 class="ais-display">Escape the City.</h2></div>
       <div class="ais-event" style="margin-top:30px">
-        <div class="ais-event__media"><img alt="Escape the City" src="images/escape-the-city.jpg"/><span class="ais-event__badge"><svg class="ais-ico"><use href="#i-fire"></use></svg>Pochi posti</span></div>
+        <div class="ais-event__media"><div class="ais-slider ais-slider--fill" data-slider data-autoplay="4500" role="region" aria-roledescription="carousel" aria-label="Immagini di Escape the City"><div class="ais-slider__track"><figure class="ais-slider__slide"><img alt="Escape the City: il gruppo attorno al fuoco" src="images/escape-the-city.jpg"/></figure><figure class="ais-slider__slide"><img alt="Il cerchio serale sotto le stelle" src="images/cammino-cerchio.jpg" loading="lazy"/></figure><figure class="ais-slider__slide"><img alt="Accendere il fuoco con le mani" src="images/accendi-fuoco.jpg" loading="lazy"/></figure><figure class="ais-slider__slide"><img alt="Camminare all&rsquo;alba sul sentiero" src="images/full-avventura.jpg" loading="lazy"/></figure></div><button class="ais-slider__btn ais-slider__btn--prev" type="button" aria-label="Immagine precedente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button><button class="ais-slider__btn ais-slider__btn--next" type="button" aria-label="Immagine successiva"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button><div class="ais-slider__dots"></div></div><span class="ais-event__badge"><svg class="ais-ico"><use href="#i-fire"></use></svg>Pochi posti</span></div>
         <div class="ais-event__body">
           <span class="ais-eyebrow">Immersione &middot; 2 giorni</span>
           <h3 class="ais-display" style="font-size:clamp(26px,3.4vw,38px)">Due giorni per tornare a sentire.</h3>
@@ -203,25 +211,59 @@
     <div class="ais-wrap ais-narrow"><span class="ais-interlude__mark" aria-hidden="true">&ldquo;</span><p class="ais-interlude__q">Non ti portiamo nel bosco per spiegarti il bosco.<br/>Ti portiamo nel bosco perch&eacute; tu possa incontrarlo.</p></div>
   </section>
 
-  <!-- METODO (blocco verde, compatto) -->
+  <!-- METODO (blocco verde): valore dell'esperienza diretta -->
   <section class="ais-sec ais-sec--forest" id="metodo">
     <div class="ais-wrap">
-      <div class="ais-narrow ais-center"><span class="ais-eyebrow">Il metodo</span><h2 class="ais-display" style="color:#fff">Impariamo con tutto il corpo.</h2></div>
+      <div class="ais-narrow ais-center">
+        <span class="ais-eyebrow">Il metodo</span>
+        <h2 class="ais-display" style="color:#fff">L&rsquo;esperienza diretta, immersa nella natura.</h2>
+        <div class="ais-stack ais-lead" style="margin-top:18px;color:rgba(255,255,255,.88)">
+          <p>Un bosco non si impara da una slide. Si impara toccandolo, ascoltandolo, sbagliando dentro. L&rsquo;esperienza diretta passa attraverso tutto il corpo, ed &egrave; l&igrave; che qualcosa resta.</p>
+          <p style="color:rgba(255,255,255,.78)">Per questo non facciamo lezioni: creiamo le condizioni. Prima fai. Poi guardi cosa succede. Poi, se serve, gli diamo un nome.</p>
+        </div>
+      </div>
       <div class="ais-triptych">
         <div class="ais-triptych__c"><svg class="ais-ico ais-triptych__ico"><use href="#i-idea"></use></svg><h3>Testa</h3><p>Capire. Osservare. Fare domande.</p></div>
         <div class="ais-triptych__c"><svg class="ais-ico ais-triptych__ico"><use href="#i-heart"></use></svg><h3>Cuore</h3><p>Sentire. Lasciarsi sorprendere. Entrare in relazione.</p></div>
         <div class="ais-triptych__c"><svg class="ais-ico ais-triptych__ico"><use href="#i-hand"></use></svg><h3>Mani</h3><p>Fare. Costruire. Sperimentare. Provare.</p></div>
       </div>
+      <p class="ais-lead ais-center" style="margin:38px auto 0;max-width:620px;color:rgba(255,255,255,.88)">Non sono tre momenti separati. Sono tre modi di entrare nella stessa esperienza.</p>
     </div>
   </section>
 
-  <!-- COSA TI PORTI A CASA: sopravvivenza -> convivenza -->
-  <section class="ais-sec ais-sec--cream ais-sec--tint" id="cosa-porti">
+  <!-- SOPRAVVIVENZA vs CONVIVENZA -->
+  <section class="ais-sec ais-sec--cream" id="convivenza">
     <div class="ais-wrap">
-      <div class="ais-narrow"><span class="ais-eyebrow">Cosa ti porti a casa</span><h2 class="ais-display">Dalla sopravvivenza alla convivenza.</h2>
+      <div class="ais-narrow ais-center">
+        <span class="ais-eyebrow">Dalla sopravvivenza alla convivenza</span>
+        <h2 class="ais-display">Quante volte accenderai un fuoco con un archetto<br/><span class="it">nella tua vita di tutti i giorni?</span></h2>
+        <div class="ais-stack ais-lead" style="margin-top:20px">
+          <p>Quante volte leggerai una bussola? Pensare che un corso di un weekend ti renda capace di &laquo;sopravvivere&raquo; &egrave; fantasia. E comunque non avrebbe un effetto diretto sulla tua vita.</p>
+          <p class="ais-muted">Quello che faccio &egrave; insegnare delle skills &mdash; accendere un fuoco, orientarsi, costruire un riparo &mdash; ma come strumenti. Strumenti per risvegliare una connessione pi&ugrave; profonda e il rispetto per ci&ograve; che significa avere un fuoco per cucinare e scaldarsi, un riparo nelle notti fredde, cibo naturale, acqua pura.</p>
+          <p>E, attraverso le attivit&agrave; che ci stanno intorno, stimolare osservazione, condivisione e riflessione: per portare qualcosa di concreto nella vita di tutti i giorni.</p>
+        </div>
+      </div>
+      <div class="ais-vs" role="table" aria-label="Differenza tra un corso di sopravvivenza e Abitare il Sentiero">
+        <div class="ais-vs__head" role="row"><div role="columnheader"></div><div class="ais-vs__a" role="columnheader">Un corso di sopravvivenza</div><div class="ais-vs__b" role="columnheader">Abitare il Sentiero</div></div>
+        <div class="ais-vs__row" role="row"><div class="ais-vs__k" role="rowheader">Lo scopo</div><div class="ais-vs__a" role="cell">Ottenere skills per cavartela.</div><div class="ais-vs__b" role="cell">Tornare in relazione con ci&ograve; che ti circonda.</div></div>
+        <div class="ais-vs__row" role="row"><div class="ais-vs__k" role="rowheader">La natura &egrave;</div><div class="ais-vs__a" role="cell">Un ambiente da affrontare e dominare.</div><div class="ais-vs__b" role="cell">Un interlocutore con cui stare.</div></div>
+        <div class="ais-vs__row" role="row"><div class="ais-vs__k" role="rowheader">Le skills sono</div><div class="ais-vs__a" role="cell">Il fine: pi&ugrave; ne hai, meglio &egrave;.</div><div class="ais-vs__b" role="cell">Strumenti, porte per una connessione pi&ugrave; profonda.</div></div>
+        <div class="ais-vs__row" role="row"><div class="ais-vs__k" role="rowheader">Il fuoco</div><div class="ais-vs__a" role="cell">Una tecnica da padroneggiare.</div><div class="ais-vs__b" role="cell">Qualcosa da custodire: scalda, cucina, ti chiede presenza.</div></div>
+        <div class="ais-vs__row" role="row"><div class="ais-vs__k" role="rowheader">Cosa resta</div><div class="ais-vs__a" role="cell">Una competenza che nella quotidianit&agrave; userai di rado.</div><div class="ais-vs__b" role="cell">Attenzione, collaborazione, uno sguardo nuovo da portare a casa.</div></div>
+      </div>
+      <p class="ais-vs__note">Niente contro le scuole di sopravvivenza: le skills servono. Cambia il perch&eacute;.</p>
+      <ul class="ais-pills" aria-label="Cosa stimoliamo">
+        <li>Osservazione</li><li>Connessione</li><li>Problem solving</li><li>Collaborazione</li><li>Riflessione personale</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- COSA TI PORTI A CASA: gli elementi come specchi -->
+  <section class="ais-sec ais-sec--sand" id="cosa-porti">
+    <div class="ais-wrap">
+      <div class="ais-narrow"><span class="ais-eyebrow">Cosa ti porti a casa</span><h2 class="ais-display">Gli elementi come specchi.</h2>
         <div class="ais-stack ais-lead" style="margin-top:16px">
-          <p>In superficie impari delle abilit&agrave;: accendere un fuoco, trovare l&rsquo;acqua, costruire un riparo, orientarti.</p>
-          <p class="ais-muted">In realt&agrave; torni pi&ugrave; indipendente, con meno distanza tra te e la natura, di nuovo in contatto con gli elementi. Fuoco, acqua e riparo come specchi, non come prove di resistenza.</p>
+          <p>Fuoco, acqua, riparo, orientamento: non prove di resistenza, ma specchi. Cos&igrave; torni pi&ugrave; indipendente, con meno distanza tra te e la natura, di nuovo in contatto con gli elementi.</p>
         </div>
       </div>
       <div class="ais-shift"><div class="ais-shiftcard"><h3><svg class="ais-ico"><use href="#i-fire"></use></svg>Fuoco</h3><div class="ais-shift__row ais-shift__surv"><span class="ais-shift__lab">In sopravvivenza</span><p>Accenderlo a ogni costo, in fretta, con la paura che si spenga.</p></div><span class="ais-shift__arrow" aria-hidden="true">&darr;</span><div class="ais-shift__row ais-shift__conv"><span class="ais-shift__lab">In convivenza</span><p>Prepararlo con cura. Il fuoco non &egrave; tecnica: &egrave; presenza.</p></div></div><div class="ais-shiftcard"><h3><svg class="ais-ico"><use href="#i-drop"></use></svg>Acqua</h3><div class="ais-shift__row ais-shift__surv"><span class="ais-shift__lab">In sopravvivenza</span><p>Controllare, accumulare, temere che non basti.</p></div><span class="ais-shift__arrow" aria-hidden="true">&darr;</span><div class="ais-shift__row ais-shift__conv"><span class="ais-shift__lab">In convivenza</span><p>Cercarla senza fretta e fidarsi di ci&ograve; che non si controlla.</p></div></div><div class="ais-shiftcard"><h3><svg class="ais-ico"><use href="#i-tent"></use></svg>Riparo</h3><div class="ais-shift__row ais-shift__surv"><span class="ais-shift__lab">In sopravvivenza</span><p>Difendersi dal bosco, chiudersi, fare da soli.</p></div><span class="ais-shift__arrow" aria-hidden="true">&darr;</span><div class="ais-shift__row ais-shift__conv"><span class="ais-shift__lab">In convivenza</span><p>Costruirlo insieme: si vede come si decide, chi guida, chi ascolta.</p></div></div><div class="ais-shiftcard"><h3><svg class="ais-ico"><use href="#i-compass"></use></svg>Orientamento</h3><div class="ais-shift__row ais-shift__surv"><span class="ais-shift__lab">In sopravvivenza</span><p>Correre verso il prossimo obiettivo, vivere sempre nel futuro.</p></div><span class="ais-shift__arrow" aria-hidden="true">&darr;</span><div class="ais-shift__row ais-shift__conv"><span class="ais-shift__lab">In convivenza</span><p>Fermarsi e leggere la bussola interna: dove sei, adesso.</p></div></div></div>

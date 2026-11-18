@@ -835,3 +835,77 @@ body{color:var(--ais-ink);}
 .ais-shift__surv p{color:#6a6256;}
 .ais-shift__arrow{display:block;color:var(--ais-ochre);font-size:18px;line-height:1;margin:2px 0 2px;}
 @media(max-width:760px){.ais-shift{grid-template-columns:1fr;}}
+
+/* --- Slider foto (scroll-snap, funziona anche senza JS) --- */
+.ais-slider{position:relative;}
+.ais-slider__track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;}
+.ais-slider__track::-webkit-scrollbar{display:none;}
+.ais-slider__slide{position:relative;flex:0 0 100%;scroll-snap-align:start;margin:0;overflow:hidden;}
+.ais-slider__slide img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;}
+.ais-slider--wide{border-radius:20px;overflow:hidden;box-shadow:0 18px 44px rgba(31,41,25,.14);}
+.ais-slider--wide .ais-slider__track{height:clamp(260px,46vw,580px);}
+.ais-slider--fill{position:absolute;inset:0;}
+.ais-slider--fill .ais-slider__track{height:100%;}
+.ais-slider__cap{position:absolute;left:20px;bottom:46px;z-index:2;font-family:Inter,system-ui,sans-serif;
+  font-size:13px;font-weight:600;color:#fff;padding:7px 14px;border-radius:999px;
+  background:rgba(16,26,15,.5);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,.22);}
+.ais-slider__btn{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:46px;height:46px;
+  border-radius:50%;border:1px solid rgba(255,255,255,.55);background:rgba(16,26,15,.42);color:#fff;
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);display:none;align-items:center;
+  justify-content:center;cursor:pointer;padding:0;transition:background .2s ease;}
+.ais-slider__btn:hover{background:rgba(16,26,15,.7);}
+.ais-slider__btn svg{width:20px;height:20px;}
+.ais-slider__btn--prev{left:16px;}
+.ais-slider__btn--next{right:16px;}
+.ais-slider--js .ais-slider__btn{display:inline-flex;}
+.ais-slider__dots{position:absolute;left:0;right:0;bottom:16px;z-index:3;display:none;justify-content:center;gap:8px;}
+.ais-slider--js .ais-slider__dots{display:flex;}
+.ais-slider__dot{width:9px;height:9px;border-radius:999px;border:0;padding:0;cursor:pointer;
+  background:rgba(255,255,255,.55);transition:width .25s ease,background .25s ease;}
+.ais-slider__dot[aria-current="true"]{width:24px;background:#fff;}
+.ais-slider--fill .ais-slider__btn{width:36px;height:36px;}
+.ais-slider--fill .ais-slider__btn svg{width:17px;height:17px;}
+.ais-slider--fill .ais-slider__btn--prev{left:10px;}
+.ais-slider--fill .ais-slider__btn--next{right:10px;}
+.ais-slider--fill .ais-slider__dots{bottom:12px;}
+.ais-event__badge{z-index:4;}
+@media(max-width:600px){.ais-slider__btn{width:38px;height:38px;}.ais-slider__cap{left:12px;bottom:42px;font-size:12px;}}
+
+/* --- Confronto: scuola di sopravvivenza vs Abitare il Sentiero --- */
+.ais-vs{margin-top:44px;border:1px solid var(--ais-line);border-radius:18px;overflow:hidden;background:#fff;
+  box-shadow:0 10px 30px rgba(31,41,25,.06);}
+.ais-vs__head,.ais-vs__row{display:grid;grid-template-columns:170px 1fr 1fr;}
+.ais-vs__head>div{padding:16px 22px;font-family:Inter,system-ui,sans-serif;font-size:11px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;}
+.ais-vs__head .ais-vs__a{background:var(--ais-sand);color:var(--ais-earth-dark);}
+.ais-vs__head .ais-vs__b{background:var(--ais-forest-deep);color:#fff;}
+.ais-vs__row{border-top:1px solid var(--ais-line);}
+.ais-vs__k{padding:20px 22px;font-family:Inter,system-ui,sans-serif;font-size:12px;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--ais-moss);}
+.ais-vs__row .ais-vs__a,.ais-vs__row .ais-vs__b{padding:20px 22px;font-family:Inter,system-ui,sans-serif;
+  font-size:15px;line-height:1.55;}
+.ais-vs__row .ais-vs__a{background:var(--ais-sand);color:#5f574a;}
+.ais-vs__row .ais-vs__b{color:var(--ais-forest-deep);font-weight:500;}
+.ais-vs__note{font-family:Inter,system-ui,sans-serif;font-size:14px;font-style:italic;color:var(--ais-ink-2);
+  text-align:center;margin:18px auto 0;max-width:560px;}
+.ais-pills{list-style:none;margin:30px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;}
+.ais-pills li{font-family:Inter,system-ui,sans-serif;font-size:13px;font-weight:600;color:var(--ais-forest-deep);
+  padding:9px 16px;border-radius:999px;background:var(--ais-sand);border:1px solid var(--ais-sand-dark);}
+@media(max-width:760px){
+  .ais-vs__head{display:none;}
+  .ais-vs__row{grid-template-columns:1fr;}
+  .ais-vs__k{padding:16px 20px 4px;}
+  .ais-vs__row .ais-vs__a::before,.ais-vs__row .ais-vs__b::before{display:block;font-size:10.5px;font-weight:700;
+    letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px;}
+  .ais-vs__row .ais-vs__a::before{content:"Corso di sopravvivenza";color:var(--ais-earth-dark);}
+  .ais-vs__row .ais-vs__b::before{content:"Abitare il Sentiero";color:var(--ais-forest);}
+}
+
+/* leggibilità testi piccoli sull'hero fotografico */
+.ais-hero__eyebrow{text-shadow:0 1px 14px rgba(12,20,12,.75);}
+.ais-hero .ais-microrow{text-shadow:0 1px 12px rgba(12,20,12,.7);color:rgba(255,255,255,.88);}
+
+.ais-topbar__short{display:none;}
+@media(max-width:600px){.ais-topbar__short{display:inline;}}
