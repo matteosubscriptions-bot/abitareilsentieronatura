@@ -303,4 +303,112 @@
   } else {
     initPeek();
   }
+
+  // Date dinamiche: legge window.AIS_DATA (events.js) e confronta con il giorno di oggi.
+  //  data-events="calendar"    -> tutte le date future, raggruppate per mese
+  //  data-events="upcoming"    -> le prossime N (data-limit) tra tutte le esperienze attive
+  //  data-events="experience"  -> le date future di una sola esperienza (data-exp)
+  // data-cta="link" (vai alla pagina) | "book" (WhatsApp). Se events.js manca resta l'HTML statico.
+  function initEvents() {
+    var D = window.AIS_DATA;
+    var nodes = document.querySelectorAll("[data-events]");
+    if (!D || !D.events || !nodes.length) return;
+    var MESI = ["gennaio","febbraio","marzo","aprile","maggio","giugno","luglio","agosto","settembre","ottobre","novembre","dicembre"];
+    var MAB = ["gen","feb","mar","apr","mag","giu","lug","ago","set","ott","nov","dic"];
+    var GG = ["dom","lun","mar","mer","gio","ven","sab"];
+    var TIPI = { soglia: "Soglia", avventura: "Avventura", immersione: "Immersione" };
+    var WA = "https://wa.me/+393667187733";
+    var now = new Date();
+    var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    function pd(s) { var p = s.split("-"); return new Date(+p[0], +p[1] - 1, +p[2]); }
+    function addDays(d, n) { return new Date(d.getFullYear(), d.getMonth(), d.getDate() + n); }
+    function short(d) { return d.getDate() + " " + MAB[d.getMonth()]; }
+    function longDate(s, f) {
+      var a = GG[s.getDay()] + " " + s.getDate();
+      if (s.getTime() === f.getTime()) return a + " " + MAB[s.getMonth()] + " " + s.getFullYear();
+      var b = GG[f.getDay()] + " " + f.getDate();
+      if (s.getMonth() === f.getMonth()) return a + " \u2013 " + b + " " + MAB[s.getMonth()] + " " + s.getFullYear();
+      return a + " " + MAB[s.getMonth()] + " \u2013 " + b + " " + MAB[f.getMonth()] + " " + f.getFullYear();
+    }
+    var ICO = function (n) { return '<svg class="ais-ico"><use href="#i-' + n + '"></use></svg>'; };
+
+    var all = D.events.map(function (e) {
+      return { e: e, x: D.experiences[e.exp] || {}, s: pd(e.start), f: pd(e.end || e.start) };
+    }).filter(function (i) { return i.f >= today; })
+      .sort(function (a, b) { return a.s - b.s; });
+
+    function row(i, o) {
+      var x = i.x, e = i.e;
+      var days = i.s.getTime() === i.f.getTime() ? "" + i.s.getDate() : i.s.getDate() + "\u2013" + i.f.getDate();
+      var place = e.place || x.place || "";
+      var price = "";
+      if (x.price) {
+        var dl = addDays(i.s, -x.price.daysBefore);
+        price = today <= dl
+          ? '<p class="ais-cal__meta ais-cal__price">\u20ac' + x.price.early + " early bird fino al " + short(dl) + " &middot; poi \u20ac" + x.price.regular + "</p>"
+          : '<p class="ais-cal__meta ais-cal__price">\u20ac' + x.price.regular + "</p>";
+      }
+      var href, label, ext = "";
+      if (o.cta === "book") {
+        var txt = "Ciao Matteo, vorrei prenotare " + x.name + " (" + longDate(i.s, i.f) + ").";
+        href = WA + "?text=" + encodeURIComponent(txt);
+        label = "Scrivimi per prenotare &rarr;";
+        ext = ' target="_blank" rel="noopener noreferrer"';
+      } else {
+        href = (x.url || "#") + "#date";
+        label = "Scopri e prenota &rarr;";
+      }
+      return '<div class="ais-cal__row"><div class="ais-cal__date"><b>' + days + "</b><span>" + MAB[i.s.getMonth()].toUpperCase() + "</span></div><div>" +
+        (o.chip && TIPI[x.type] ? '<span class="ais-caltype ais-caltype--' + x.type + '">' + TIPI[x.type] + "</span>" : "") +
+        '<h3 class="ais-cal__t">' + x.name + (e.note ? '<span class="ais-cal__flag">' + e.note + "</span>" : "") + "</h3>" +
+        '<p class="ais-cal__meta">' + longDate(i.s, i.f) + " &middot; " + ICO("clock") + x.duration + " &middot; " + ICO("pin") + place + "</p>" + price +
+        '</div><a class="ais-textlink ais-cal__cta" href="' + href + '"' + ext + ">" + label + "</a></div>";
+    }
+    function empty() {
+      return '<p class="ais-cal__note">Nuove date in arrivo. <a class="ais-textlink" href="' + WA + '" target="_blank" rel="noopener noreferrer">Scrivimi</a> per essere avvisato.</p>';
+    }
+
+    Array.prototype.forEach.call(nodes, function (node) {
+      var mode = node.getAttribute("data-events");
+      var cta = node.getAttribute("data-cta") || "link";
+      var limit = parseInt(node.getAttribute("data-limit"), 10) || 0;
+      var list, html = "";
+      if (mode === "experience") {
+        var slug = node.getAttribute("data-exp");
+        list = all.filter(function (i) { return i.e.exp === slug; });
+        if (limit) list = list.slice(0, limit);
+        html = list.length ? list.map(function (i) { return row(i, { cta: cta, chip: false }); }).join("") : empty();
+      } else {
+        list = all.filter(function (i) { return i.x.active; });
+        if (mode === "upcoming") {
+          if (limit) list = list.slice(0, limit);
+          html = list.length ? list.map(function (i) { return row(i, { cta: cta, chip: true }); }).join("") : empty();
+        } else { // calendar
+          if (!list.length) { html = empty(); }
+          else {
+            var key = "", group = "";
+            list.forEach(function (i) {
+              var k = i.s.getFullYear() + "-" + i.s.getMonth();
+              if (k !== key) {
+                if (group) html += "</div>";
+                key = k;
+                var m = MESI[i.s.getMonth()];
+                html += '<h3 class="ais-calmonth">' + m.charAt(0).toUpperCase() + m.slice(1) + " " + i.s.getFullYear() + '</h3><div class="ais-cal">';
+                group = "open";
+              }
+              html += row(i, { cta: cta, chip: true });
+            });
+            if (group) html += "</div>";
+          }
+        }
+      }
+      node.innerHTML = html;
+      node.setAttribute("data-events-ready", "true");
+    });
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initEvents);
+  } else {
+    initEvents();
+  }
 })();

@@ -32,6 +32,14 @@ config.js · site.js · cookies.js · forms.js · styles.css · images/ · video
 - **Immersioni** (con pernotto): **Escape the City** (30h) · Guardiani del Fuoco (18→12) · Via degli Dei (24h) · Elementi di Convivenza (2 gg) · Il Cammino (4 gg)
 - **Percorsi & Comunità**: direzione futura (Cerchio dell'Anno), non prenotabile.
 
+## Date delle esperienze (dinamiche)
+Le date stanno in **un solo file: `events.js`**. Da lì si aggiornano da sole il **Calendario** (`calendario.html`), le
+**"prossime 3 esperienze"** (`esperienze.html`) e le date dentro ogni pagina esperienza. Le date **passate spariscono
+da sole** (si confronta con il giorno di oggi) e l'**early bird** di Escape (€115 fino a 15 giorni prima, poi €135)
+è calcolato per ogni data. Per aggiungere una data: una riga in `events` (`start`/`end` in formato `AAAA-MM-GG`).
+`active:false` = esperienza nascosta (non compare in calendario/prossime date). Le date attuali sono **indicative (2027)**.
+Se JavaScript non parte resta visibile l'elenco statico di riserva presente nell'HTML.
+
 ## Pagine temporaneamente nascoste
 Per ora **nessun link** porta a queste 5 pagine (i file restano nel repo, raggiungibili solo con l'URL diretto):
 `la-mappa-del-tuo-viaggio.html` · `via-degli-dei.html` · `cammino.html` · `tribu-del-bosco.html` · `guardiani-del-fuoco.html`.
