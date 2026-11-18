@@ -1069,3 +1069,7 @@ mark.ais-hl{background:linear-gradient(transparent 56%,rgba(176,84,45,.26) 56%);
 @media(max-width:1020px){.ais-pgrid--3{grid-template-columns:repeat(2,1fr);}}
 .ais-nosignal .ais-ico{width:32px;height:32px;}
 .ais-pgrid--3 .ais-pcard__media{aspect-ratio:4/3;}
+
+/* Anteprima bozza (admin) */
+.ais-previewbar{position:fixed;left:50%;top:84px;transform:translateX(-50%);z-index:1200;background:var(--ais-ochre);color:#fff;
+  padding:8px 18px;border-radius:999px;font:600 13px Inter,system-ui,sans-serif;box-shadow:0 8px 24px -8px rgba(0,0,0,.4);}

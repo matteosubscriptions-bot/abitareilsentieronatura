@@ -329,6 +329,26 @@
     initPeek();
   }
 
+  // Dati: window.AIS_DATA (events.js). Con ?preview=1 usa la bozza salvata da admin.html.
+  var PREVIEW = /[?&]preview=1/.test(location.search);
+  function getData() {
+    if (PREVIEW) {
+      try {
+        var pv = JSON.parse(localStorage.getItem("ais_preview") || "null");
+        if (pv && pv.experiences && pv.events) return pv;
+      } catch (e) {}
+    }
+    return window.AIS_DATA;
+  }
+  if (PREVIEW) {
+    document.addEventListener("DOMContentLoaded", function () {
+      var b = document.createElement("div");
+      b.className = "ais-previewbar";
+      b.textContent = "Anteprima bozza \u2014 non ancora pubblicata";
+      document.body.appendChild(b);
+    });
+  }
+
   // Date dinamiche: legge window.AIS_DATA (events.js) e confronta con il giorno di oggi.
   //  data-events="calendar"    -> tutte le date future, raggruppate per mese
   //  data-events="upcoming"    -> le prossime N (data-limit) tra tutte le esperienze attive
@@ -358,7 +378,7 @@
   }
 
   function initEvents() {
-    var D = window.AIS_DATA;
+    var D = getData();
     var nodes = document.querySelectorAll("[data-events]");
     if (!D || !D.events || !nodes.length) return;
     var MESI = ["gennaio","febbraio","marzo","aprile","maggio","giugno","luglio","agosto","settembre","ottobre","novembre","dicembre"];
@@ -525,6 +545,61 @@
     document.addEventListener("DOMContentLoaded", initEvents);
   } else {
     initEvents();
+  }
+
+  // Contenuti gestiti da admin.html: domande, info utili, "cosa impari", prezzi.
+  // Il markup statico resta come riserva se i dati mancano o JavaScript non parte.
+  function initContent() {
+    var D = getData();
+    if (!D || !D.experiences) return;
+    function esc(t) {
+      return String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+    function fmt(text, x) {
+      var p = x && x.price;
+      var t = esc(text == null ? "" : text);
+      t = t.replace(/\{early\}/g, p ? p.early : "\u2014").replace(/\{regular\}/g, p ? p.regular : "\u2014").replace(/\{days\}/g, p ? p.daysBefore : "\u2014");
+      t = t.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>").replace(/\[([^\]]+)\]/g, '<span class="todo">[$1]</span>');
+      return t;
+    }
+    function ico(n) { return '<svg class="ais-ico"><use href="#i-' + esc(n) + '"></use></svg>'; }
+    Array.prototype.forEach.call(document.querySelectorAll("[data-content]"), function (node) {
+      var x = D.experiences[node.getAttribute("data-exp")];
+      var kind = node.getAttribute("data-content");
+      if (!x) return;
+      var list = x[kind];
+      if (!list || !list.length) return;
+      var html = "";
+      if (kind === "faq") {
+        html = list.map(function (f) { return "<details><summary>" + fmt(f.q, x) + "</summary><p>" + fmt(f.a, x) + "</p></details>"; }).join("");
+      } else if (kind === "info") {
+        html = list.map(function (r) {
+          return '<div class="ais-data__row"><div class="ais-data__k">' + (r.ico ? ico(r.ico) : "") + esc(r.k) + '</div><div class="ais-data__v">' + fmt(r.v, x) + "</div></div>";
+        }).join("");
+      } else if (kind === "learn") {
+        html = list.map(function (c) {
+          return '<article class="ais-pcard"><div class="ais-pcard__media"><img alt="" src="' + esc(c.img) + '" loading="lazy"/></div><div class="ais-pcard__body"><h3>' +
+            ico(c.icon || "sparkles") + esc(c.title) + '</h3><ul class="ais-pcard__chips">' +
+            (c.chips || []).map(function (ch) { return "<li>" + esc(ch) + "</li>"; }).join("") + "</ul></div></article>";
+        }).join("");
+        node.classList.toggle("ais-pgrid--3", list.length === 3 || list.length === 6);
+      } else { return; }
+      node.innerHTML = html;
+      node.setAttribute("data-content-ready", "true");
+    });
+    Array.prototype.forEach.call(document.querySelectorAll("[data-price]"), function (n) {
+      var x = D.experiences[n.getAttribute("data-exp")];
+      var p = x && x.price;
+      if (!p) return;
+      var k = n.getAttribute("data-price");
+      var v = k === "early" ? p.early : k === "regular" ? p.regular : p.daysBefore;
+      if (v != null) n.textContent = v;
+    });
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initContent);
+  } else {
+    initContent();
   }
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", initStickyCta);

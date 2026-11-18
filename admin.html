@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="robots" content="noindex, nofollow"/>
+<title>Gestione esperienze · Abitare il Sentiero</title>
+<link rel="icon" href="favicon.ico"/>
+<style>
+:root{--forest:#2d5a27;--forest-deep:#1f3d1a;--cream:#fdfbf7;--sand:#f5f0e8;--sand-dark:#e6dccb;--earth:#c4a97d;--ink:#26261f;--muted:#5c5c52;
+  --ochre:#b0542d;--ochre-deep:#8f4321;--ok:#2d6a3a;--err:#a4262c;--line:#e2d9c8;}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--sand);color:var(--ink);font:15px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;}
+button,input,select,textarea{font:inherit;color:inherit}
+.top{position:sticky;top:0;z-index:20;background:var(--forest-deep);color:#fff;display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:12px 20px;}
+.top h1{font:500 22px "Cormorant Garamond",Georgia,serif;margin:0 auto 0 0;letter-spacing:.01em}
+.top h1 small{font:400 12px Inter,sans-serif;opacity:.7;margin-left:8px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;font-size:12.5px;font-weight:600;background:rgba(255,255,255,.14)}
+.chip.dirty{background:var(--ochre)}
+.chip.err{background:var(--err)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:40px;padding:8px 16px;border-radius:999px;border:1.5px solid var(--forest);background:#fff;color:var(--forest-deep);font-weight:600;cursor:pointer;font-size:14px;text-decoration:none}
+.btn:hover{background:var(--sand)}
+.btn:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--ochre);outline-offset:2px}
+.btn.primary{background:var(--ochre);border-color:var(--ochre);color:#fff}
+.btn.primary:hover{background:var(--ochre-deep)}
+.btn.ghost{background:transparent;border-color:rgba(255,255,255,.5);color:#fff}
+.btn.ghost:hover{background:rgba(255,255,255,.12)}
+.btn.sm{min-height:32px;padding:4px 12px;font-size:13px}
+.btn.danger{border-color:var(--err);color:var(--err)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.layout{display:grid;grid-template-columns:270px 1fr;gap:20px;max-width:1280px;margin:0 auto;padding:20px}
+aside{position:sticky;top:76px;align-self:start;background:#fff;border:1px solid var(--line);border-radius:16px;padding:10px;max-height:calc(100vh - 96px);overflow:auto}
+aside h2{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:10px 10px 6px}
+.exp{display:block;width:100%;text-align:left;border:0;background:transparent;border-radius:10px;padding:9px 10px;cursor:pointer}
+.exp:hover{background:var(--sand)}
+.exp[aria-current="true"]{background:var(--forest-deep);color:#fff}
+.exp b{display:block;font-weight:600}
+.exp span{font-size:12px;opacity:.75}
+.tag{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:999px;background:var(--sand-dark);color:var(--forest-deep);margin-right:4px}
+.exp[aria-current="true"] .tag{background:rgba(255,255,255,.2);color:#fff}
+.tag.off{background:#eadad2;color:var(--ochre-deep)}
+main{min-width:0}
+.panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px}
+.panel h2{font:500 28px "Cormorant Garamond",Georgia,serif;margin:0 0 4px;color:var(--forest-deep)}
+.panel .sub{color:var(--muted);margin:0 0 16px}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 18px;border-bottom:1px solid var(--line);padding-bottom:12px}
+.tab{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:7px 16px;cursor:pointer;font-weight:600;font-size:14px}
+.tab[aria-selected="true"]{background:var(--forest-deep);border-color:var(--forest-deep);color:#fff}
+.tab i{font-style:normal;opacity:.7;font-weight:500;margin-left:4px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+label.f{display:block;font-size:12.5px;font-weight:600;color:var(--muted)}
+label.f>span{display:block;margin-bottom:4px}
+input[type=text],input[type=number],input[type=date],input[type=password],select,textarea{width:100%;padding:9px 11px;border:1.5px solid var(--sand-dark);border-radius:10px;background:#fff;min-height:40px}
+textarea{resize:vertical;min-height:70px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.hint{font-size:13px;color:var(--muted);background:var(--sand);border-radius:10px;padding:9px 12px;margin:0 0 14px}
+.hint code{background:#fff;padding:1px 5px;border-radius:5px;border:1px solid var(--line);font-size:12.5px}
+.item{border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px;background:var(--cream)}
+.item .tools{display:flex;gap:6px;justify-content:flex-end;margin-top:8px}
+.check{display:flex;align-items:center;gap:10px;font-weight:600}
+.check input{width:20px;height:20px}
+table{width:100%;border-collapse:collapse}
+th{font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);text-align:left;padding:4px 6px}
+td{padding:5px 6px;vertical-align:top}
+tr.past td{opacity:.55}
+tr.bad input{border-color:var(--err)}
+.err-t{color:var(--err);font-size:12.5px;margin-top:2px}
+.thumb{width:84px;height:64px;border-radius:8px;object-fit:cover;background:var(--sand-dark);flex:none}
+.empty{padding:24px;text-align:center;color:var(--muted);border:1.5px dashed var(--sand-dark);border-radius:12px}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--forest-deep);color:#fff;padding:11px 20px;border-radius:999px;font-weight:600;z-index:60;box-shadow:0 10px 30px -8px rgba(0,0,0,.4);max-width:90vw}
+.toast.bad{background:var(--err)}
+dialog{border:0;border-radius:18px;padding:0;width:min(560px,94vw);box-shadow:0 30px 80px -20px rgba(0,0,0,.5)}
+dialog::backdrop{background:rgba(20,28,18,.55)}
+dialog form{padding:24px}
+dialog h3{font:500 26px "Cormorant Garamond",Georgia,serif;margin:0 0 6px;color:var(--forest-deep)}
+.errs{background:#fbeaea;border:1px solid #e5b9bb;border-radius:10px;padding:10px 14px;margin:0 0 14px;color:#6d1b20;font-size:13.5px}
+.errs ul{margin:6px 0 0;padding-left:18px}
+.log{font-size:13.5px;margin-top:12px;padding:10px 12px;border-radius:10px;background:var(--sand);white-space:pre-wrap}
+.log.ok{background:#e4f1e6;color:#1d4a28}
+.log.bad{background:#fbeaea;color:#6d1b20}
+@media(max-width:860px){.layout{grid-template-columns:1fr;padding:12px}.top{position:static}aside{position:static;max-height:none;padding:6px}aside h2{display:none}#side{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px}.exp{flex:none;width:auto;white-space:nowrap;border:1.5px solid var(--line)}
+  .top{padding:10px 12px}.panel{padding:16px}
+  table,thead,tbody,tr,td{display:block}thead{display:none}tr{border:1px solid var(--line);border-radius:12px;padding:8px;margin-bottom:10px;background:var(--cream)}
+  td{padding:4px 2px}td::before{content:attr(data-l);display:block;font-size:11.5px;font-weight:600;color:var(--muted)}}
+</style>
+</head>
+<body>
+<header class="top">
+  <h1>Gestione esperienze<small>Abitare il Sentiero</small></h1>
+  <span class="chip" id="status">Nessuna modifica</span>
+  <a class="btn ghost sm" href="index.html" target="_blank" rel="noopener">Apri il sito</a>
+  <button class="btn ghost sm" id="b-import" type="button">Importa</button>
+  <button class="btn ghost sm" id="b-download" type="button">Scarica events.js</button>
+  <button class="btn ghost sm" id="b-reset" type="button">Annulla modifiche</button>
+  <button class="btn primary" id="b-publish" type="button">Pubblica sul sito</button>
+  <input type="file" id="file" accept=".js,.json,.txt" hidden/>
+</header>
+
+<div class="layout">
+  <aside aria-label="Esperienze"><h2>Esperienze</h2><div id="side"></div></aside>
+  <main id="main" aria-live="polite"></main>
+</div>
+
+<dialog id="pub">
+  <form method="dialog" id="pub-form">
+    <h3>Pubblica sul sito</h3>
+    <p class="sub" style="margin:0 0 14px;color:var(--muted)">Salva <code>events.js</code> nel repository GitHub: il sito si aggiorna quando il repository viene ripubblicato dal tuo hosting.</p>
+    <div id="pub-errs"></div>
+    <div class="grid" style="margin-bottom:12px">
+      <label class="f"><span>Repository (utente/nome)</span><input type="text" id="p-repo" autocomplete="off"/></label>
+      <label class="f"><span>Branch</span><input type="text" id="p-branch" autocomplete="off"/></label>
+    </div>
+    <label class="f" style="margin-bottom:12px"><span>Token GitHub (permesso “Contents: Read and write” solo su questo repository)</span><input type="password" id="p-token" autocomplete="off" placeholder="github_pat_…"/></label>
+    <label class="check" style="font-weight:500;margin-bottom:14px"><input type="checkbox" id="p-remember"/> Ricorda il token su questo browser</label>
+    <div class="row" style="justify-content:flex-end">
+      <button class="btn" type="button" id="p-cancel">Chiudi</button>
+      <button class="btn primary" type="button" id="p-go">Pubblica ora</button>
+    </div>
+    <div id="p-log" class="log" hidden></div>
+  </form>
+</dialog>
+
+<script src="events.js"></script>
+<script>
+(function () {
+  "use strict";
+  var DRAFT_KEY = "ais_admin_draft", CFG_KEY = "ais_admin_cfg";
+  var TYPES = { soglia: "Soglia", avventura: "Avventura", immersione: "Immersione" };
+  var ICONS = ["fire","leaf","eye","heart","moon","tent","compass","hand","sparkles","route","idea","drop","users","clock","pin","calendar"];
+  var IMAGES = ["accendi-fuoco","cammino-cerchio","cammino-giorno2","escape-the-city","full-avventura","full-bosco","full-natura","furgone","hero-forest","mappa-viaggio","agricoltura","cammino-eroe","convivenza","full-abitare","full-cammino","full-fuoco","abitare-sentiero","via-degli-dei"];
+  var HEADER = '/* Abitare il Sentiero — DATI DELLE ESPERIENZE (unica fonte)\n' +
+    '   ------------------------------------------------------------------\n' +
+    '   Questo file si modifica dalla pagina  admin.html  (consigliato) oppure a mano.\n' +
+    '   Da qui si aggiornano da sole: Calendario, "prossime 3 esperienze", date, prezzi,\n' +
+    '   domande frequenti, info utili e "cosa impari" di ogni pagina esperienza.\n' +
+    '   Le date passate spariscono da sole (si confronta con il giorno di oggi).\n\n' +
+    '   Per ogni esperienza (experiences):\n' +
+    '   - name, type (soglia|avventura|immersione), duration, place, url, img\n' +
+    '   - active: false = nascosta (non compare in calendario / "prossime date")\n' +
+    '   - price: { early, regular, daysBefore } = prezzo early bird fino a N giorni prima, poi intero\n' +
+    '   - info: righe "Info utili" [{ k, v, ico? }]    - faq: [{ q, a }]\n' +
+    '   - learn: card "Cosa impari" [{ img, icon, title, chips[] }]\n' +
+    '   Nei testi: **grassetto**, [testo da completare] (evidenziato), {early} {regular} {days} (dal prezzo).\n' +
+    '   Per ogni data (events): exp, start, end?, place? (luogo di quella data), note?  — formato date AAAA-MM-GG.\n' +
+    '   Script classico (niente type="module"). Le date sono INDICATIVE: da confermare. */\n';
+
+  function clone(o) { return JSON.parse(JSON.stringify(o)); }
+  function $(id) { return document.getElementById(id); }
+  function el(tag, attrs, kids) {
+    var n = document.createElement(tag);
+    Object.keys(attrs || {}).forEach(function (k) {
+      var v = attrs[k];
+      if (v == null || v === false) return;
+      if (k === "class") n.className = v;
+      else if (k === "text") n.textContent = v;
+      else if (k.slice(0, 2) === "on") n.addEventListener(k.slice(2), v);
+      else if (k === "value") n.value = v;
+      else n.setAttribute(k, v === true ? "" : v);
+    });
+    (kids || []).forEach(function (c) { if (c != null) n.appendChild(typeof c === "string" ? document.createTextNode(c) : c); });
+    return n;
+  }
+
+  var PUBLISHED = clone(window.AIS_DATA);
+  var data = clone(PUBLISHED);
+  var cur = Object.keys(data.experiences)[0];
+  var tab = "generale";
+  var restored = false;
+
+  try {
+    var d = JSON.parse(localStorage.getItem(DRAFT_KEY) || "null");
+    if (d && d.experiences && d.events) { data = d; restored = true; }
+  } catch (e) {}
+  if (!data.experiences[cur]) cur = Object.keys(data.experiences)[0];
+
+  /* ------------------------------------------------ normalizzazione / build */
+  function clean(o) {
+    var x = clone(o);
+    Object.keys(x.experiences).forEach(function (s) {
+      var e = x.experiences[s];
+      if (e.price && !(e.price.early > 0 || e.price.regular > 0)) delete e.price;
+      if (e.price) {
+        e.price.early = Number(e.price.early) || 0;
+        e.price.regular = Number(e.price.regular) || 0;
+        e.price.daysBefore = Math.max(0, parseInt(e.price.daysBefore, 10) || 0);
+      }
+      (e.info || []).forEach(function (r) { if (!r.ico) delete r.ico; });
+      if (!e.info || !e.info.length) delete e.info;
+      if (!e.faq || !e.faq.length) delete e.faq;
+      if (!e.learn || !e.learn.length) delete e.learn;
+      if (!e.img) delete e.img;
+    });
+    x.events = x.events.map(function (v) {
+      var r = { exp: v.exp, start: v.start };
+      if (v.end && v.end !== v.start) r.end = v.end;
+      if (v.place) r.place = v.place;
+      if (v.note) r.note = v.note;
+      return r;
+    }).sort(function (a, b) { return a.start < b.start ? -1 : a.start > b.start ? 1 : (a.exp < b.exp ? -1 : 1); });
+    return x;
+  }
+  function build(o) { return HEADER + "window.AIS_DATA = " + JSON.stringify(clean(o), null, 2) + ";\n"; }
+  function isDirty() { return JSON.stringify(clean(data)) !== JSON.stringify(clean(PUBLISHED)); }
+
+  /* ------------------------------------------------ validazione */
+  function isDate(s) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(s || "")) return false;
+    var p = s.split("-"), d = new Date(+p[0], +p[1] - 1, +p[2]);
+    return d.getFullYear() === +p[0] && d.getMonth() === +p[1] - 1 && d.getDate() === +p[2];
+  }
+  function validate() {
+    var errs = [];
+    Object.keys(data.experiences).forEach(function (s) {
+      var e = data.experiences[s], n = e.name || s;
+      if (!e.name) errs.push(s + ": manca il nome");
+      if (!e.duration) errs.push(n + ": manca la durata");
+      if (e.price) {
+        if (!(Number(e.price.early) > 0) || !(Number(e.price.regular) > 0)) errs.push(n + ": prezzo early e intero devono essere maggiori di zero");
+        else if (Number(e.price.early) > Number(e.price.regular)) errs.push(n + ": il prezzo early bird è più alto di quello intero");
+      }
+      (e.faq || []).forEach(function (f, i) { if (!f.q || !f.a) errs.push(n + ": domanda " + (i + 1) + " incompleta"); });
+      (e.info || []).forEach(function (r, i) { if (!r.k || !r.v) errs.push(n + ": riga info " + (i + 1) + " incompleta"); });
+      (e.learn || []).forEach(function (c, i) { if (!c.title || !c.img) errs.push(n + ": card “cosa impari” " + (i + 1) + " incompleta"); });
+    });
+    data.events.forEach(function (v) {
+      var n = (data.experiences[v.exp] || {}).name || v.exp;
+      if (!isDate(v.start)) errs.push(n + ": data di inizio non valida");
+      else if (v.end && !isDate(v.end)) errs.push(n + " " + v.start + ": data di fine non valida");
+      else if (v.end && v.end < v.start) errs.push(n + " " + v.start + ": la fine è prima dell’inizio");
+    });
+    return errs;
+  }
+
+  /* ------------------------------------------------ stato / bozza */
+  var saveT;
+  function touch() {
+    clearTimeout(saveT);
+    saveT = setTimeout(function () { try { localStorage.setItem(DRAFT_KEY, JSON.stringify(data)); } catch (e) {} }, 250);
+    status();
+  }
+  function status() {
+    var s = $("status"), errs = validate().length;
+    if (errs) { s.className = "chip err"; s.textContent = errs + (errs === 1 ? " controllo da sistemare" : " controlli da sistemare"); }
+    else if (isDirty()) { s.className = "chip dirty"; s.textContent = "Modifiche non pubblicate"; }
+    else { s.className = "chip"; s.textContent = "Nessuna modifica"; }
+  }
+  function toast(msg, bad) {
+    var t = el("div", { class: "toast" + (bad ? " bad" : ""), role: "status", text: msg });
+    document.body.appendChild(t);
+    setTimeout(function () { t.remove(); }, 3200);
+  }
+
+  /* ------------------------------------------------ campi riusabili */
+  function inp(obj, key, o) {
+    o = o || {};
+    var i = el("input", { type: o.type || "text", placeholder: o.ph || "", inputmode: o.inputmode, min: o.min, step: o.step });
+    i.value = obj[key] == null ? "" : obj[key];
+    i.addEventListener("input", function () {
+      var v = i.value;
+      if (o.type === "number") v = v === "" ? "" : Number(v);
+      obj[key] = v; touch(); if (o.after) o.after();
+    });
+    return i;
+  }
+  function area(obj, key, rows) {
+    var t = el("textarea", { rows: rows || 3 });
+    t.value = obj[key] == null ? "" : obj[key];
+    t.addEventListener("input", function () { obj[key] = t.value; touch(); });
+    return t;
+  }
+  function field(label, node) { return el("label", { class: "f" }, [el("span", { text: label }), node]); }
+  function sel(obj, key, options, o) {
+    var s = el("select");
+    options.forEach(function (op) {
+      var c = el("option", { value: op[0], text: op[1] });
+      if ((obj[key] || "") === op[0]) c.selected = true;
+      s.appendChild(c);
+    });
+    s.addEventListener("change", function () { obj[key] = s.value; touch(); if (o && o.after) o.after(); });
+    return s;
+  }
+  function move(arr, i, d) {
+    var j = i + d;
+    if (j < 0 || j >= arr.length) return;
+    var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+    touch(); render();
+  }
+  function tools(arr, i) {
+    return el("div", { class: "tools" }, [
+      el("button", { class: "btn sm", type: "button", "aria-label": "Sposta su", text: "↑", onclick: function () { move(arr, i, -1); } }),
+      el("button", { class: "btn sm", type: "button", "aria-label": "Sposta giù", text: "↓", onclick: function () { move(arr, i, 1); } }),
+      el("button", { class: "btn sm danger", type: "button", text: "Elimina", onclick: function () { arr.splice(i, 1); touch(); render(); } })
+    ]);
+  }
+  var FMT = el("p", { class: "hint" });
+  FMT.innerHTML = 'Nei testi: <code>**grassetto**</code> · <code>[da completare]</code> viene evidenziato · <code>{early}</code> <code>{regular}</code> <code>{days}</code> si riempiono con il prezzo dell’esperienza.';
+  function fmtHint() { return FMT.cloneNode(true); }
+
+  /* ------------------------------------------------ tab */
+  function tabGenerale(e) {
+    var imgs = [["", "— nessuna —"]].concat(IMAGES.map(function (n) { return ["images/" + n + ".jpg", n]; }));
+    if (e.img && !imgs.some(function (o) { return o[0] === e.img; })) imgs.push([e.img, e.img]);
+    var thumb = el("img", { class: "thumb", alt: "", src: e.img || "" });
+    var imgSel = sel(e, "img", imgs, { after: function () { thumb.src = e.img || ""; } });
+    var act = el("input", { type: "checkbox" }); act.checked = e.active !== false;
+    act.addEventListener("change", function () { e.active = act.checked; touch(); renderSide(); });
+    return el("div", {}, [
+      el("div", { class: "grid" }, [
+        field("Nome", inp(e, "name", { after: renderSide })),
+        field("Tipologia", sel(e, "type", Object.keys(TYPES).map(function (k) { return [k, TYPES[k]]; }), { after: renderSide })),
+        field("Durata (es. 2 giorni)", inp(e, "duration")),
+        field("Luogo di base (se una data non ne ha uno proprio)", inp(e, "place")),
+        field("Pagina (file)", inp(e, "url")),
+        field("Foto nelle card del calendario", el("div", { class: "row", style: "flex-wrap:nowrap" }, [imgSel, thumb]))
+      ]),
+      el("label", { class: "check", style: "margin-top:18px" }, [act, document.createTextNode("Mostra nel calendario e nelle “prossime date”")]),
+      el("p", { class: "sub", style: "margin-top:6px;font-size:13px", text: "Se è spuntato nascosto, la pagina resta raggiungibile solo con il link diretto." })
+    ]);
+  }
+
+  function tabPrezzo(e) {
+    var box = el("div");
+    function draw() {
+      box.innerHTML = "";
+      var has = !!e.price;
+      var c = el("input", { type: "checkbox" }); c.checked = has;
+      c.addEventListener("change", function () {
+        e.price = c.checked ? (e.price || { early: 0, regular: 0, daysBefore: 15 }) : null;
+        if (!c.checked) delete e.price;
+        touch(); draw(); renderSide();
+      });
+      box.appendChild(el("label", { class: "check" }, [c, document.createTextNode("Mostra il prezzo in chiaro per questa esperienza")]));
+      if (!has) {
+        box.appendChild(el("p", { class: "sub", style: "margin-top:8px", text: "Senza prezzo, le pagine mostrano “Scrivimi per il prezzo” (se così scritto nelle info utili)." }));
+        return;
+      }
+      var ex = el("p", { class: "hint", style: "margin-top:14px" });
+      function example() {
+        var next = data.events.filter(function (v) { return v.exp === cur && isDate(v.start) && v.start >= todayStr(); })
+          .sort(function (a, b) { return a.start < b.start ? -1 : 1; })[0];
+        var p = e.price;
+        var t = "Intero €" + (p.regular || "—") + " · Early bird €" + (p.early || "—");
+        if (next && p.daysBefore >= 0) {
+          var dd = new Date(next.start + "T00:00:00"); dd.setDate(dd.getDate() - (parseInt(p.daysBefore, 10) || 0));
+          t += " — per la prossima data (" + it(next.start) + ") l’early bird vale fino al " + it(fixLocal(dd));
+        }
+        ex.textContent = t + ".";
+      }
+      box.appendChild(el("div", { class: "grid", style: "margin-top:14px" }, [
+        field("Prezzo intero (€)", inp(e.price, "regular", { type: "number", min: 0, step: 1, inputmode: "numeric", after: example })),
+        field("Prezzo early bird (€)", inp(e.price, "early", { type: "number", min: 0, step: 1, inputmode: "numeric", after: example })),
+        field("Early bird fino a … giorni prima della data", inp(e.price, "daysBefore", { type: "number", min: 0, step: 1, inputmode: "numeric", after: example }))
+      ]));
+      box.appendChild(ex);
+      example();
+      box.appendChild(el("p", { class: "sub", style: "font-size:13px", text: "Il prezzo si aggiorna in automatico in calendario, nelle date e nelle pagine che usano {early} {regular} {days}." }));
+    }
+    draw();
+    return box;
+  }
+  function todayStr() { var n = new Date(); return fixLocal(n); }
+  function fixLocal(d) { return d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2); }
+  function it(s) { var p = s.split("-"); return p[2] + "/" + p[1] + "/" + p[0]; }
+
+  function tabDate(e) {
+    var rows = data.events.filter(function (v) { return v.exp === cur; });
+    var wrap = el("div");
+    wrap.appendChild(el("p", { class: "hint", text: "Una riga per ogni data. “Luogo” vale solo per quella data (se vuoto si usa il luogo di base: " + (e.place || "—") + "). “Etichetta” è una nota breve, es. Pochi posti. Le date passate spariscono da sole dal sito." }));
+    if (!rows.length) wrap.appendChild(el("div", { class: "empty", text: "Nessuna data. Aggiungine una." }));
+    else {
+      var tb = el("tbody");
+      rows.forEach(function (v) {
+        var past = isDate(v.start) && (v.end && isDate(v.end) ? v.end : v.start) < todayStr();
+        var bad = !isDate(v.start) || (v.end && (!isDate(v.end) || v.end < v.start));
+        var tr = el("tr", { class: (past ? "past " : "") + (bad ? "bad" : "") });
+        function td(l, n) { return el("td", { "data-l": l }, [n]); }
+        tr.appendChild(td("Inizio", inp(v, "start", { type: "date", after: render })));
+        tr.appendChild(td("Fine (se più giorni)", inp(v, "end", { type: "date", after: render })));
+        tr.appendChild(td("Luogo di questa data", inp(v, "place", { ph: e.place || "" })));
+        tr.appendChild(td("Etichetta", inp(v, "note", { ph: "es. Pochi posti" })));
+        var act = el("td", { "data-l": "" }, [el("button", { class: "btn sm danger", type: "button", text: "Elimina", onclick: function () { data.events.splice(data.events.indexOf(v), 1); touch(); render(); } })]);
+        tr.appendChild(act);
+        if (past) tr.firstChild.appendChild(el("div", { class: "err-t", style: "color:var(--muted)", text: "passata" }));
+        if (bad) tr.firstChild.appendChild(el("div", { class: "err-t", text: !isDate(v.start) ? "Data non valida" : "Controlla la data di fine" }));
+        tb.appendChild(tr);
+      });
+      wrap.appendChild(el("table", {}, [el("thead", {}, [el("tr", {}, ["Inizio", "Fine", "Luogo", "Etichetta", ""].map(function (t) { return el("th", { text: t }); }))]), tb]));
+    }
+    wrap.appendChild(el("div", { class: "row", style: "margin-top:14px" }, [
+      el("button", { class: "btn", type: "button", text: "+ Aggiungi data", onclick: function () {
+        var d = new Date(); d.setDate(d.getDate() + 30);
+        data.events.push({ exp: cur, start: fixLocal(d) }); touch(); render();
+      } }),
+      el("button", { class: "btn", type: "button", text: "Ordina per data", onclick: function () {
+        var mine = data.events.filter(function (v) { return v.exp === cur; }).sort(function (a, b) { return a.start < b.start ? -1 : 1; });
+        var others = data.events.filter(function (v) { return v.exp !== cur; });
+        data.events = others.concat(mine); touch(); render();
+      } })
+    ]));
+    return wrap;
+  }
+
+  function tabFaq(e) {
+    e.faq = e.faq || [];
+    var wrap = el("div", {}, [fmtHint()]);
+    if (!e.faq.length) wrap.appendChild(el("div", { class: "empty", text: "Nessuna domanda: la pagina mostra quelle scritte nel testo originale." }));
+    e.faq.forEach(function (f, i) {
+      wrap.appendChild(el("div", { class: "item" }, [
+        field("Domanda", inp(f, "q")),
+        el("div", { style: "height:8px" }),
+        field("Risposta", area(f, "a", 3)),
+        tools(e.faq, i)
+      ]));
+    });
+    wrap.appendChild(el("button", { class: "btn", type: "button", text: "+ Aggiungi domanda", onclick: function () { e.faq.push({ q: "", a: "" }); touch(); render(); } }));
+    return wrap;
+  }
+
+  function tabInfo(e) {
+    e.info = e.info || [];
+    var wrap = el("div", {}, [fmtHint()]);
+    if (!e.info.length) wrap.appendChild(el("div", { class: "empty", text: "Nessuna riga." }));
+    e.info.forEach(function (r, i) {
+      wrap.appendChild(el("div", { class: "item" }, [
+        el("div", { class: "grid", style: "grid-template-columns:1fr 160px" }, [
+          field("Titolo della riga (es. Durata)", inp(r, "k")),
+          field("Icona", sel(r, "ico", [["", "— nessuna —"]].concat(ICONS.map(function (n) { return [n, n]; }))))
+        ]),
+        el("div", { style: "height:8px" }),
+        field("Testo", area(r, "v", 2)),
+        tools(e.info, i)
+      ]));
+    });
+    wrap.appendChild(el("button", { class: "btn", type: "button", text: "+ Aggiungi riga", onclick: function () { e.info.push({ k: "", v: "" }); touch(); render(); } }));
+    return wrap;
+  }
+
+  function tabLearn(e) {
+    e.learn = e.learn || [];
+    var wrap = el("div", {}, [el("p", { class: "hint", text: "Le card con foto della sezione “Cosa impari / Cosa ti resta”. Le parole chiave si scrivono separate da virgola." })]);
+    if (!e.learn.length) wrap.appendChild(el("div", { class: "empty", text: "Nessuna card." }));
+    e.learn.forEach(function (c, i) {
+      var imgs = IMAGES.map(function (n) { return ["images/" + n + ".jpg", n]; });
+      if (c.img && !imgs.some(function (o) { return o[0] === c.img; })) imgs.push([c.img, c.img]);
+      var thumb = el("img", { class: "thumb", alt: "", src: c.img || "" });
+      var chips = el("input", { type: "text", placeholder: "es. Fuoco, Nodi, Campo base" });
+      chips.value = (c.chips || []).join(", ");
+      chips.addEventListener("input", function () {
+        c.chips = chips.value.split(",").map(function (s) { return s.trim(); }).filter(Boolean); touch();
+      });
+      wrap.appendChild(el("div", { class: "item" }, [
+        el("div", { class: "grid", style: "grid-template-columns:1fr 160px" }, [
+          field("Titolo", inp(c, "title")),
+          field("Icona", sel(c, "icon", ICONS.map(function (n) { return [n, n]; })))
+        ]),
+        el("div", { style: "height:8px" }),
+        el("div", { class: "row", style: "flex-wrap:nowrap;align-items:flex-end" }, [
+          el("div", { style: "flex:1" }, [field("Foto", sel(c, "img", imgs, { after: function () { thumb.src = c.img || ""; } }))]),
+          thumb
+        ]),
+        el("div", { style: "height:8px" }),
+        field("Parole chiave", chips),
+        tools(e.learn, i)
+      ]));
+    });
+    wrap.appendChild(el("button", { class: "btn", type: "button", text: "+ Aggiungi card", onclick: function () { e.learn.push({ img: "images/full-bosco.jpg", icon: "leaf", title: "", chips: [] }); touch(); render(); } }));
+    return wrap;
+  }
+
+  /* ------------------------------------------------ render */
+  var TABS = [["generale", "Generale"], ["prezzo", "Prezzo"], ["date", "Date e luoghi"], ["faq", "Domande"], ["info", "Info utili"], ["learn", "Cosa impari"]];
+  function count(e, k) {
+    if (k === "date") return data.events.filter(function (v) { return v.exp === cur; }).length;
+    if (k === "faq" || k === "info" || k === "learn") return (e[k] || []).length;
+    return null;
+  }
+  function renderSide() {
+    var s = $("side"); s.innerHTML = "";
+    Object.keys(data.experiences).forEach(function (slug) {
+      var e = data.experiences[slug];
+      var n = data.events.filter(function (v) { return v.exp === slug && v.start >= todayStr(); }).length;
+      var b = el("button", { class: "exp", type: "button", "aria-current": slug === cur ? "true" : "false", onclick: function () { cur = slug; render(); } }, [
+        el("b", { text: e.name || slug }),
+        el("span", {}, [el("span", { class: "tag", text: TYPES[e.type] || e.type }), e.active === false ? el("span", { class: "tag off", text: "nascosta" }) : null, document.createTextNode(n + (n === 1 ? " data" : " date"))])
+      ]);
+      s.appendChild(b);
+    });
+  }
+  function render() {
+    renderSide();
+    var e = data.experiences[cur];
+    var m = $("main"); m.innerHTML = "";
+    var tabs = el("div", { class: "tabs", role: "tablist" }, TABS.map(function (t) {
+      var c = count(e, t[0]);
+      return el("button", { class: "tab", type: "button", role: "tab", "aria-selected": String(t[0] === tab), onclick: function () { tab = t[0]; render(); } },
+        [document.createTextNode(t[1]), c != null ? el("i", { text: "(" + c + ")" }) : null]);
+    }));
+    var body = { generale: tabGenerale, prezzo: tabPrezzo, date: tabDate, faq: tabFaq, info: tabInfo, learn: tabLearn }[tab](e);
+    m.appendChild(el("div", { class: "panel" }, [
+      el("div", { class: "row", style: "justify-content:space-between" }, [
+        el("div", {}, [el("h2", { text: e.name || cur }), el("p", { class: "sub", text: (TYPES[e.type] || "") + " · " + (e.duration || "") })]),
+        el("div", { class: "row" }, [
+          el("button", { class: "btn sm", type: "button", text: "Anteprima di questa pagina", onclick: function () { preview(e.url || "index.html"); } })
+        ])
+      ]),
+      tabs, body
+    ]));
+    status();
+  }
+
+  function preview(page) {
+    try { localStorage.setItem("ais_preview", JSON.stringify(clean(data))); } catch (e) { toast("Anteprima non disponibile in questo browser", true); return; }
+    window.open(page + "?preview=1", "_blank");
+  }
+
+  /* ------------------------------------------------ azioni globali */
+  $("b-download").addEventListener("click", function () {
+    var blob = new Blob([build(data)], { type: "text/javascript" });
+    var a = el("a", { href: URL.createObjectURL(blob), download: "events.js" });
+    document.body.appendChild(a); a.click(); a.remove();
+  });
+  $("b-reset").addEventListener("click", function () {
+    if (!isDirty() && !restored) { toast("Non ci sono modifiche da annullare"); return; }
+    if (!confirm("Annullare tutte le modifiche non pubblicate?")) return;
+    data = clone(PUBLISHED); restored = false;
+    try { localStorage.removeItem(DRAFT_KEY); } catch (e) {}
+    render(); toast("Modifiche annullate");
+  });
+  $("b-import").addEventListener("click", function () { $("file").click(); });
+  $("file").addEventListener("change", function (ev) {
+    var f = ev.target.files[0]; if (!f) return;
+    var r = new FileReader();
+    r.onload = function () {
+      try {
+        var t = String(r.result), i = t.indexOf("window.AIS_DATA");
+        if (i >= 0) t = t.slice(t.indexOf("=", i) + 1, t.lastIndexOf(";"));
+        var o = JSON.parse(t);
+        if (!o.experiences || !o.events) throw new Error("formato");
+        data = o; touch(); render(); toast("File importato");
+      } catch (e) { toast("File non valido: usa un events.js scaricato da questa pagina", true); }
+      $("file").value = "";
+    };
+    r.readAsText(f);
+  });
+
+  /* ------------------------------------------------ pubblicazione GitHub */
+  var cfg = { repo: "matteosubscriptions-bot/abitareilsentieronatura", branch: "main", token: "" };
+  try { var c0 = JSON.parse(localStorage.getItem(CFG_KEY) || "null"); if (c0) { cfg.repo = c0.repo || cfg.repo; cfg.branch = c0.branch || cfg.branch; cfg.token = c0.token || ""; } } catch (e) {}
+
+  function logp(msg, kind) { var l = $("p-log"); l.hidden = false; l.className = "log " + (kind || ""); l.textContent = msg; }
+  $("b-publish").addEventListener("click", function () {
+    var errs = validate(), box = $("pub-errs"); box.innerHTML = "";
+    if (errs.length) {
+      var d = el("div", { class: "errs" }, [el("b", { text: "Sistema prima questi punti:" }), el("ul", {}, errs.slice(0, 12).map(function (x) { return el("li", { text: x }); }))]);
+      box.appendChild(d);
+    }
+    $("p-repo").value = cfg.repo; $("p-branch").value = cfg.branch; $("p-token").value = cfg.token;
+    $("p-remember").checked = !!cfg.token; $("p-log").hidden = true;
+    $("p-go").disabled = errs.length > 0;
+    $("pub").showModal();
+  });
+  $("p-cancel").addEventListener("click", function () { $("pub").close(); });
+  function b64(t) { return btoa(unescape(encodeURIComponent(t))); }
+  $("p-go").addEventListener("click", function () {
+    var repo = $("p-repo").value.trim(), branch = $("p-branch").value.trim() || "main", token = $("p-token").value.trim();
+    if (!/^[\w.-]+\/[\w.-]+$/.test(repo)) { logp("Scrivi il repository come utente/nome.", "bad"); return; }
+    if (!token) { logp("Incolla il token GitHub.", "bad"); return; }
+    var remember = $("p-remember").checked;
+    cfg = { repo: repo, branch: branch, token: remember ? token : "" };
+    try { localStorage.setItem(CFG_KEY, JSON.stringify(cfg)); } catch (e) {}
+    $("p-go").disabled = true; logp("Pubblicazione in corso…");
+    var base = "https://api.github.com/repos/" + repo + "/contents/events.js";
+    var H = { Accept: "application/vnd.github+json", Authorization: "Bearer " + token, "X-GitHub-Api-Version": "2022-11-28" };
+    var text = build(data);
+    fetch(base + "?ref=" + encodeURIComponent(branch), { headers: H })
+      .then(function (r) {
+        if (r.status === 404) return { sha: null };
+        if (!r.ok) throw { status: r.status };
+        return r.json();
+      })
+      .then(function (cur0) {
+        var body = { message: "Aggiornamento contenuti esperienze da admin", content: b64(text), branch: branch };
+        if (cur0.sha) body.sha = cur0.sha;
+        return fetch(base, { method: "PUT", headers: Object.assign({ "Content-Type": "application/json" }, H), body: JSON.stringify(body) });
+      })
+      .then(function (r) { if (!r.ok) throw { status: r.status }; return r.json(); })
+      .then(function () {
+        PUBLISHED = clone(clean(data)); data = clone(PUBLISHED); restored = false;
+        try { localStorage.removeItem(DRAFT_KEY); } catch (e) {}
+        logp("Pubblicato. Il sito si aggiorna appena il repository viene ripubblicato dal tuo hosting (di solito in uno-due minuti).", "ok");
+        render(); $("p-go").disabled = false;
+      })
+      .catch(function (e) {
+        var s = e && e.status, m = "Non sono riuscito a pubblicare.";
+        if (s === 401) m = "Token non valido o scaduto (401).";
+        else if (s === 403) m = "Il token non ha il permesso di scrivere su questo repository (403).";
+        else if (s === 404) m = "Repository o branch non trovato, oppure il token non lo vede (404).";
+        else if (s === 409 || s === 422) m = "Conflitto: il file è cambiato nel frattempo. Riprova (" + s + ").";
+        else if (!s) m = "Connessione a GitHub non riuscita. Controlla la rete e riprova.";
+        logp(m + "\nLe tue modifiche sono salvate in questo browser: puoi anche usare “Scarica events.js”.", "bad");
+        $("p-go").disabled = false;
+      });
+  });
+
+  window.addEventListener("beforeunload", function (ev) { if (isDirty()) { ev.preventDefault(); ev.returnValue = ""; } });
+
+  render();
+  if (restored) toast("Ho recuperato la bozza non pubblicata di questo browser");
+})();
+</script>
+</body>
+</html>

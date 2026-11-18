@@ -34,7 +34,7 @@ config.js · site.js · cookies.js · forms.js · styles.css · images/ · video
 
 ## Date delle esperienze (dinamiche)
 Le date stanno in **un solo file: `events.js`**. Da lì si aggiornano da sole il **Calendario** (`calendario.html`), le
-**"prossime 3 esperienze"** (`esperienze.html`) e le date dentro ogni pagina esperienza. Le date **passate spariscono
+**"prossime 3 esperienze"** (`esperienze.html`), le date, i prezzi, le FAQ, le info utili e il "cosa impari" di ogni pagina esperienza. Le date **passate spariscono
 da sole** (si confronta con il giorno di oggi) e l'**early bird** di Escape (€115 fino a 15 giorni prima, poi €135)
 è calcolato per ogni data. Per aggiungere una data: una riga in `events` (`start`/`end` in formato `AAAA-MM-GG`).
 `active:false` = esperienza nascosta (non compare in calendario/prossime date). Le date attuali sono **indicative (2027)**.
@@ -54,6 +54,20 @@ Le altre 8 pagine esperienza seguono lo **stesso schema**: hero → foto → int
 specifica → card con foto → (recensioni *oppure* "cosa potresti portarti a casa") → banda CTA → galleria → date → info → FAQ →
 altri corsi → CTA, con barra "Prenota" fissa. Le sezioni lunghe "Cosa succede" e "Per chi è" sono state tolte (restano nella
 cronologia git). Le recensioni vere esistono solo per Accendi e La Mappa; nelle altre ci sono esempi dichiarati come tali.
+
+## Pagina di gestione (`admin.html`)
+Apri `admin.html` (non è linkata dal sito ed è `noindex`). Per ogni esperienza gestisci: **generale** (nome, tipologia, durata, luogo di base,
+foto, visibilità), **prezzo** (intero, early bird, giorni prima), **date** con **luogo per ogni data** e etichetta, **domande**, **info utili**
+e **cosa impari**. Tutto finisce in `events.js` (fonte unica) e le pagine si aggiornano da sole.
+- **Anteprima**: il pulsante apre la pagina con `?preview=1` e mostra la bozza, senza pubblicarla.
+- **Pubblica sul sito**: scrive `events.js` nel repository via API GitHub. Serve un *fine-grained token* con permesso **Contents: Read and write**
+  solo su questo repository (GitHub → Settings → Developer settings). Il token si può ricordare solo su questo browser.
+  Alternativa senza token: **Scarica events.js** e sostituisci il file nel repository.
+- Le modifiche non pubblicate restano come bozza nel browser. **Importa** carica un `events.js` scaricato da questa pagina.
+- Nei testi: `**grassetto**`, `[da completare]` (evidenziato), `{early}` `{regular}` `{days}` (si riempiono col prezzo).
+- Nota: l'HTML delle pagine conserva ancora il testo originale come riserva (utile senza JavaScript); quello che vedi sul sito
+  viene da `events.js`. Chi pubblica da `admin.html` non deve toccare l'HTML.
+- Sicurezza: la pagina è pubblica ma senza token non può scrivere nulla; i dati in `events.js` sono comunque pubblici.
 
 ## Pagine temporaneamente nascoste
 Per ora **nessun link** porta a queste 5 pagine (i file restano nel repo, raggiungibili solo con l'URL diretto):
