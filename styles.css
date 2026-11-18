@@ -780,3 +780,21 @@ body{color:var(--ais-ink);}
 /* hero ridotto per le sotto-pagine */
 .ais-hero--short{min-height:60vh;}
 @media(max-width:700px){.ais-hero--short{min-height:70vh;}}
+
+/* --- card "scegli il tuo percorso" a tutta foto (Soglia/Avventura/Immersione) --- */
+.ais-pathgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:42px;}
+.ais-pathcard{position:relative;display:block;border-radius:18px;overflow:hidden;min-height:400px;
+  text-decoration:none;box-shadow:0 14px 38px rgba(31,41,25,.14);}
+.ais-pathcard img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .6s ease;}
+.ais-pathcard:hover img{transform:scale(1.05);}
+.ais-pathcard__scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(12,20,12,.12) 30%,rgba(12,20,12,.82));}
+.ais-pathcard__body{position:absolute;left:0;right:0;bottom:0;padding:28px 26px;color:#fff;}
+.ais-pathcard__dur{display:inline-block;font-family:Inter,system-ui,sans-serif;font-size:11px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--ais-earth);margin-bottom:8px;}
+.ais-pathcard__t{font-family:"Cormorant Garamond",Georgia,serif;font-size:32px;line-height:1.05;color:#fff;margin:0 0 8px;}
+.ais-pathcard__d{font-family:Inter,system-ui,sans-serif;font-size:14.5px;line-height:1.55;color:rgba(255,255,255,.88);margin:0 0 16px;}
+.ais-pathcard__cta{display:inline-flex;align-items:center;gap:.4em;font-family:Inter,system-ui,sans-serif;
+  font-size:14px;font-weight:600;color:#fff;transition:gap .2s ease;}
+.ais-pathcard:hover .ais-pathcard__cta{gap:.75em;}
+.ais-pathcard__cta svg{width:15px;height:15px;}
+@media(max-width:860px){.ais-pathgrid{grid-template-columns:1fr;}.ais-pathcard{min-height:320px;}}
