@@ -798,3 +798,13 @@ body{color:var(--ais-ink);}
 .ais-pathcard:hover .ais-pathcard__cta{gap:.75em;}
 .ais-pathcard__cta svg{width:15px;height:15px;}
 @media(max-width:860px){.ais-pathgrid{grid-template-columns:1fr;}.ais-pathcard{min-height:320px;}}
+
+/* --- Galleria immagini (mosaico) --- */
+.ais-gallery{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:190px;gap:14px;margin-top:40px;}
+.ais-gallery a,.ais-gallery figure{position:relative;margin:0;overflow:hidden;border-radius:14px;background:var(--ais-sand-dark);}
+.ais-gallery img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s ease;}
+.ais-gallery a:hover img,.ais-gallery figure:hover img{transform:scale(1.06);}
+.ais-gallery .g-wide{grid-column:span 2;}
+.ais-gallery .g-tall{grid-row:span 2;}
+@media(max-width:860px){.ais-gallery{grid-template-columns:repeat(2,1fr);grid-auto-rows:150px;}
+  .ais-gallery .g-wide{grid-column:span 2;}.ais-gallery .g-tall{grid-row:span 1;}}
