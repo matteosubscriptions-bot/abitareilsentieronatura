@@ -32,6 +32,14 @@ config.js · site.js · cookies.js · forms.js · styles.css · images/ · video
 - **Immersioni** (con pernotto): **Escape the City** (30h) · Guardiani del Fuoco (18→12) · Via degli Dei (24h) · Elementi di Convivenza (2 gg) · Il Cammino (4 gg)
 - **Percorsi & Comunità**: direzione futura (Cerchio dell'Anno), non prenotabile.
 
+## Pagine temporaneamente nascoste
+Per ora **nessun link** porta a queste 5 pagine (i file restano nel repo, raggiungibili solo con l'URL diretto):
+`la-mappa-del-tuo-viaggio.html` · `via-degli-dei.html` · `cammino.html` · `tribu-del-bosco.html` · `guardiani-del-fuoco.html`.
+Sono state tolte da menu, footer, catalogo (`esperienze.html`), calendario e rimandi interni.
+Per riattivarle: ripristina le voci in `partials/header.html` / `partials/footer.html` (poi ricopia il blocco nelle pagine),
+le card in `esperienze.html` e le righe in `calendario.html` — oppure recupera tutto dal commit precedente
+(`git show HEAD~1:<file>`). Le testimonianze segnaposto citano ancora "La Mappa del tuo Viaggio" come testo.
+
 ## Da completare (segnaposto)
 - **Testi delle 3 nuove esperienze** (Orienteering sensoriale, Tribù del bosco, Guardiani del Fuoco):
   sono **bozze on-brand** da rivedere con i tuoi contenuti reali.
