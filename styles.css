@@ -1122,11 +1122,11 @@ mark.ais-hl{background:linear-gradient(transparent 56%,rgba(176,84,45,.26) 56%);
 .ais-ingr li::before{content:counter(i);font:500 34px "Cormorant Garamond",Georgia,serif;color:var(--ais-ochre);line-height:1;}
 .ais-ingr b{font:500 22px "Cormorant Garamond",Georgia,serif;color:var(--ais-forest-deep);}
 .ais-ingr span{font:400 14.5px/1.55 Inter,system-ui,sans-serif;color:var(--ais-ink-2);}
-.ais-flow{list-style:none;margin:34px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;}
-.ais-flow li{background:#fff;border:1px solid var(--ais-line);border-radius:16px;padding:22px;display:flex;flex-direction:column;gap:6px;}
-.ais-flow i{font:500 34px "Cormorant Garamond",Georgia,serif;color:var(--ais-ochre);font-style:normal;line-height:1;}
-.ais-flow b{font:500 22px "Cormorant Garamond",Georgia,serif;color:var(--ais-forest-deep);}
-.ais-flow span{font:400 14.5px/1.55 Inter,system-ui,sans-serif;color:var(--ais-ink-2);}
+.ais-steplist{list-style:none;margin:34px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;}
+.ais-steplist li{background:#fff;border:1px solid var(--ais-line);border-radius:16px;padding:22px;display:flex;flex-direction:column;gap:6px;}
+.ais-steplist i{font:500 34px "Cormorant Garamond",Georgia,serif;color:var(--ais-ochre);font-style:normal;line-height:1;}
+.ais-steplist b{font:500 22px "Cormorant Garamond",Georgia,serif;color:var(--ais-forest-deep);}
+.ais-steplist span{font:400 14.5px/1.55 Inter,system-ui,sans-serif;color:var(--ais-ink-2);}
 .ais-acorn{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:40px;}
 .ais-acorn__card{background:#fff;border:1px solid var(--ais-line);border-radius:18px;padding:22px 18px;display:flex;flex-direction:column;}
 .ais-acorn__l{font:500 68px/1 "Cormorant Garamond",Georgia,serif;color:var(--ais-ochre);}
@@ -1177,3 +1177,13 @@ mark.ais-hl{background:linear-gradient(transparent 56%,rgba(176,84,45,.26) 56%);
 .ais-topbar__long{display:inline;}
 .ais-topbar mark,.ais-topbar mark.ais-hl{background:none;color:var(--ais-earth);font-weight:700;padding:0;}
 @media(max-width:600px){.ais-topbar__long{display:none;}}
+
+/* "Come collaboriamo / Come funziona": passaggi a sinistra, foto a destra */
+.ais-flowsplit{display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:stretch;margin-top:34px;}
+.ais-flowsplit .ais-steplist{display:flex;flex-direction:column;gap:14px;margin:0;}
+.ais-flowsplit .ais-steplist li{display:grid;grid-template-columns:48px 1fr;column-gap:16px;row-gap:4px;align-items:start;padding:20px 22px;}
+.ais-flowsplit .ais-steplist i{grid-row:1 / span 2;font-size:40px;}
+.ais-flowsplit .ais-steplist b,.ais-flowsplit .ais-steplist span{grid-column:2;}
+.ais-flowsplit__media{position:relative;border-radius:20px;overflow:hidden;min-height:360px;background:var(--ais-sand-dark);box-shadow:0 18px 40px -22px rgba(31,61,26,.45);}
+.ais-flowsplit__media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;}
+@media(max-width:860px){.ais-flowsplit{grid-template-columns:1fr;gap:22px;}.ais-flowsplit__media{min-height:0;aspect-ratio:4/3;}}
