@@ -74,19 +74,44 @@
       });
     }
 
-    // Scroll fluido per le ancore interne alla pagina (#id)
+    // Scroll alle ancore (#id): tiene conto della barra annunci + menu fissi,
+    // così in alto si vede il TITOLO della sezione (non la card sotto).
+    function anchorOffset() {
+      var h = 0;
+      var bar = document.querySelector(".ais-topbar");
+      var head = document.getElementById("site-header");
+      if (bar) h += bar.offsetHeight;
+      if (head) h += head.offsetHeight;
+      return h + 44;
+    }
+    function scrollToId(id, smooth) {
+      var target = id && id.length > 1 ? document.getElementById(decodeURIComponent(id.slice(1))) : null;
+      if (!target) return false;
+      // punta al titolo della sezione (eyebrow/titolo), non al bordo con il suo padding
+      var top = target.getBoundingClientRect().top;
+      var head = target.querySelector(".ais-eyebrow, .ais-level__t, h1, h2, h3");
+      if (head) {
+        var d = head.getBoundingClientRect().top - top;
+        if (d > 0 && d < 260) top += d;
+      }
+      var y = top + window.pageYOffset - anchorOffset();
+      window.scrollTo({ top: Math.max(0, y), behavior: smooth ? "smooth" : "auto" });
+      return true;
+    }
     document.querySelectorAll('a[href^="#"]').forEach(function (a) {
       a.addEventListener("click", function (e) {
         var id = a.getAttribute("href");
-        if (id && id.length > 1) {
-          var target = document.querySelector(id);
-          if (target) {
-            e.preventDefault();
-            target.scrollIntoView({ behavior: "smooth" });
-          }
+        if (scrollToId(id, true)) {
+          e.preventDefault();
+          if (history.replaceState) history.replaceState(null, "", id);
         }
       });
     });
+    // Link da un'altra pagina (pagina.html#id): riallinea dopo il caricamento
+    if (location.hash.length > 1) {
+      var fixHash = function () { scrollToId(location.hash, false); };
+      window.addEventListener("load", function () { fixHash(); setTimeout(fixHash, 250); });
+    }
 
     // Segnala che gli include sono pronti (per cookies.js / forms.js)
     document.dispatchEvent(new CustomEvent("includes:ready"));
@@ -309,6 +334,29 @@
   //  data-events="upcoming"    -> le prossime N (data-limit) tra tutte le esperienze attive
   //  data-events="experience"  -> le date future di una sola esperienza (data-exp)
   // data-cta="link" (vai alla pagina) | "book" (WhatsApp). Se events.js manca resta l'HTML statico.
+
+  // CTA fissa (pagina Escape): compare dopo l'hero, si nasconde sulle sezioni date/contatto
+  function initStickyCta() {
+    var bar = document.querySelector("[data-sticky-cta]");
+    if (!bar) return;
+    bar.hidden = false;
+    var hide = {};
+    function update() {
+      var past = window.pageYOffset > 520;
+      var busy = hide.date || hide.parliamone || hide.footer;
+      bar.classList.toggle("is-on", past && !busy);
+    }
+    window.addEventListener("scroll", update, { passive: true });
+    if ("IntersectionObserver" in window) {
+      [["date", "#date"], ["parliamone", "#parliamone"], ["footer", "#contatti"]].forEach(function (p) {
+        var el = document.querySelector(p[1]);
+        if (!el) return;
+        new IntersectionObserver(function (en) { hide[p[0]] = en[0].isIntersecting; update(); }).observe(el);
+      });
+    }
+    update();
+  }
+
   function initEvents() {
     var D = window.AIS_DATA;
     var nodes = document.querySelectorAll("[data-events]");
@@ -368,11 +416,94 @@
       return '<p class="ais-cal__note">Nuove date in arrivo. <a class="ais-textlink" href="' + WA + '" target="_blank" rel="noopener noreferrer">Scrivimi</a> per essere avvisato.</p>';
     }
 
+
+    // Calendario a card con immagine e filtro per tipologia
+    var FILTRI = [
+      { k: "tutte", label: "Tutte" },
+      { k: "soglia", label: "Soglia", sub: "meno di 1 giorno" },
+      { k: "avventura", label: "Avventura", sub: "fino a 1 giorno" },
+      { k: "immersione", label: "Immersione", sub: "pi\u00f9 giorni" }
+    ];
+    function card(i, cta) {
+      var x = i.x, e = i.e;
+      var place = e.place || x.place || "";
+      var days = i.s.getTime() === i.f.getTime() ? "" + i.s.getDate() : i.s.getDate() + "\u2013" + i.f.getDate();
+      var price = "";
+      if (x.price) {
+        var dl = addDays(i.s, -x.price.daysBefore);
+        price = today <= dl
+          ? '<p class="ais-calcard__price"><b>\u20ac' + x.price.early + "</b> early bird fino al " + short(dl) + " &middot; poi \u20ac" + x.price.regular + "</p>"
+          : '<p class="ais-calcard__price"><b>\u20ac' + x.price.regular + "</b></p>";
+      }
+      var href = (x.url || "#") + "#date", label = "Scopri e prenota", ext = "";
+      if (cta === "book") {
+        href = WA + "?text=" + encodeURIComponent("Ciao Matteo, vorrei prenotare " + x.name + " (" + longDate(i.s, i.f) + ").");
+        label = "Scrivimi per prenotare"; ext = ' target="_blank" rel="noopener noreferrer"';
+      }
+      return '<article class="ais-calcard" data-type="' + x.type + '">' +
+        '<a class="ais-calcard__media" href="' + (x.url || "#") + '" tabindex="-1" aria-hidden="true"><img alt="" loading="lazy" src="' + (x.img || "images/full-bosco.jpg") + '"/>' +
+        '<span class="ais-calcard__date"><b>' + days + "</b><span>" + MAB[i.s.getMonth()].toUpperCase() + "</span></span>" +
+        (e.note ? '<span class="ais-calcard__flag">' + e.note + "</span>" : "") + "</a>" +
+        '<div class="ais-calcard__body"><span class="ais-caltype ais-caltype--' + x.type + '">' + (TIPI[x.type] || "") + "</span>" +
+        '<h3 class="ais-calcard__t"><a href="' + (x.url || "#") + '">' + x.name + "</a></h3>" +
+        '<p class="ais-calcard__meta">' + longDate(i.s, i.f) + "</p>" +
+        '<p class="ais-calcard__meta">' + ICO("clock") + x.duration + " &middot; " + ICO("pin") + place + "</p>" + price +
+        '<a class="ais-calcard__cta" href="' + href + '"' + ext + ">" + label + " " + ICO("arrow") + "</a></div></article>";
+    }
+    function renderCalendar(node, list, cta) {
+      if (!list.length) { node.innerHTML = empty(); return; }
+      var counts = { tutte: list.length };
+      list.forEach(function (i) { counts[i.x.type] = (counts[i.x.type] || 0) + 1; });
+      var bar = '<div class="ais-calfilter" role="group" aria-label="Filtra per tipologia">' +
+        FILTRI.filter(function (f) { return f.k === "tutte" || counts[f.k]; }).map(function (f) {
+          return '<button type="button" class="ais-calfilter__btn" data-filter="' + f.k + '" aria-pressed="' + (f.k === "tutte") + '">' +
+            "<span>" + f.label + (f.sub ? ' <small>' + f.sub + "</small>" : "") + '</span><i>' + counts[f.k] + "</i></button>";
+        }).join("") + "</div>";
+      var html = "", key = "", open = false;
+      list.forEach(function (i) {
+        var k = i.s.getFullYear() + "-" + i.s.getMonth();
+        if (k !== key) {
+          if (open) html += "</div></section>";
+          key = k;
+          var m = MESI[i.s.getMonth()];
+          html += '<section class="ais-calgroup"><h3 class="ais-calmonth">' + m.charAt(0).toUpperCase() + m.slice(1) + " " + i.s.getFullYear() + '</h3><div class="ais-calgrid">';
+          open = true;
+        }
+        html += card(i, cta);
+      });
+      if (open) html += "</div></section>";
+      node.innerHTML = bar + '<div class="ais-calresults">' + html + "</div>" +
+        '<p class="ais-cal__note ais-calfilter__none" hidden>Nessuna data in questa tipologia, per ora. <a class="ais-textlink" href="' + WA + '" target="_blank" rel="noopener noreferrer">Scrivimi</a> per essere avvisato.</p>';
+      var btns = node.querySelectorAll(".ais-calfilter__btn");
+      var none = node.querySelector(".ais-calfilter__none");
+      function apply(k) {
+        Array.prototype.forEach.call(btns, function (b) { b.setAttribute("aria-pressed", String(b.getAttribute("data-filter") === k)); });
+        var shown = 0;
+        Array.prototype.forEach.call(node.querySelectorAll(".ais-calgroup"), function (g) {
+          var n = 0;
+          Array.prototype.forEach.call(g.querySelectorAll(".ais-calcard"), function (c) {
+            var ok = k === "tutte" || c.getAttribute("data-type") === k;
+            c.hidden = !ok; if (ok) n++;
+          });
+          g.hidden = n === 0; shown += n;
+        });
+        none.hidden = shown !== 0;
+      }
+      Array.prototype.forEach.call(btns, function (b) {
+        b.addEventListener("click", function () { apply(b.getAttribute("data-filter")); });
+      });
+    }
+
     Array.prototype.forEach.call(nodes, function (node) {
       var mode = node.getAttribute("data-events");
       var cta = node.getAttribute("data-cta") || "link";
       var limit = parseInt(node.getAttribute("data-limit"), 10) || 0;
       var list, html = "";
+      if (mode === "calendar") {
+        renderCalendar(node, all.filter(function (i) { return i.x.active; }), cta);
+        node.setAttribute("data-events-ready", "true");
+        return;
+      }
       if (mode === "experience") {
         var slug = node.getAttribute("data-exp");
         list = all.filter(function (i) { return i.e.exp === slug; });
@@ -383,23 +514,6 @@
         if (mode === "upcoming") {
           if (limit) list = list.slice(0, limit);
           html = list.length ? list.map(function (i) { return row(i, { cta: cta, chip: true }); }).join("") : empty();
-        } else { // calendar
-          if (!list.length) { html = empty(); }
-          else {
-            var key = "", group = "";
-            list.forEach(function (i) {
-              var k = i.s.getFullYear() + "-" + i.s.getMonth();
-              if (k !== key) {
-                if (group) html += "</div>";
-                key = k;
-                var m = MESI[i.s.getMonth()];
-                html += '<h3 class="ais-calmonth">' + m.charAt(0).toUpperCase() + m.slice(1) + " " + i.s.getFullYear() + '</h3><div class="ais-cal">';
-                group = "open";
-              }
-              html += row(i, { cta: cta, chip: true });
-            });
-            if (group) html += "</div>";
-          }
         }
       }
       node.innerHTML = html;
@@ -410,5 +524,10 @@
     document.addEventListener("DOMContentLoaded", initEvents);
   } else {
     initEvents();
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initStickyCta);
+  } else {
+    initStickyCta();
   }
 })();

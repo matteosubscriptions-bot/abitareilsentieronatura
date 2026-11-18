@@ -9,21 +9,22 @@
    - events: una riga per ogni data. Formato date: "AAAA-MM-GG".
      end = ultimo giorno (se è un solo giorno puoi ometterlo).
      place (opzionale) sovrascrive il luogo dell'esperienza; note (opzionale) = etichetta es. "Pochi posti".
+   - img: foto della card nel Calendario (percorso in images/).
    - price: solo dove c'è un prezzo in chiaro (early bird fino a N giorni prima della data).
    Script classico (niente type="module"). Le date qui sotto sono INDICATIVE: da confermare. */
 window.AIS_DATA = {
   experiences: {
-    "escape-the-city":         { name: "Escape the City",         type: "immersione", duration: "2 giorni",  place: "Appennino",  url: "escape-the-city.html",         active: true,
+    "escape-the-city":         { name: "Escape the City",         type: "immersione", duration: "2 giorni",  place: "Appennino",  img: "images/escape-the-city.jpg", url: "escape-the-city.html",         active: true,
                                   price: { early: 115, regular: 135, daysBefore: 15 } },
-    "elementi-di-convivenza":  { name: "Elementi di Convivenza",  type: "immersione", duration: "3 giorni",  place: "Appennino",  url: "elementi-di-convivenza.html",  active: true },
-    "orienteering-sensoriale": { name: "Orienteering sensoriale", type: "avventura",  duration: "6 ore",     place: "Appennino",  url: "orienteering-sensoriale.html", active: true },
-    "accendi-il-tuo-fuoco":    { name: "Accendi il tuo Fuoco",    type: "soglia",     duration: "3 ore",     place: "Toscana",    url: "accendi-il-tuo-fuoco.html",    active: true },
+    "elementi-di-convivenza":  { name: "Elementi di Convivenza",  type: "immersione", duration: "3 giorni",  place: "Appennino",  img: "images/cammino-cerchio.jpg", url: "elementi-di-convivenza.html",  active: true },
+    "orienteering-sensoriale": { name: "Orienteering sensoriale", type: "avventura",  duration: "6 ore",     place: "Appennino",  img: "images/mappa-viaggio.jpg", url: "orienteering-sensoriale.html", active: true },
+    "accendi-il-tuo-fuoco":    { name: "Accendi il tuo Fuoco",    type: "soglia",     duration: "3 ore",     place: "Toscana",    img: "images/accendi-fuoco.jpg", url: "accendi-il-tuo-fuoco.html",    active: true },
     /* --- pagine nascoste al momento (active:false) --- */
-    "tribu-del-bosco":         { name: "Tribù del bosco",         type: "avventura",  duration: "6 ore",     place: "Appennino",  url: "tribu-del-bosco.html",         active: false },
-    "guardiani-del-fuoco":     { name: "Guardiani del Fuoco",     type: "immersione", duration: "18 → 12",   place: "Appennino",  url: "guardiani-del-fuoco.html",     active: false },
-    "la-mappa-del-tuo-viaggio":{ name: "La Mappa del tuo Viaggio",type: "soglia",     duration: "3 ore",     place: "Appennino",  url: "la-mappa-del-tuo-viaggio.html",active: false },
-    "via-degli-dei":           { name: "Via degli Dei",           type: "immersione", duration: "24 ore",    place: "Appennino",  url: "via-degli-dei.html",           active: false },
-    "cammino":                 { name: "Il Cammino",              type: "immersione", duration: "4 giorni",  place: "Italia",     url: "cammino.html",                 active: false }
+    "tribu-del-bosco":         { name: "Tribù del bosco",         type: "avventura",  duration: "6 ore",     place: "Appennino",  img: "images/full-avventura.jpg", url: "tribu-del-bosco.html",         active: false },
+    "guardiani-del-fuoco":     { name: "Guardiani del Fuoco",     type: "immersione", duration: "18 → 12",   place: "Appennino",  img: "images/full-bosco.jpg", url: "guardiani-del-fuoco.html",     active: false },
+    "la-mappa-del-tuo-viaggio":{ name: "La Mappa del tuo Viaggio",type: "soglia",     duration: "3 ore",     place: "Appennino",  img: "images/mappa-viaggio.jpg", url: "la-mappa-del-tuo-viaggio.html",active: false },
+    "via-degli-dei":           { name: "Via degli Dei",           type: "immersione", duration: "24 ore",    place: "Appennino",  img: "images/full-natura.jpg", url: "via-degli-dei.html",           active: false },
+    "cammino":                 { name: "Il Cammino",              type: "immersione", duration: "4 giorni",  place: "Italia",     img: "images/cammino-giorno2.jpg", url: "cammino.html",                 active: false }
   },
   events: [
     { exp: "accendi-il-tuo-fuoco",     start: "2027-04-11" },
