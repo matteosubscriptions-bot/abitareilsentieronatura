@@ -621,12 +621,16 @@
         }
         return L.join("\n");
       }
+      var edited = false, resetBtn = root.querySelector("[data-msg-reset]");
       function update() {
-        var m = build();
-        if (msgEl) { if ("value" in msgEl) msgEl.value = m; }
+        var m = edited && msgEl ? msgEl.value : build();
+        if (msgEl && !edited && "value" in msgEl) msgEl.value = m;
+        if (resetBtn) resetBtn.hidden = !edited;
         if (wa) wa.href = WA + "?text=" + encodeURIComponent(m);
         if (mail) mail.href = "mailto:" + MAIL + "?subject=" + encodeURIComponent(kind === "aziende" ? "Richiesta di proposta per il team" : "Richiesta di proposta: " + TL[type]) + "&body=" + encodeURIComponent(m);
       }
+      if (msgEl) msgEl.addEventListener("input", function () { edited = true; update(); });
+      if (resetBtn) resetBtn.addEventListener("click", function () { edited = false; update(); });
       Array.prototype.forEach.call(root.querySelectorAll("[data-f]"), function (f) { f.addEventListener("input", update); f.addEventListener("change", update); });
       Array.prototype.forEach.call(root.querySelectorAll("[data-type]"), function (b) {
         b.addEventListener("click", function () { setType(b.getAttribute("data-type")); });

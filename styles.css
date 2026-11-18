@@ -1244,3 +1244,6 @@ mark.ais-hl{background:linear-gradient(transparent 56%,rgba(176,84,45,.26) 56%);
 .ais-pgrid--4{grid-template-columns:repeat(4,1fr);}
 @media(max-width:1000px){.ais-pgrid--4{grid-template-columns:repeat(2,1fr);}}
 @media(max-width:520px){.ais-stats{grid-template-columns:1fr;}.ais-pgrid--4{grid-template-columns:1fr;}}
+.ais-composer__hint{font-weight:400;opacity:.75;font-size:.85em;}
+.ais-composer__reset{align-self:flex-start;background:none;border:0;padding:0;margin:-4px 0 6px;color:inherit;text-decoration:underline;text-underline-offset:3px;font:500 13.5px Inter,system-ui,sans-serif;cursor:pointer;}
+.ais-composer__reset[hidden]{display:none;}
