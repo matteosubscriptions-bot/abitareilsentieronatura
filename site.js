@@ -588,7 +588,7 @@
     var WA = "https://wa.me/+393667187733", MAIL = "abitareilsentiero@gmail.com";
     Array.prototype.forEach.call(document.querySelectorAll("[data-composer]"), function (root) {
       var kind = root.getAttribute("data-composer");
-      var type = "scuola", themes = [];
+      var type = "scuola", themes = [], props = [];
       var F = {};
       Array.prototype.forEach.call(root.querySelectorAll("[data-f]"), function (f) { F[f.getAttribute("data-f")] = f; });
       var msgEl = root.querySelector("[data-msg]"), wa = root.querySelector("[data-wa]"), mail = root.querySelector("[data-mail]");
@@ -602,6 +602,9 @@
           if (v("where")) g.push("a " + v("where"));
           if (g.length) L.push("Siamo " + g.join(", ") + ".");
           if (v("when")) L.push("Periodo: " + v("when") + ".");
+          var named = props.filter(function (p) { return p !== "__adhoc"; });
+          if (named.length) L.push("Ci hanno incuriosito: " + named.join(", ") + ".");
+          if (props.indexOf("__adhoc") >= 0) L.push("Vorremmo una proposta su misura" + (v("adhoc") ? ": " + v("adhoc") : "") + ".");
           if (themes.length) L.push("Vorremmo lavorare su: " + themes.join(", ").toLowerCase() + ".");
           if (v("note")) L.push(v("note"));
           L.push("Possiamo sentirci per progettare la giornata?");
@@ -640,6 +643,23 @@
           b.setAttribute("aria-pressed", i < 0 ? "true" : "false");
           update();
         });
+      });
+      // proposte di interesse (aziende): scelta multipla + "su misura" con descrizione
+      var adhocBox = root.querySelector("[data-adhoc]");
+      function setProp(name, on) {
+        var i = props.indexOf(name);
+        if (on && i < 0) props.push(name); else if (!on && i >= 0) props.splice(i, 1);
+        Array.prototype.forEach.call(root.querySelectorAll("[data-prop]"), function (b) {
+          if (b.getAttribute("data-prop") === name) b.setAttribute("aria-pressed", on ? "true" : "false");
+        });
+        if (adhocBox) adhocBox.hidden = props.indexOf("__adhoc") < 0;
+        update();
+      }
+      Array.prototype.forEach.call(root.querySelectorAll("[data-prop]"), function (b) {
+        b.addEventListener("click", function () { var n = b.getAttribute("data-prop"); setProp(n, props.indexOf(n) < 0); });
+      });
+      Array.prototype.forEach.call(document.querySelectorAll("[data-pick-prop]"), function (a) {
+        a.addEventListener("click", function () { setProp(a.getAttribute("data-pick-prop"), true); });
       });
       // i pulsanti "Richiedi una proposta" delle schede preselezionano il tipo
       Array.prototype.forEach.call(document.querySelectorAll("[data-pick-type]"), function (a) {
