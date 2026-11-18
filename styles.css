@@ -808,3 +808,30 @@ body{color:var(--ais-ink);}
 .ais-gallery .g-tall{grid-row:span 2;}
 @media(max-width:860px){.ais-gallery{grid-template-columns:repeat(2,1fr);grid-auto-rows:150px;}
   .ais-gallery .g-wide{grid-column:span 2;}.ais-gallery .g-tall{grid-row:span 1;}}
+
+/* --- Calendario: intestazioni mese + chip tipologia --- */
+.ais-calmonth{font-family:"Cormorant Garamond",Georgia,serif;font-size:clamp(24px,3.2vw,32px);
+  color:var(--ais-forest-deep);margin:48px 0 6px;padding-bottom:8px;border-bottom:1px solid var(--ais-line);}
+.ais-calmonth:first-of-type{margin-top:8px;}
+.ais-caltype{display:inline-block;font-family:Inter,system-ui,sans-serif;font-size:10.5px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;padding:3px 10px;border-radius:999px;margin-bottom:7px;}
+.ais-caltype--soglia{background:var(--ais-sand-dark);color:var(--ais-forest-deep);}
+.ais-caltype--avventura{background:var(--ais-earth);color:#3a2f1e;}
+.ais-caltype--immersione{background:var(--ais-forest);color:#fff;}
+
+/* --- Metodo: passaggio sopravvivenza -> convivenza --- */
+.ais-shift{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;margin-top:40px;}
+.ais-shiftcard{background:#fff;border:1px solid var(--ais-line);border-radius:16px;padding:24px 24px 22px;
+  box-shadow:0 8px 24px rgba(31,41,25,.05);}
+.ais-shiftcard h3{font-family:"Cormorant Garamond",Georgia,serif;font-size:25px;color:var(--ais-forest-deep);
+  margin:0 0 14px;display:flex;align-items:center;gap:10px;}
+.ais-shiftcard h3 svg{width:24px;height:24px;color:var(--ais-ochre);flex:none;}
+.ais-shift__row{padding:10px 0;}
+.ais-shift__lab{display:block;font-family:Inter,system-ui,sans-serif;font-size:10.5px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px;}
+.ais-shift__surv .ais-shift__lab{color:var(--ais-earth-dark);}
+.ais-shift__conv .ais-shift__lab{color:var(--ais-forest);}
+.ais-shift__row p{font-family:Inter,system-ui,sans-serif;font-size:14.5px;line-height:1.55;color:var(--ais-ink-2);margin:0;}
+.ais-shift__surv p{color:#6a6256;}
+.ais-shift__arrow{display:block;color:var(--ais-ochre);font-size:18px;line-height:1;margin:2px 0 2px;}
+@media(max-width:760px){.ais-shift{grid-template-columns:1fr;}}
