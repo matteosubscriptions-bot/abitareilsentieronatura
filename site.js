@@ -554,6 +554,141 @@
     initTestimonials();
   }
 
+
+  // Schede (tab) accessibili: Scuole / Centri estivi / Famiglie
+  function initTabs() {
+    Array.prototype.forEach.call(document.querySelectorAll(".ais-tabbar"), function (bar) {
+      var btns = Array.prototype.slice.call(bar.querySelectorAll("[data-tab]"));
+      function show(k, focus) {
+        btns.forEach(function (b) {
+          var on = b.getAttribute("data-tab") === k;
+          b.setAttribute("aria-selected", on ? "true" : "false");
+          b.tabIndex = on ? 0 : -1;
+          var p = document.getElementById("pan-" + b.getAttribute("data-tab"));
+          if (p) p.hidden = !on;
+          if (on && focus) b.focus();
+        });
+      }
+      btns.forEach(function (b, i) {
+        b.addEventListener("click", function () { show(b.getAttribute("data-tab")); });
+        b.addEventListener("keydown", function (e) {
+          var j = e.key === "ArrowRight" ? i + 1 : e.key === "ArrowLeft" ? i - 1 : -1;
+          if (j < 0) return;
+          e.preventDefault();
+          show(btns[(j + btns.length) % btns.length].getAttribute("data-tab"), true);
+        });
+      });
+      show(btns[0].getAttribute("data-tab"));
+      bar._show = show;
+    });
+  }
+
+  // Richiesta di proposta: compone il messaggio e prepara i link WhatsApp / email
+  function initComposer() {
+    var WA = "https://wa.me/+393667187733", MAIL = "abitareilsentiero@gmail.com";
+    Array.prototype.forEach.call(document.querySelectorAll("[data-composer]"), function (root) {
+      var kind = root.getAttribute("data-composer");
+      var type = "scuola", themes = [];
+      var F = {};
+      Array.prototype.forEach.call(root.querySelectorAll("[data-f]"), function (f) { F[f.getAttribute("data-f")] = f; });
+      var msgEl = root.querySelector("[data-msg]"), wa = root.querySelector("[data-wa]"), mail = root.querySelector("[data-mail]");
+      var TL = { scuola: "una scuola", estivo: "un centro estivo", famiglie: "un gruppo di famiglie" };
+      function v(k) { return F[k] ? F[k].value.trim() : ""; }
+      function build() {
+        var L = ["Ciao Matteo,"], g = [];
+        if (kind === "aziende") {
+          L.push("scrivo per il team di " + (v("name") || "un’azienda") + ".");
+          if (v("n")) g.push("circa " + v("n") + " persone");
+          if (v("where")) g.push("a " + v("where"));
+          if (g.length) L.push("Siamo " + g.join(", ") + ".");
+          if (v("when")) L.push("Periodo: " + v("when") + ".");
+          if (themes.length) L.push("Vorremmo lavorare su: " + themes.join(", ").toLowerCase() + ".");
+          if (v("note")) L.push(v("note"));
+          L.push("Possiamo sentirci per progettare la giornata?");
+        } else {
+          L.push("scrivo per " + TL[type] + (v("name") ? " (" + v("name") + ")" : "") + ".");
+          if (v("n")) g.push("circa " + v("n") + " bambini");
+          if (v("age")) g.push(v("age"));
+          if (g.length) L.push("Siamo " + g.join(", ") + (v("where") ? ", a " + v("where") : "") + ".");
+          else if (v("where")) L.push("Siamo a " + v("where") + ".");
+          if (v("when")) L.push("Periodo: " + v("when") + ".");
+          if (themes.length) L.push("Ci piacerebbe: " + themes.join(", ").toLowerCase() + ".");
+          if (v("note")) L.push(v("note"));
+          L.push("Possiamo sentirci per costruire una proposta insieme?");
+        }
+        return L.join("\n");
+      }
+      function update() {
+        var m = build();
+        if (msgEl) { if ("value" in msgEl) msgEl.value = m; }
+        if (wa) wa.href = WA + "?text=" + encodeURIComponent(m);
+        if (mail) mail.href = "mailto:" + MAIL + "?subject=" + encodeURIComponent(kind === "aziende" ? "Richiesta di proposta per il team" : "Richiesta di proposta: " + TL[type]) + "&body=" + encodeURIComponent(m);
+      }
+      Array.prototype.forEach.call(root.querySelectorAll("[data-f]"), function (f) { f.addEventListener("input", update); f.addEventListener("change", update); });
+      Array.prototype.forEach.call(root.querySelectorAll("[data-type]"), function (b) {
+        b.addEventListener("click", function () { setType(b.getAttribute("data-type")); });
+      });
+      function setType(t) {
+        type = t;
+        Array.prototype.forEach.call(root.querySelectorAll("[data-type]"), function (b) { b.setAttribute("aria-pressed", b.getAttribute("data-type") === t ? "true" : "false"); });
+        update();
+      }
+      Array.prototype.forEach.call(root.querySelectorAll("[data-theme]"), function (b) {
+        b.addEventListener("click", function () {
+          var t = b.getAttribute("data-theme"), i = themes.indexOf(t);
+          if (i < 0) themes.push(t); else themes.splice(i, 1);
+          b.setAttribute("aria-pressed", i < 0 ? "true" : "false");
+          update();
+        });
+      });
+      // i pulsanti "Richiedi una proposta" delle schede preselezionano il tipo
+      Array.prototype.forEach.call(document.querySelectorAll("[data-pick-type]"), function (a) {
+        a.addEventListener("click", function () { setType(a.getAttribute("data-pick-type")); });
+      });
+      update();
+    });
+  }
+  function onReady(fn) { if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", fn); else fn(); }
+  onReady(initTabs);
+  onReady(initComposer);
+
+
+  // Testi e immagini delle pagine modificati da admin.html (data.pages): chiave -> testo/foto.
+  // Marcatori nel testo: **grassetto**  //corsivo//  ==evidenziato==  [da completare]  e a capo.
+  function liteToHtml(txt, el) {
+    var ex = el.querySelector && el.querySelector("span.it");
+    var st = ex && ex.getAttribute("style") ? ' style="' + ex.getAttribute("style") + '"' : "";
+    return String(txt).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+      .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+      .replace(/\/\/(.+?)\/\//g, '<span class="it"' + st + ">$1</span>")
+      .replace(/==(.+?)==/g, '<mark class="ais-hl">$1</mark>')
+      .replace(/\[([^\]]+)\]/g, '<span class="todo">[$1]</span>')
+      .replace(/\n/g, "<br/>");
+  }
+  function pageSlug() {
+    var f = location.pathname.split("/").pop().replace(/\.html$/, "");
+    return f || "index";
+  }
+  function applyEdits() {
+    var D = getData();
+    if (!D || !D.pages) return;
+    var P = D.pages[pageSlug()] || {}, G = D.pages._global || {};
+    Array.prototype.forEach.call(document.querySelectorAll("[data-edit]"), function (n) {
+      var k = n.getAttribute("data-edit"), S = k.indexOf("g-") === 0 ? G : P;
+      if (typeof S[k] === "string" && S[k] !== "") n.innerHTML = liteToHtml(S[k], n);
+      if (n.tagName === "A" && S[k + "@href"]) n.setAttribute("href", S[k + "@href"]);
+    });
+    Array.prototype.forEach.call(document.querySelectorAll("[data-edit-img]"), function (n) {
+      var k = n.getAttribute("data-edit-img");
+      if (P[k]) n.setAttribute("src", P[k]);
+      if (typeof P[k + ".alt"] === "string") n.setAttribute("alt", P[k + ".alt"]);
+    });
+    if (P["@title"]) document.title = P["@title"];
+    if (P["@description"]) {
+      Array.prototype.forEach.call(document.querySelectorAll('meta[name="description"],meta[property="og:description"]'), function (m) { m.setAttribute("content", P["@description"]); });
+    }
+  }
+
   // CTA fissa (pagina Escape): compare dopo l'hero, si nasconde sulle sezioni date/contatto
   function initStickyCta() {
     var bar = document.querySelector("[data-sticky-cta]");
@@ -826,4 +961,5 @@
   } else {
     initStickyCta();
   }
+  onReady(applyEdits);
 })();

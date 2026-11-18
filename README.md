@@ -19,7 +19,7 @@ esperienze.html            → Catalogo/percorso completo (Soglie · Immersioni 
 escape-the-city.html       → Escape the City (punta) — racconto giorno-per-giorno, €135 · early bird €115
 orienteering-sensoriale.html · tribu-del-bosco.html · guardiani-del-fuoco.html   → 3 esperienze NUOVE (bozze di testo da rivedere)
 accendi-il-tuo-fuoco.html · la-mappa-del-tuo-viaggio.html · via-degli-dei.html · elementi-di-convivenza.html · cammino.html
-scuole-team.html           → Scuole e ragazzi + Team e organizzazioni
+scuole-gruppi.html         → Scuole & Gruppi · aziende.html → Aziende (scuole-team.html rimanda alla prima)
 testimonianze.html         → Video + recensioni scritte + "lascia la tua"
 chi-sono.html              → Matteo Mancini (storia/timeline, metodo)
 privacy.html · cookie-policy.html
@@ -79,6 +79,26 @@ Per ogni esperienza gestisci: **generale** (nome, tipologia, durata, luogo di ba
 - **Sicurezza**: il sito è statico, quindi il login è solo un blocco di cortesia lato browser (le credenziali sono verificate con un hash nel file):
   non protegge i dati, che in `events.js` sono comunque pubblici. Chi non ha il token GitHub non può comunque pubblicare nulla.
   Per una protezione vera, metti una password sul file `admin.html` dall'hosting.
+
+## Pagine nuove
+- **Scuole & Gruppi** (`scuole-gruppi.html`): scuole, centri estivi e famiglie — metodologia, proposte per target (schede), come collaboriamo, FAQ e richiesta di proposta
+  che compone il messaggio per WhatsApp/email. I campi `[tra parentesi]` sono dati da completare (tesserino, assicurazione, prezzi…). `scuole-team.html` rimanda qui.
+- **Aziende** (`aziende.html`): "Sulla stessa traccia", costruita sulla struttura **ACORN** (Ascolto, Coesione, Orientamento, Resilienza, Nuove idee: una mia
+  interpretazione, modificabile), attività in forma di idea, come funziona, location (Canyon Park Bagni di Lucca, Parco Avventura Il Gigante) e contatto.
+  Le foto `images/team-*.jpg` sono ritagli del PDF "Formazione esperienziale outdoor".
+
+## Testi e foto di tutte le pagine (admin)
+In `admin.html` → **Pagine del sito** (Home, Esperienze, Calendario, Chi sono, Scuole & Gruppi, Aziende, Testimonianze, **Globale** = barra annunci e footer) e,
+dentro ogni esperienza, la scheda **Testi pagina**. L'admin legge la pagina pubblicata, elenca testi e foto per sezione e salva solo le differenze in `events.js`
+(`pages`). Ogni elemento ha una chiave nel codice (`data-edit="eN"`, `data-edit-img="iN"`). Nei testi: `**grassetto**`, `//corsivo//`, `==evidenziato==`,
+`[da completare]`, invio = a capo; i pulsanti hanno anche il campo Link; ogni pagina ha titolo e descrizione per Google. "Ripristina" torna all'originale.
+Se aggiungi a mano nuovi testi in una pagina, lancia lo strumento di marcatura (o chiedi) per renderli modificabili.
+Le sezioni dinamiche (date, domande, info utili, cosa impari, media, testimonianze, menu) si gestiscono dalle loro schede dedicate.
+
+## Libreria media = cartella `images/`
+Aprendo l'admin (e con "Sincronizza con la cartella") la libreria legge la cartella `images/`: prova l'elenco file del server (serve l'indice di directory attivo) e
+l'API GitHub del repository (se privato serve il token). I file trovati compaiono in libreria; quelli caricati dall'admin finiscono in `images/` pubblicando.
+Le voci il cui file non c'è più sono segnate "file non trovato" e si possono rimuovere in blocco.
 
 ## Pagine temporaneamente nascoste
 Per ora **nessun link** porta a queste 5 pagine (i file restano nel repo, raggiungibili solo con l'URL diretto):

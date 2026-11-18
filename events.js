@@ -16,6 +16,9 @@
      related: [slug, slug, slug?] = le 2-3 esperienze collegate ("Altri corsi ed esperienze")
    Testimonianze (testimonials): [{ id, name, label, title?, text?, video?, poster?, home, page, exps[] }]
      video = link YouTube / Vimeo oppure file (videos/nome.mp4); home/page/exps = dove compare.
+   Testi e foto delle pagine (pages): { "<pagina>": { "<chiave>": "testo o percorso foto", ... }, "_global": {...} }
+     chiavi: eN = testo (eN@href = link), iN = foto (iN.alt = descrizione), @title / @description = SEO.
+     Nei testi: **grassetto**  //corsivo//  ==evidenziato==  [da completare]
    Libreria foto (media): [{ src, alt }] — le foto si caricano da admin.html (cartella images/).
    Nei testi: **grassetto**, [testo da completare] (evidenziato), {early} {regular} {days} (dal prezzo).
    Per ogni data (events): exp, start, end?, place? (luogo di quella data), note?  — formato date AAAA-MM-GG.
@@ -730,7 +733,7 @@ window.AIS_DATA = {
         },
         {
           "q": "È un team building aziendale?",
-          "a": "Questa è la versione per singoli. Per team e organizzazioni vedi la pagina Scuole & Team."
+          "a": "Questa è la versione per singoli. Per team e aziende vedi la pagina Aziende."
         }
       ],
       "learn": [
@@ -1586,6 +1589,54 @@ window.AIS_DATA = {
       "alt": ""
     },
     {
+      "src": "images/team-appunti-mani.jpg",
+      "alt": "Mani che scrivono su un foglietto, nell’erba"
+    },
+    {
+      "src": "images/team-archetto.jpg",
+      "alt": "Mani che usano l’archetto per accendere il fuoco"
+    },
+    {
+      "src": "images/team-ascolto-bosco.jpg",
+      "alt": "Persona nel bosco che ascolta con le mani a coppa"
+    },
+    {
+      "src": "images/team-codice-carte.jpg",
+      "alt": "Carte e bandana su un ceppo nel bosco"
+    },
+    {
+      "src": "images/team-fuoco-scintille.jpg",
+      "alt": "Scintille da una pietra focaia su corteccia di betulla"
+    },
+    {
+      "src": "images/team-impronta.jpg",
+      "alt": "Mano che indica un’impronta nel terreno"
+    },
+    {
+      "src": "images/team-land-art.jpg",
+      "alt": "Land art di rami tra gli alberi"
+    },
+    {
+      "src": "images/team-mani-terra.jpg",
+      "alt": "Mano nella terra"
+    },
+    {
+      "src": "images/team-mappa-disegnata.jpg",
+      "alt": "Mappa illustrata del percorso tra le mani"
+    },
+    {
+      "src": "images/team-mappa-zaino.jpg",
+      "alt": "Escursionista di spalle con mappa e zaino"
+    },
+    {
+      "src": "images/team-scarpe-bussola.jpg",
+      "alt": "Scarpone, mappa e bussola nel sottobosco"
+    },
+    {
+      "src": "images/team-tenda-bushcraft.jpg",
+      "alt": "Riparo di bushcraft nel bosco con il fuoco"
+    },
+    {
       "src": "images/testimonial-1.jpg",
       "alt": ""
     },
@@ -1821,5 +1872,6 @@ window.AIS_DATA = {
         "la-mappa-del-tuo-viaggio"
       ]
     }
-  ]
+  ],
+  "pages": {}
 };
