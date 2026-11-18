@@ -46,10 +46,14 @@ Se JavaScript non parte resta visibile l'elenco statico di riserva presente nell
 I link interni (`#id`, anche da un'altra pagina con `pagina.html#id`) scrollano in modo che il **titolo della sezione**
 resti visibile sotto barra annunci + menu (logica in `site.js`, `scrollToId`; margine di sicurezza in `styles.css`, `scroll-padding-top`).
 
-## Pagina Escape
+## Pagina Escape (e struttura di tutte le pagine esperienza)
 Struttura: hero → foto → intro "Sopravvivere o convivere" → **Nessun segnale** → Cosa impari (card con foto) → Testimonianze →
 banda CTA → galleria → Cosa porti a casa → Date → Info → FAQ → Altri corsi → CTA. Barra **"Prenota" fissa** (`data-sticky-cta`),
 visibile dopo l'hero e nascosta su date/contatto. Il canale per le **urgenze** (nessun segnale sul posto) è un segnaposto da definire.
+Le altre 8 pagine esperienza seguono lo **stesso schema**: hero → foto → introduzione → pannello foto con la frase-chiave
+specifica → card con foto → (recensioni *oppure* "cosa potresti portarti a casa") → banda CTA → galleria → date → info → FAQ →
+altri corsi → CTA, con barra "Prenota" fissa. Le sezioni lunghe "Cosa succede" e "Per chi è" sono state tolte (restano nella
+cronologia git). Le recensioni vere esistono solo per Accendi e La Mappa; nelle altre ci sono esempi dichiarati come tali.
 
 ## Pagine temporaneamente nascoste
 Per ora **nessun link** porta a queste 5 pagine (i file restano nel repo, raggiungibili solo con l'URL diretto):

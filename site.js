@@ -409,7 +409,8 @@
       return '<div class="ais-cal__row"><div class="ais-cal__date"><b>' + days + "</b><span>" + MAB[i.s.getMonth()].toUpperCase() + "</span></div><div>" +
         (o.chip && TIPI[x.type] ? '<span class="ais-caltype ais-caltype--' + x.type + '">' + TIPI[x.type] + "</span>" : "") +
         '<h3 class="ais-cal__t">' + x.name + (e.note ? '<span class="ais-cal__flag">' + e.note + "</span>" : "") + "</h3>" +
-        '<p class="ais-cal__meta">' + longDate(i.s, i.f) + " &middot; " + ICO("clock") + x.duration + " &middot; " + ICO("pin") + place + "</p>" + price +
+        '<p class="ais-cal__meta">' + longDate(i.s, i.f) + "</p>" +
+        '<p class="ais-cal__meta ais-cal__facts"><span>' + ICO("clock") + x.duration + "</span><span>" + ICO("pin") + place + "</span></p>" + price +
         '</div><a class="ais-textlink ais-cal__cta" href="' + href + '"' + ext + ">" + label + "</a></div>";
     }
     function empty() {

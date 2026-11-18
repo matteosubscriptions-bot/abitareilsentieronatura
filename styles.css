@@ -1049,3 +1049,23 @@ mark.ais-hl{background:linear-gradient(transparent 56%,rgba(176,84,45,.26) 56%);
 @media(max-width:520px){.ais-stickycta{width:calc(100vw - 24px);justify-content:space-between;gap:10px;padding-left:18px;bottom:12px;}.ais-stickycta__t{font-size:13px;}}
 .ais-calfilter{justify-content:center;}
 .ais-calcard__body .ais-caltype{align-self:flex-start;}
+
+/* ---- Righe date: leggibili anche su mobile ---- */
+.ais-cal__meta{display:block;text-transform:none;letter-spacing:0;font-size:14px;font-weight:500;line-height:1.5;}
+.ais-cal__facts{display:flex;flex-wrap:wrap;gap:4px 16px;margin-top:2px;}
+.ais-cal__facts span{display:inline-flex;align-items:center;gap:6px;}
+.ais-cal__meta.ais-cal__price{display:block;font-weight:600;color:var(--ais-ochre-deep);}
+@media(max-width:680px){
+  .ais-cal__row{grid-template-columns:1fr;gap:10px;padding:22px 2px;}
+  .ais-cal__date{display:inline-flex;align-items:baseline;gap:8px;justify-self:start;padding:6px 14px;border-radius:999px;background:var(--ais-sand);}
+  .ais-cal__date b{display:inline;font-size:22px;}
+  .ais-cal__date span{font-size:12px;font-weight:600;}
+  .ais-cal__t{font-size:26px;}
+  .ais-cal__cta{grid-column:1;margin-top:4px;padding:12px 0;min-height:44px;display:inline-flex;align-items:center;}
+}
+
+/* ---- Pagine esperienza: griglia a 3 colonne e icona nel pannello foto ---- */
+.ais-pgrid--3{grid-template-columns:repeat(3,1fr);}
+@media(max-width:1020px){.ais-pgrid--3{grid-template-columns:repeat(2,1fr);}}
+.ais-nosignal .ais-ico{width:32px;height:32px;}
+.ais-pgrid--3 .ais-pcard__media{aspect-ratio:4/3;}
