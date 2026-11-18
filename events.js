@@ -2,15 +2,17 @@
    ------------------------------------------------------------------
    Questo file si modifica dalla pagina  admin.html  (consigliato) oppure a mano.
    Da qui si aggiornano da sole: Calendario, "prossime 3 esperienze", date, prezzi,
-   domande frequenti, info utili e "cosa impari" di ogni pagina esperienza.
+   domande frequenti, info utili, "cosa impari" e media di ogni pagina esperienza.
    Le date passate spariscono da sole (si confronta con il giorno di oggi).
 
    Per ogni esperienza (experiences):
-   - name, type (soglia|avventura|immersione), duration, place, url, img
+   - name, type (soglia|avventura|immersione), duration, place, url, img (foto della card)
    - active: false = nascosta (non compare in calendario / "prossime date")
    - price: { early, regular, daysBefore } = prezzo early bird fino a N giorni prima, poi intero
    - info: righe "Info utili" [{ k, v, ico? }]    - faq: [{ q, a }]
    - learn: card "Cosa impari" [{ img, icon, title, chips[] }]
+   - media: { hero: { img, video? }, slider: [{ img, cap }], gallery: [img, ...] }
+   Libreria foto (media): [{ src, alt }] — le foto si caricano da admin.html (cartella images/).
    Nei testi: **grassetto**, [testo da completare] (evidenziato), {early} {regular} {days} (dal prezzo).
    Per ogni data (events): exp, start, end?, place? (luogo di quella data), note?  — formato date AAAA-MM-GG.
    Script classico (niente type="module"). Le date sono INDICATIVE: da confermare. */
@@ -155,7 +157,53 @@ window.AIS_DATA = {
             "Silenzio"
           ]
         }
-      ]
+      ],
+      "media": {
+        "hero": {
+          "img": "images/escape-the-city.jpg",
+          "video": "videos/escape-city.mp4"
+        },
+        "slider": [
+          {
+            "img": "images/escape-the-city.jpg",
+            "cap": "Una notte nel bosco"
+          },
+          {
+            "img": "images/cammino-cerchio.jpg",
+            "cap": "Il cerchio"
+          },
+          {
+            "img": "images/accendi-fuoco.jpg",
+            "cap": "Accendere il fuoco"
+          },
+          {
+            "img": "images/full-avventura.jpg",
+            "cap": "Camminare lenti"
+          },
+          {
+            "img": "images/full-bosco.jpg",
+            "cap": "Il bosco"
+          },
+          {
+            "img": "images/cammino-giorno2.jpg",
+            "cap": "Il rifugio"
+          },
+          {
+            "img": "images/hero-forest.jpg",
+            "cap": "La luce tra gli alberi"
+          }
+        ],
+        "gallery": [
+          "images/escape-the-city.jpg",
+          "images/accendi-fuoco.jpg",
+          "images/full-bosco.jpg",
+          "images/full-avventura.jpg",
+          "images/cammino-cerchio.jpg",
+          "images/full-natura.jpg",
+          "images/cammino-giorno2.jpg",
+          "images/mappa-viaggio.jpg"
+        ]
+      }
     },
     "elementi-di-convivenza": {
       "name": "Elementi di Convivenza",
@@ -284,7 +332,45 @@ window.AIS_DATA = {
             "Ciò che ti sostiene"
           ]
         }
-      ]
+      ],
+      "media": {
+        "hero": {
+          "img": "images/convivenza.jpg",
+          "video": "videos/convivenza.mp4"
+        },
+        "slider": [
+          {
+            "img": "images/cammino-cerchio.jpg",
+            "cap": "Il cerchio"
+          },
+          {
+            "img": "images/accendi-fuoco.jpg",
+            "cap": "Accendere il fuoco"
+          },
+          {
+            "img": "images/escape-the-city.jpg",
+            "cap": "Una notte nel bosco"
+          },
+          {
+            "img": "images/full-bosco.jpg",
+            "cap": "Il bosco"
+          },
+          {
+            "img": "images/hero-forest.jpg",
+            "cap": "La luce tra gli alberi"
+          }
+        ],
+        "gallery": [
+          "images/cammino-cerchio.jpg",
+          "images/hero-forest.jpg",
+          "images/full-bosco.jpg",
+          "images/accendi-fuoco.jpg",
+          "images/full-avventura.jpg",
+          "images/escape-the-city.jpg",
+          "images/cammino-giorno2.jpg",
+          "images/mappa-viaggio.jpg"
+        ]
+      }
     },
     "orienteering-sensoriale": {
       "name": "Orienteering sensoriale",
@@ -381,7 +467,44 @@ window.AIS_DATA = {
             "Meno schermo"
           ]
         }
-      ]
+      ],
+      "media": {
+        "hero": {
+          "img": "images/mappa-viaggio.jpg"
+        },
+        "slider": [
+          {
+            "img": "images/mappa-viaggio.jpg",
+            "cap": "Leggere dove sei"
+          },
+          {
+            "img": "images/full-avventura.jpg",
+            "cap": "Camminare lenti"
+          },
+          {
+            "img": "images/full-bosco.jpg",
+            "cap": "Il bosco"
+          },
+          {
+            "img": "images/cammino-giorno2.jpg",
+            "cap": "Il rifugio"
+          },
+          {
+            "img": "images/hero-forest.jpg",
+            "cap": "La luce tra gli alberi"
+          }
+        ],
+        "gallery": [
+          "images/mappa-viaggio.jpg",
+          "images/hero-forest.jpg",
+          "images/full-bosco.jpg",
+          "images/cammino-cerchio.jpg",
+          "images/accendi-fuoco.jpg",
+          "images/full-avventura.jpg",
+          "images/escape-the-city.jpg",
+          "images/cammino-giorno2.jpg"
+        ]
+      }
     },
     "accendi-il-tuo-fuoco": {
       "name": "Accendi il tuo Fuoco",
@@ -481,7 +604,45 @@ window.AIS_DATA = {
             "Un passo preciso"
           ]
         }
-      ]
+      ],
+      "media": {
+        "hero": {
+          "img": "images/accendi-fuoco.jpg",
+          "video": "videos/accendi-fuoco.mp4"
+        },
+        "slider": [
+          {
+            "img": "images/accendi-fuoco.jpg",
+            "cap": "Accendere il fuoco"
+          },
+          {
+            "img": "images/cammino-cerchio.jpg",
+            "cap": "Il cerchio"
+          },
+          {
+            "img": "images/escape-the-city.jpg",
+            "cap": "Una notte nel bosco"
+          },
+          {
+            "img": "images/full-bosco.jpg",
+            "cap": "Il bosco"
+          },
+          {
+            "img": "images/hero-forest.jpg",
+            "cap": "La luce tra gli alberi"
+          }
+        ],
+        "gallery": [
+          "images/accendi-fuoco.jpg",
+          "images/hero-forest.jpg",
+          "images/full-bosco.jpg",
+          "images/cammino-cerchio.jpg",
+          "images/full-avventura.jpg",
+          "images/escape-the-city.jpg",
+          "images/cammino-giorno2.jpg",
+          "images/mappa-viaggio.jpg"
+        ]
+      }
     },
     "tribu-del-bosco": {
       "name": "Tribù del bosco",
@@ -576,7 +737,44 @@ window.AIS_DATA = {
             "Rispetto del luogo"
           ]
         }
-      ]
+      ],
+      "media": {
+        "hero": {
+          "img": "images/cammino-cerchio.jpg"
+        },
+        "slider": [
+          {
+            "img": "images/cammino-cerchio.jpg",
+            "cap": "Il cerchio"
+          },
+          {
+            "img": "images/escape-the-city.jpg",
+            "cap": "Una notte nel bosco"
+          },
+          {
+            "img": "images/accendi-fuoco.jpg",
+            "cap": "Accendere il fuoco"
+          },
+          {
+            "img": "images/full-bosco.jpg",
+            "cap": "Il bosco"
+          },
+          {
+            "img": "images/hero-forest.jpg",
+            "cap": "La luce tra gli alberi"
+          }
+        ],
+        "gallery": [
+          "images/cammino-cerchio.jpg",
+          "images/hero-forest.jpg",
+          "images/full-bosco.jpg",
+          "images/accendi-fuoco.jpg",
+          "images/full-avventura.jpg",
+          "images/escape-the-city.jpg",
+          "images/cammino-giorno2.jpg",
+          "images/mappa-viaggio.jpg"
+        ]
+      }
     },
     "guardiani-del-fuoco": {
       "name": "Guardiani del Fuoco",
@@ -679,7 +877,45 @@ window.AIS_DATA = {
             "Ascoltare"
           ]
         }
-      ]
+      ],
+      "media": {
+        "hero": {
+          "img": "images/full-fuoco.jpg",
+          "video": "videos/accendi-fuoco.mp4"
+        },
+        "slider": [
+          {
+            "img": "images/accendi-fuoco.jpg",
+            "cap": "Accendere il fuoco"
+          },
+          {
+            "img": "images/cammino-cerchio.jpg",
+            "cap": "Il cerchio"
+          },
+          {
+            "img": "images/escape-the-city.jpg",
+            "cap": "Una notte nel bosco"
+          },
+          {
+            "img": "images/full-bosco.jpg",
+            "cap": "Il bosco"
+          },
+          {
+            "img": "images/hero-forest.jpg",
+            "cap": "La luce tra gli alberi"
+          }
+        ],
+        "gallery": [
+          "images/escape-the-city.jpg",
+          "images/hero-forest.jpg",
+          "images/full-bosco.jpg",
+          "images/cammino-cerchio.jpg",
+          "images/accendi-fuoco.jpg",
+          "images/full-avventura.jpg",
+          "images/cammino-giorno2.jpg",
+          "images/mappa-viaggio.jpg"
+        ]
+      }
     },
     "la-mappa-del-tuo-viaggio": {
       "name": "La Mappa del tuo Viaggio",
@@ -778,7 +1014,45 @@ window.AIS_DATA = {
             "Direzione condivisa"
           ]
         }
-      ]
+      ],
+      "media": {
+        "hero": {
+          "img": "images/mappa-viaggio.jpg",
+          "video": "videos/mappa-viaggio.mp4"
+        },
+        "slider": [
+          {
+            "img": "images/mappa-viaggio.jpg",
+            "cap": "Leggere dove sei"
+          },
+          {
+            "img": "images/full-avventura.jpg",
+            "cap": "Camminare lenti"
+          },
+          {
+            "img": "images/full-bosco.jpg",
+            "cap": "Il bosco"
+          },
+          {
+            "img": "images/cammino-giorno2.jpg",
+            "cap": "Il rifugio"
+          },
+          {
+            "img": "images/hero-forest.jpg",
+            "cap": "La luce tra gli alberi"
+          }
+        ],
+        "gallery": [
+          "images/mappa-viaggio.jpg",
+          "images/hero-forest.jpg",
+          "images/full-bosco.jpg",
+          "images/cammino-cerchio.jpg",
+          "images/accendi-fuoco.jpg",
+          "images/full-avventura.jpg",
+          "images/escape-the-city.jpg",
+          "images/cammino-giorno2.jpg"
+        ]
+      }
     },
     "via-degli-dei": {
       "name": "Via degli Dei",
@@ -891,7 +1165,45 @@ window.AIS_DATA = {
             "Si cammina insieme"
           ]
         }
-      ]
+      ],
+      "media": {
+        "hero": {
+          "img": "images/via-degli-dei.jpg",
+          "video": "videos/via-degli-dei.mp4"
+        },
+        "slider": [
+          {
+            "img": "images/full-avventura.jpg",
+            "cap": "Camminare lenti"
+          },
+          {
+            "img": "images/cammino-giorno2.jpg",
+            "cap": "Il rifugio"
+          },
+          {
+            "img": "images/full-bosco.jpg",
+            "cap": "Il bosco"
+          },
+          {
+            "img": "images/hero-forest.jpg",
+            "cap": "La luce tra gli alberi"
+          },
+          {
+            "img": "images/cammino-cerchio.jpg",
+            "cap": "Il cerchio"
+          }
+        ],
+        "gallery": [
+          "images/cammino-giorno2.jpg",
+          "images/hero-forest.jpg",
+          "images/full-bosco.jpg",
+          "images/cammino-cerchio.jpg",
+          "images/accendi-fuoco.jpg",
+          "images/full-avventura.jpg",
+          "images/escape-the-city.jpg",
+          "images/mappa-viaggio.jpg"
+        ]
+      }
     },
     "cammino": {
       "name": "Il Cammino",
@@ -1002,7 +1314,45 @@ window.AIS_DATA = {
             "Una decisione"
           ]
         }
-      ]
+      ],
+      "media": {
+        "hero": {
+          "img": "images/cammino-eroe.jpg",
+          "video": "videos/cammino.mp4"
+        },
+        "slider": [
+          {
+            "img": "images/full-avventura.jpg",
+            "cap": "Camminare lenti"
+          },
+          {
+            "img": "images/cammino-giorno2.jpg",
+            "cap": "Il rifugio"
+          },
+          {
+            "img": "images/full-bosco.jpg",
+            "cap": "Il bosco"
+          },
+          {
+            "img": "images/hero-forest.jpg",
+            "cap": "La luce tra gli alberi"
+          },
+          {
+            "img": "images/furgone.jpg",
+            "cap": "Case in cammino"
+          }
+        ],
+        "gallery": [
+          "images/full-avventura.jpg",
+          "images/hero-forest.jpg",
+          "images/full-bosco.jpg",
+          "images/cammino-cerchio.jpg",
+          "images/accendi-fuoco.jpg",
+          "images/escape-the-city.jpg",
+          "images/cammino-giorno2.jpg",
+          "images/mappa-viaggio.jpg"
+        ]
+      }
     }
   },
   "events": [
@@ -1080,6 +1430,120 @@ window.AIS_DATA = {
     {
       "exp": "la-mappa-del-tuo-viaggio",
       "start": "2027-10-03"
+    }
+  ],
+  "media": [
+    {
+      "src": "images/abitare-sentiero.jpg",
+      "alt": ""
+    },
+    {
+      "src": "images/accendi-fuoco.jpg",
+      "alt": "Mani che accendono il fuoco con l’archetto"
+    },
+    {
+      "src": "images/agricoltura.jpg",
+      "alt": ""
+    },
+    {
+      "src": "images/cammino-cerchio.jpg",
+      "alt": "Cerchio attorno al fuoco sotto le stelle"
+    },
+    {
+      "src": "images/cammino-eroe.jpg",
+      "alt": "Cammino in montagna"
+    },
+    {
+      "src": "images/cammino-giorno2.jpg",
+      "alt": "Baita di pietra e sentiero in montagna"
+    },
+    {
+      "src": "images/convivenza.jpg",
+      "alt": "Elementi di Convivenza"
+    },
+    {
+      "src": "images/escape-the-city.jpg",
+      "alt": "Escape the City: il gruppo attorno al fuoco"
+    },
+    {
+      "src": "images/full-abitare.jpg",
+      "alt": "Anni nel mondo corporate"
+    },
+    {
+      "src": "images/full-avventura.jpg",
+      "alt": "Persona sul sentiero all’alba tra la nebbia"
+    },
+    {
+      "src": "images/full-bosco.jpg",
+      "alt": "Il bosco come luogo da leggere"
+    },
+    {
+      "src": "images/full-cammino.jpg",
+      "alt": "Oggi, guida e facilitatore in natura"
+    },
+    {
+      "src": "images/full-fuoco.jpg",
+      "alt": ""
+    },
+    {
+      "src": "images/full-natura.jpg",
+      "alt": "Agricoltura e permacultura"
+    },
+    {
+      "src": "images/furgone.jpg",
+      "alt": "Furgone nel bosco al tramonto"
+    },
+    {
+      "src": "images/hero-forest.jpg",
+      "alt": "Luce tra gli alberi, lontano da tutto"
+    },
+    {
+      "src": "images/mappa-viaggio.jpg",
+      "alt": "Mappa e bussola su un tavolo di legno"
+    },
+    {
+      "src": "images/per-chi-andrea.jpg",
+      "alt": ""
+    },
+    {
+      "src": "images/per-chi-federica.jpg",
+      "alt": ""
+    },
+    {
+      "src": "images/per-chi-marco.jpg",
+      "alt": ""
+    },
+    {
+      "src": "images/per-chi-sara.jpg",
+      "alt": ""
+    },
+    {
+      "src": "images/testimonial-1.jpg",
+      "alt": ""
+    },
+    {
+      "src": "images/testimonial-2.jpg",
+      "alt": ""
+    },
+    {
+      "src": "images/testimonial-3.jpg",
+      "alt": ""
+    },
+    {
+      "src": "images/testimonial-4.jpg",
+      "alt": ""
+    },
+    {
+      "src": "images/testimonial-5.jpg",
+      "alt": ""
+    },
+    {
+      "src": "images/testimonial-6.jpg",
+      "alt": ""
+    },
+    {
+      "src": "images/via-degli-dei.jpg",
+      "alt": "Via degli Dei"
     }
   ]
 };

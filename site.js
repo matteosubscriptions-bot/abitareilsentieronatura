@@ -236,6 +236,75 @@
     initSliders();
   }
 
+  // Media gestiti da admin.html: header principale, slider e galleria di ogni esperienza.
+  // Il markup statico resta come riserva e viene sostituito solo se i dati sono diversi.
+  function initMedia() {
+    var D = getData();
+    if (!D || !D.experiences) return;
+    var lib = {};
+    (D.media || []).forEach(function (m) { lib[m.src] = m.alt || ""; });
+    function esc(t) { return String(t == null ? "" : t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+    var PATTERN = ["g-wide g-tall", "", "", "", "", "g-wide", "", ""];
+    Array.prototype.forEach.call(document.querySelectorAll("[data-media]"), function (node) {
+      var x = D.experiences[node.getAttribute("data-exp")];
+      var m = x && x.media;
+      var kind = node.getAttribute("data-media");
+      if (!m) return;
+      if (kind === "hero") {
+        var h = m.hero;
+        if (!h || !h.img) return;
+        var v = node.querySelector("video"), im = node.querySelector("img");
+        var a = lib[h.img] || x.name || "";
+        if (h.video) {
+          if (v && v.getAttribute("src") === h.video && v.getAttribute("poster") === h.img) return;
+          node.innerHTML = '<video autoplay="" loop="" muted="" playsinline="" poster="' + esc(h.img) + '" src="' + esc(h.video) + '"></video>';
+          var nv = node.querySelector("video"); if (nv) nv.muted = true;
+        } else {
+          if (!v && im && im.getAttribute("src") === h.img && im.getAttribute("alt") === a) return;
+          node.innerHTML = '<img alt="' + esc(a) + '" src="' + esc(h.img) + '"/>';
+        }
+      } else if (kind === "slider") {
+        var list = m.slider || [];
+        if (!list.length) return;
+        var stage = node.querySelector(".ais-peek__stage");
+        if (!stage) return;
+        var old = Array.prototype.slice.call(stage.querySelectorAll(".ais-peek__slide"));
+        var same = old.length === list.length && old.every(function (f, i) {
+          var fi = f.querySelector("img"), fc = f.querySelector("figcaption");
+          return fi && fi.getAttribute("src") === list[i].img && (fc ? fc.textContent : "") === (list[i].cap || "") &&
+            fi.getAttribute("alt") === (lib[list[i].img] || list[i].cap || "");
+        });
+        if (same) return;
+        var first = stage.querySelector(".ais-peek__btn");
+        old.forEach(function (f) { f.remove(); });
+        list.forEach(function (s, i) {
+          var f = document.createElement("figure");
+          f.className = "ais-peek__slide" + (i === 0 ? " is-active" : "");
+          f.setAttribute("role", "group"); f.setAttribute("aria-roledescription", "slide");
+          f.setAttribute("aria-label", (i + 1) + " di " + list.length);
+          f.innerHTML = '<img alt="' + esc(lib[s.img] || s.cap || "") + '" src="' + esc(s.img) + '"' + (i > 1 ? ' loading="lazy"' : "") + "/>" +
+            (s.cap ? '<figcaption class="ais-peek__cap">' + esc(s.cap) + "</figcaption>" : "");
+          stage.insertBefore(f, first);
+        });
+      } else if (kind === "gallery") {
+        var g = m.gallery || [];
+        if (!g.length) return;
+        var cur = Array.prototype.slice.call(node.querySelectorAll("img")).map(function (i) { return i.getAttribute("src"); });
+        var sameG = cur.length === g.length && cur.every(function (src, i) { return src === g[i]; });
+        if (sameG) return;
+        node.innerHTML = g.map(function (src, i) {
+          var c = PATTERN[i % PATTERN.length];
+          return "<figure" + (c ? ' class="' + c + '"' : "") + '><img alt="' + esc(lib[src] || "") + '" src="' + esc(src) + '" loading="lazy"/></figure>';
+        }).join("");
+      }
+    });
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initMedia);
+  } else {
+    initMedia();
+  }
+
   // Slider "peek": immagine centrale con anteprima della precedente e della successiva.
   // Script classico. Senza JS resta visibile la prima foto. Su mobile: una foto per volta, swipe.
   function initPeek() {

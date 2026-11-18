@@ -1073,3 +1073,5 @@ mark.ais-hl{background:linear-gradient(transparent 56%,rgba(176,84,45,.26) 56%);
 /* Anteprima bozza (admin) */
 .ais-previewbar{position:fixed;left:50%;top:84px;transform:translateX(-50%);z-index:1200;background:var(--ais-ochre);color:#fff;
   padding:8px 18px;border-radius:999px;font:600 13px Inter,system-ui,sans-serif;box-shadow:0 8px 24px -8px rgba(0,0,0,.4);}
+
+.ais-gallery{grid-auto-flow:dense;}

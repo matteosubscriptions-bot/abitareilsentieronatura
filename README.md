@@ -56,18 +56,23 @@ altri corsi → CTA, con barra "Prenota" fissa. Le sezioni lunghe "Cosa succede"
 cronologia git). Le recensioni vere esistono solo per Accendi e La Mappa; nelle altre ci sono esempi dichiarati come tali.
 
 ## Pagina di gestione (`admin.html`)
-Apri `admin.html` (non è linkata dal sito ed è `noindex`). Per ogni esperienza gestisci: **generale** (nome, tipologia, durata, luogo di base,
-foto, visibilità), **prezzo** (intero, early bird, giorni prima), **date** con **luogo per ogni data** e etichetta, **domande**, **info utili**
-e **cosa impari**. Tutto finisce in `events.js` (fonte unica) e le pagine si aggiornano da sole.
-- **Anteprima**: il pulsante apre la pagina con `?preview=1` e mostra la bozza, senza pubblicarla.
-- **Pubblica sul sito**: scrive `events.js` nel repository via API GitHub. Serve un *fine-grained token* con permesso **Contents: Read and write**
-  solo su questo repository (GitHub → Settings → Developer settings). Il token si può ricordare solo su questo browser.
-  Alternativa senza token: **Scarica events.js** e sostituisci il file nel repository.
-- Le modifiche non pubblicate restano come bozza nel browser. **Importa** carica un `events.js` scaricato da questa pagina.
+Apri `admin.html` (non è linkata dal sito ed è `noindex`). **Accesso con utente e password** (la sessione dura finché chiudi la scheda; "Esci" in alto).
+Per ogni esperienza gestisci: **generale** (nome, tipologia, durata, luogo di base, **immagine della card**, visibilità), **media**
+(**header principale**, **slider**, **galleria**, scelti dalla libreria), **prezzo** (intero, early bird, giorni prima), **date** con
+**luogo per ogni data** e etichetta, **domande**, **info utili** e **cosa impari** (con foto dalla libreria). Tutto finisce in
+`events.js` (fonte unica) e le pagine si aggiornano da sole.
+- **Libreria media**: carichi le foto (JPG, PNG, WebP; si ridimensionano a max 2200 px e si salvano in `images/`), dai una descrizione (alt)
+  e le scegli da ogni esperienza. Le foto nuove restano "da pubblicare" finché non pubblichi.
+- **Anteprima**: il pulsante apre la pagina con `?preview=1` e mostra la bozza (le foto appena caricate si vedono dopo la pubblicazione).
+- **Pubblica sul sito**: scrive nel repository (prima le foto nuove, poi `events.js`) via API GitHub. Serve un *fine-grained token* con permesso
+  **Contents: Read and write** solo su questo repository (GitHub → Settings → Developer settings). Il token si può ricordare solo su questo browser.
+  Alternativa senza token: **Scarica events.js** e sostituisci il file nel repository (le foto nuove vanno caricate a mano in `images/`).
+- Le modifiche non pubblicate (foto comprese) restano come bozza nel browser. **Importa** carica un `events.js` scaricato da questa pagina.
 - Nei testi: `**grassetto**`, `[da completare]` (evidenziato), `{early}` `{regular}` `{days}` (si riempiono col prezzo).
-- Nota: l'HTML delle pagine conserva ancora il testo originale come riserva (utile senza JavaScript); quello che vedi sul sito
-  viene da `events.js`. Chi pubblica da `admin.html` non deve toccare l'HTML.
-- Sicurezza: la pagina è pubblica ma senza token non può scrivere nulla; i dati in `events.js` sono comunque pubblici.
+- L'HTML delle pagine conserva il testo e le foto originali come riserva (utile senza JavaScript); quello che vedi sul sito viene da `events.js`.
+- **Sicurezza**: il sito è statico, quindi il login è solo un blocco di cortesia lato browser (le credenziali sono verificate con un hash nel file):
+  non protegge i dati, che in `events.js` sono comunque pubblici. Chi non ha il token GitHub non può comunque pubblicare nulla.
+  Per una protezione vera, metti una password sul file `admin.html` dall'hosting.
 
 ## Pagine temporaneamente nascoste
 Per ora **nessun link** porta a queste 5 pagine (i file restano nel repo, raggiungibili solo con l'URL diretto):
