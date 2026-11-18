@@ -1192,3 +1192,41 @@ mark.ais-hl{background:linear-gradient(transparent 56%,rgba(176,84,45,.26) 56%);
 .ais-act__pick:hover{text-decoration:underline;}
 .ais-composer [hidden]{display:none !important;}
 .ais-composer__adhoc{display:block;}
+
+/* ======== Pagina Metodo ======== */
+.ais-concept{display:grid;grid-template-columns:.9fr 1.1fr;gap:56px;align-items:center;}
+.ais-concept--rev .ais-concept__media{order:2;}
+.ais-concept__media{border-radius:22px;overflow:hidden;aspect-ratio:4/5;background:var(--ais-sand-dark);box-shadow:0 22px 44px -26px rgba(31,61,26,.5);}
+.ais-concept__media img{width:100%;height:100%;object-fit:cover;display:block;}
+.ais-cdl{margin:22px 0 0;display:grid;gap:14px;}
+.ais-cdl>div{padding:14px 0 0;border-top:1px solid var(--ais-line);}
+.ais-cdl dt{font:700 11.5px Inter,system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--ais-ochre-deep);margin:0 0 4px;}
+.ais-cdl dd{margin:0;font:400 15.5px/1.6 Inter,system-ui,sans-serif;color:var(--ais-ink-2);}
+.ais-duo{display:grid;grid-template-columns:1fr auto 1fr;gap:20px;align-items:center;margin-top:36px;}
+.ais-duo__c{position:relative;border-radius:20px;overflow:hidden;aspect-ratio:4/3;background:var(--ais-forest-deep);}
+.ais-duo__c img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.62);}
+.ais-duo__c h3,.ais-duo__c p{position:relative;z-index:1;color:#fff;margin:0;padding:0 24px;}
+.ais-duo__c{display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:22px;}
+.ais-duo__c h3{font:500 36px "Cormorant Garamond",Georgia,serif;}
+.ais-duo__c p{font:500 14px Inter,system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#e8c98f;margin-top:4px;}
+.ais-duo__plus{font:500 44px "Cormorant Garamond",Georgia,serif;color:var(--ais-ochre);}
+.ais-prin{list-style:none;margin:20px 0 0;padding:0;display:grid;gap:14px;}
+.ais-prin li{display:flex;flex-direction:column;gap:2px;padding-top:14px;border-top:1px solid var(--ais-line);}
+.ais-prin b{font:500 23px "Cormorant Garamond",Georgia,serif;color:var(--ais-forest-deep);}
+.ais-prin span{font:400 15px/1.55 Inter,system-ui,sans-serif;color:var(--ais-ink-2);}
+.ais-nots{display:grid;gap:12px;max-width:860px;margin:34px auto 0;}
+.ais-nots__row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.ais-nots__row p{margin:0;padding:16px 18px;border-radius:14px;font:500 15.5px/1.45 Inter,system-ui,sans-serif;}
+.ais-nots__row .no{background:#f0e9de;color:#7a6f60;text-decoration:line-through;text-decoration-color:rgba(122,111,96,.5);}
+.ais-nots__row .yes{background:var(--ais-forest-deep);color:#fff;}
+@media(max-width:860px){.ais-concept{grid-template-columns:1fr;gap:26px;}.ais-concept--rev .ais-concept__media{order:0;}.ais-concept__media{aspect-ratio:4/3;}
+  .ais-duo{grid-template-columns:1fr;}.ais-duo__plus{text-align:center;}.ais-nots__row{grid-template-columns:1fr;gap:6px;}}
+
+/* menu con 7 voci: nessun a capo, spaziatura più stretta sotto i 1240px */
+.site-header .nav-link,.site-header .nav-logo{white-space:nowrap;}
+@media(min-width:1024px) and (max-width:1240px){
+  .site-header nav.lg\:flex{gap:18px;}
+  .site-header .nav-link{font-size:13px;letter-spacing:.02em;}
+  .site-header .nav-logo{font-size:19px;}
+  .site-header .nav-cta{padding:10px 16px;font-size:13px;}
+}

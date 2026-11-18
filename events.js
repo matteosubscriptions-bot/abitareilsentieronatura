@@ -2178,6 +2178,53 @@ window.AIS_DATA = {
           "images/team-tenda-bushcraft.jpg"
         ]
       }
+    },
+    "metodologia": {
+      "media": {
+        "hero": {
+          "img": "images/hero-forest.jpg"
+        },
+        "slider": [
+          {
+            "img": "images/full-bosco.jpg",
+            "cap": "Il bosco"
+          },
+          {
+            "img": "images/accendi-fuoco.jpg",
+            "cap": "Fare con le mani"
+          },
+          {
+            "img": "images/team-impronta.jpg",
+            "cap": "Leggere le tracce"
+          },
+          {
+            "img": "images/mappa-viaggio.jpg",
+            "cap": "Orientarsi"
+          },
+          {
+            "img": "images/cammino-giorno2.jpg",
+            "cap": "Il tempo lento"
+          },
+          {
+            "img": "images/escape-the-city.jpg",
+            "cap": "Il gruppo"
+          },
+          {
+            "img": "images/team-fuoco-scintille.jpg",
+            "cap": "Il fuoco"
+          }
+        ],
+        "gallery": [
+          "images/team-mappa-zaino.jpg",
+          "images/team-scarpe-bussola.jpg",
+          "images/hero-forest.jpg",
+          "images/team-mappa-disegnata.jpg",
+          "images/team-codice-carte.jpg",
+          "images/team-land-art.jpg",
+          "images/escape-the-city.jpg",
+          "images/accendi-fuoco.jpg"
+        ]
+      }
     }
   }
 };

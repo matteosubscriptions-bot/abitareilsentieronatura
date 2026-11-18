@@ -89,6 +89,10 @@ Per ogni esperienza gestisci: **generale** (nome, tipologia, durata, luogo di ba
   interpretazione, modificabile), attività in forma di idea, come funziona, location (Canyon Park Bagni di Lucca, Parco Avventura Il Gigante) e contatto.
   Le foto `images/team-*.jpg` sono ritagli del PDF "Formazione esperienziale outdoor".
 
+- **Metodo** (`metodologia.html`): "Il corpo fa la prima mossa". Per ognuno dei 7 strumenti (apprendimento esperienziale, testa-cuore-mani, Coyote Mentoring e Lavoro che riconnette,
+  8 Shields, cerchi e comunicazione non violenta, bushcraft, permacultura): cos'è, da dove viene, nella mia vita, nel bosco con te. I fatti personali vengono dal prototipo
+  (storia, formazioni); le origini storiche degli strumenti sono sintetiche: rivedile. Menu: voce "Metodo".
+
 ## Testi e foto di tutte le pagine (admin)
 In `admin.html` → **Pagine del sito** (Home, Esperienze, Calendario, Chi sono, Scuole & Gruppi, Aziende, Testimonianze, **Globale** = barra annunci e footer) e,
 dentro ogni esperienza, la scheda **Testi pagina**. L'admin legge la pagina pubblicata, elenca testi e foto per sezione e salva solo le differenze in `events.js`
