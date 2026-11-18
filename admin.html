@@ -228,6 +228,7 @@ dialog#pick{width:min(860px,96vw)}
     '   - price: { early, regular, daysBefore } = prezzo early bird fino a N giorni prima, poi intero\n' +
     '   - info: righe "Info utili" [{ k, v, ico? }]    - faq: [{ q, a }]\n' +
     '   - learn: card "Cosa impari" [{ img, icon, title, chips[] }]\n' +
+    '   - activities: "Cosa facciamo" [{ icon, title, text }]\n' +
     '   - media: { hero: { img, video? }, slider: [{ img, cap }], gallery: [img, ...] }\n' +
     '   - menu: true = compare nel menu (e nel footer);  blurb, group, badge = testi della card;\n' +
     '     related: [slug, slug, slug?] = le 2-3 esperienze collegate ("Altri corsi ed esperienze")\n' +
@@ -405,6 +406,7 @@ dialog#pick{width:min(860px,96vw)}
         if (!e.info || !e.info.length) delete e.info;
         if (!e.faq || !e.faq.length) delete e.faq;
         if (!e.learn || !e.learn.length) delete e.learn;
+        if (!e.activities || !e.activities.length) delete e.activities;
         if (!e.img) delete e.img;
         if (!e.blurb) delete e.blurb;
         if (!e.group) delete e.group;
@@ -477,6 +479,7 @@ dialog#pick{width:min(860px,96vw)}
         }
         (e.faq || []).forEach(function (f, i) { if (!f.q || !f.a) errs.push(n + ": domanda " + (i + 1) + " incompleta"); });
         (e.info || []).forEach(function (r, i) { if (!r.k || !r.v) errs.push(n + ": riga info " + (i + 1) + " incompleta"); });
+        (e.activities || []).forEach(function (c, i) { if (!c.title || !c.text) errs.push(n + ": attività " + (i + 1) + " incompleta"); });
         (e.learn || []).forEach(function (c, i) { if (!c.title || !c.img) errs.push(n + ": card “cosa impari” " + (i + 1) + " incompleta"); });
         var rel = (e.related || []).filter(Boolean);
         if (rel.length < 2 || rel.length > 3) errs.push(n + ": scegli 2 o 3 esperienze collegate");
@@ -906,6 +909,22 @@ dialog#pick{width:min(860px,96vw)}
       return wrap;
     }
 
+    function tabActivities(e) {
+      e.activities = e.activities || [];
+      var wrap = el("div", {}, [el("p", { class: "hint", text: "Le attività della sezione “Cosa facciamo”, sopra “Cosa impari”: poche cose concrete, con un’icona. Titolo e frase breve. Il titolo e l’introduzione della sezione si cambiano in “Testi pagina”." })]);
+      if (!e.activities.length) wrap.appendChild(el("div", { class: "empty", text: "Nessuna attività: la pagina mostra quelle scritte nel testo originale." }));
+      e.activities.forEach(function (c, i) {
+        wrap.appendChild(el("div", { class: "item" }, [
+          el("div", { class: "grid", style: "grid-template-columns:1fr 160px" }, [
+            field("Titolo", inp(c, "title")),
+            field("Icona", sel(c, "icon", ICONS.map(function (n) { return [n, n]; })))
+          ]),
+          el("div", { style: "height:8px" }), field("Testo", area(c, "text", 2)), tools(e.activities, i)
+        ]));
+      });
+      wrap.appendChild(el("button", { class: "btn", type: "button", text: "+ Aggiungi attività", onclick: function () { e.activities.push({ icon: "sparkles", title: "", text: "" }); touch(); render(); } }));
+      return wrap;
+    }
     function tabLearn(e) {
       e.learn = e.learn || [];
       var wrap = el("div", {}, [el("p", { class: "hint", text: "Le card con foto della sezione “Cosa impari / Cosa ti resta”. Le parole chiave si scrivono separate da virgola." })]);
@@ -1313,10 +1332,10 @@ dialog#pick{width:min(860px,96vw)}
     }
 
     /* ---- render */
-    var TABS = [["generale", "Generale"], ["media", "Media"], ["related", "Collegate"], ["prezzo", "Prezzo"], ["date", "Date e luoghi"], ["faq", "Domande"], ["info", "Info utili"], ["learn", "Cosa impari"], ["testi", "Testi pagina"]];
+    var TABS = [["generale", "Generale"], ["media", "Media"], ["related", "Collegate"], ["prezzo", "Prezzo"], ["date", "Date e luoghi"], ["faq", "Domande"], ["info", "Info utili"], ["activities", "Attività"], ["learn", "Cosa impari"], ["testi", "Testi pagina"]];
     function count(e, k) {
       if (k === "date") return data.events.filter(function (v) { return v.exp === cur; }).length;
-      if (k === "faq" || k === "info" || k === "learn") return (e[k] || []).length;
+      if (k === "faq" || k === "info" || k === "learn" || k === "activities") return (e[k] || []).length;
       if (k === "related") return (e.related || []).filter(Boolean).length;
       return null;
     }
@@ -1363,7 +1382,7 @@ dialog#pick{width:min(860px,96vw)}
         return el("button", { class: "tab", type: "button", role: "tab", "aria-selected": String(t[0] === tab), onclick: function () { tab = t[0]; render(); } },
           [document.createTextNode(t[1]), c != null ? el("i", { text: "(" + c + ")" }) : null]);
       }));
-      var body = { generale: tabGenerale, media: tabMedia, related: tabRelated, prezzo: tabPrezzo, date: tabDate, faq: tabFaq, info: tabInfo, learn: tabLearn, testi: tabPageTexts }[tab](e);
+      var body = { generale: tabGenerale, media: tabMedia, related: tabRelated, prezzo: tabPrezzo, date: tabDate, faq: tabFaq, info: tabInfo, activities: tabActivities, learn: tabLearn, testi: tabPageTexts }[tab](e);
       m.appendChild(el("div", { class: "panel" }, [
         el("div", { class: "row", style: "justify-content:space-between" }, [
           el("div", {}, [el("h2", { text: e.name || cur }), el("p", { class: "sub", text: (TYPES[e.type] || "") + " · " + (e.duration || "") })]),

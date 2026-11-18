@@ -951,6 +951,12 @@
         html = list.map(function (r) {
           return '<div class="ais-data__row"><div class="ais-data__k">' + (r.ico ? ico(r.ico) : "") + esc(r.k) + '</div><div class="ais-data__v">' + fmt(r.v, x) + "</div></div>";
         }).join("");
+      } else if (kind === "activities") {
+        html = list.map(function (a) {
+          return '<div class="ais-practice">' + '<svg class="ais-ico ais-practice__ico"><use href="#i-' + esc(a.icon || "sparkles") + '"></use></svg><h3>' + esc(a.title) + "</h3><p>" + fmt(a.text, x) + "</p></div>";
+        }).join("");
+        node.classList.toggle("ais-grid--4", list.length === 4);
+        node.classList.toggle("ais-grid--3", list.length !== 4);
       } else if (kind === "learn") {
         html = list.map(function (c) {
           return '<article class="ais-pcard"><div class="ais-pcard__media"><img alt="" src="' + esc(c.img) + '" loading="lazy"/></div><div class="ais-pcard__body"><h3>' +

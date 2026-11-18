@@ -11,6 +11,7 @@
    - price: { early, regular, daysBefore } = prezzo early bird fino a N giorni prima, poi intero
    - info: righe "Info utili" [{ k, v, ico? }]    - faq: [{ q, a }]
    - learn: card "Cosa impari" [{ img, icon, title, chips[] }]
+   - activities: "Cosa facciamo" [{ icon, title, text }]
    - media: { hero: { img, video? }, slider: [{ img, cap }], gallery: [img, ...] }
    - menu: true = compare nel menu (e nel footer);  blurb, group, badge = testi della card;
      related: [slug, slug, slug?] = le 2-3 esperienze collegate ("Altri corsi ed esperienze")
@@ -219,6 +220,38 @@ window.AIS_DATA = {
       "related": [
         "elementi-di-convivenza",
         "orienteering-sensoriale"
+      ],
+      "activities": [
+        {
+          "icon": "fire",
+          "title": "Il fuoco",
+          "text": "Lo accendi con metodi primitivi e lo tieni vivo per tutto il weekend."
+        },
+        {
+          "icon": "tent",
+          "title": "Il campo base",
+          "text": "Monti la tenda, cucini sul fuoco, organizzi il campo con il gruppo."
+        },
+        {
+          "icon": "compass",
+          "title": "Orientarsi",
+          "text": "Mappa e bussola, ma anche segni, luce e forma del terreno."
+        },
+        {
+          "icon": "hand",
+          "title": "Nodi, corde e coltello",
+          "text": "Fibre naturali, nodi essenziali, un utensile intagliato nel legno, in sicurezza."
+        },
+        {
+          "icon": "leaf",
+          "title": "Tracce e piante",
+          "text": "Leggi le tracce degli animali e impari a riconoscere alberi e piante."
+        },
+        {
+          "icon": "eye",
+          "title": "Il sit spot",
+          "text": "Un tempo da solo nel bosco, in silenzio, a osservare."
+        }
       ]
     },
     "orienteering-sensoriale": {
@@ -360,6 +393,28 @@ window.AIS_DATA = {
       "related": [
         "accendi-il-tuo-fuoco",
         "escape-the-city"
+      ],
+      "activities": [
+        {
+          "icon": "compass",
+          "title": "La carta",
+          "text": "Si parte da una mappa topografica vera: curve di livello, corsi d’acqua, sentieri."
+        },
+        {
+          "icon": "route",
+          "title": "Dalla mappa al terreno",
+          "text": "Poi si esce a cercarli nel paesaggio, a passo lento."
+        },
+        {
+          "icon": "eye",
+          "title": "I sensi",
+          "text": "Vista, udito, tatto: leggere il terreno, la luce, i suoni."
+        },
+        {
+          "icon": "sparkles",
+          "title": "I dettagli",
+          "text": "Ti fermi e noti qualcosa che prima non c’era."
+        }
       ]
     },
     "accendi-il-tuo-fuoco": {
@@ -505,6 +560,28 @@ window.AIS_DATA = {
       "related": [
         "orienteering-sensoriale",
         "escape-the-city"
+      ],
+      "activities": [
+        {
+          "icon": "users",
+          "title": "Il cerchio",
+          "text": "Ci si siede insieme e si guarda come funziona l’archetto."
+        },
+        {
+          "icon": "fire",
+          "title": "L’archetto",
+          "text": "Provi tu: il braccio si stanca e la brace non arriva subito."
+        },
+        {
+          "icon": "eye",
+          "title": "Osservare",
+          "text": "Noti come reagisci: forzi, cambi tecnica, ti fermi, chiedi aiuto?"
+        },
+        {
+          "icon": "hand",
+          "title": "Una scelta",
+          "text": "Torni a casa con un’azione precisa, decisa da te."
+        }
       ]
     },
     "elementi-di-convivenza": {
@@ -679,6 +756,28 @@ window.AIS_DATA = {
       "related": [
         "escape-the-city",
         "accendi-il-tuo-fuoco"
+      ],
+      "activities": [
+        {
+          "icon": "fire",
+          "title": "Fuoco e cibo",
+          "text": "Accendi il fuoco con le mani e cucini insieme."
+        },
+        {
+          "icon": "drop",
+          "title": "Acqua",
+          "text": "Trovi e filtri una sorgente."
+        },
+        {
+          "icon": "tent",
+          "title": "Riparo",
+          "text": "Costruisci un riparo con il gruppo."
+        },
+        {
+          "icon": "moon",
+          "title": "Buio e terra",
+          "text": "Cammini di notte, poi a piedi nudi sulla terra."
+        }
       ]
     },
     "tribu-del-bosco": {
@@ -818,6 +917,28 @@ window.AIS_DATA = {
       "related": [
         "escape-the-city",
         "orienteering-sensoriale"
+      ],
+      "activities": [
+        {
+          "icon": "fire",
+          "title": "Il fuoco",
+          "text": "Si accende insieme, al centro del gruppo."
+        },
+        {
+          "icon": "hand",
+          "title": "Costruire",
+          "text": "Qualcosa da fare con le mani, tutti insieme."
+        },
+        {
+          "icon": "sparkles",
+          "title": "Giocare",
+          "text": "Davvero, senza dover essere bravi."
+        },
+        {
+          "icon": "users",
+          "title": "Il cerchio",
+          "text": "Ci si siede e ci si racconta."
+        }
       ]
     },
     "guardiani-del-fuoco": {
@@ -966,6 +1087,28 @@ window.AIS_DATA = {
       "related": [
         "escape-the-city",
         "accendi-il-tuo-fuoco"
+      ],
+      "activities": [
+        {
+          "icon": "fire",
+          "title": "Il fuoco",
+          "text": "Al tramonto lo accendi con le mani."
+        },
+        {
+          "icon": "users",
+          "title": "I turni",
+          "text": "A turno lo alimenti e lo custodisci."
+        },
+        {
+          "icon": "moon",
+          "title": "Storie e silenzio",
+          "text": "Nel cerchio si racconta, si ascolta, si sta zitti."
+        },
+        {
+          "icon": "tent",
+          "title": "La notte",
+          "text": "Si dorme vicino alla brace; al mattino colazione sul fuoco."
+        }
       ]
     },
     "la-mappa-del-tuo-viaggio": {
@@ -1110,6 +1253,28 @@ window.AIS_DATA = {
       "related": [
         "accendi-il-tuo-fuoco",
         "escape-the-city"
+      ],
+      "activities": [
+        {
+          "icon": "compass",
+          "title": "Leggere la carta",
+          "text": "Curve di livello, corsi d’acqua, sentieri."
+        },
+        {
+          "icon": "idea",
+          "title": "Le metafore",
+          "text": "Ogni elemento della mappa diventa una domanda sul tuo percorso."
+        },
+        {
+          "icon": "hand",
+          "title": "Disegnare",
+          "text": "Carta e penna: la tua mappa, fatta con le tue mani."
+        },
+        {
+          "icon": "route",
+          "title": "La bussola",
+          "text": "Ogni bussola ha un nord: qual è il tuo?"
+        }
       ]
     },
     "via-degli-dei": {
@@ -1268,6 +1433,28 @@ window.AIS_DATA = {
       "related": [
         "escape-the-city",
         "orienteering-sensoriale"
+      ],
+      "activities": [
+        {
+          "icon": "route",
+          "title": "Il cammino",
+          "text": "Un tratto del sentiero storico tra Bologna e Firenze, a passo lento."
+        },
+        {
+          "icon": "tent",
+          "title": "Il campo",
+          "text": "Si montano le tende prima del tramonto."
+        },
+        {
+          "icon": "fire",
+          "title": "La sera",
+          "text": "Il fuoco, la cena, le storie condivise."
+        },
+        {
+          "icon": "leaf",
+          "title": "L’ecovillaggio",
+          "text": "Il mattino dopo incontri chi ha scelto di viverci."
+        }
       ]
     },
     "cammino": {
@@ -1424,6 +1611,28 @@ window.AIS_DATA = {
       "related": [
         "escape-the-city",
         "orienteering-sensoriale"
+      ],
+      "activities": [
+        {
+          "icon": "route",
+          "title": "Zaino in spalla",
+          "text": "Ogni giorno una tappa, un passo dopo l’altro."
+        },
+        {
+          "icon": "users",
+          "title": "Il cerchio",
+          "text": "La sera, attorno al fuoco, si condivide quello che è emerso."
+        },
+        {
+          "icon": "moon",
+          "title": "Un tratto in silenzio",
+          "text": "Cammini da solo per un pezzo di strada."
+        },
+        {
+          "icon": "sparkles",
+          "title": "Il punto più alto",
+          "text": "Dopo la fatica, lo sguardo si apre."
+        }
       ]
     }
   },
