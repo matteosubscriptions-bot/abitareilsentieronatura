@@ -1271,3 +1271,11 @@ mark.ais-hl{background:linear-gradient(transparent 56%,rgba(176,84,45,.26) 56%);
 .ais-yt-bg.is-playing{opacity:1;}
 .ais-yt-bg iframe{position:absolute;top:50%;left:50%;width:177.78vh;height:56.25vw;min-width:100%;min-height:100%;transform:translate(-50%,-50%);border:0;pointer-events:none;}
 @supports (width:1cqw){.ais-yt-bg iframe{width:max(100cqw,177.78cqh);height:max(56.25cqw,100cqh);min-width:0;min-height:0;}}
+
+/* Pulsante fluttuante WhatsApp */
+.ais-wafab{position:fixed;right:20px;bottom:20px;z-index:950;display:inline-flex;align-items:center;gap:10px;height:58px;min-width:58px;padding:0 20px 0 16px;border-radius:999px;background:var(--ais-forest-deep);color:#fff;text-decoration:none;font:600 15px Inter,system-ui,sans-serif;box-shadow:0 10px 28px -8px rgba(0,0,0,.5),0 0 0 2px rgba(255,255,255,.18);transition:transform .2s,box-shadow .2s;}
+.ais-wafab svg{width:28px;height:28px;flex:none;fill:#25d366;}
+.ais-wafab:hover{transform:translateY(-2px);box-shadow:0 14px 32px -8px rgba(0,0,0,.55),0 0 0 2px rgba(255,255,255,.3);}
+.ais-wafab:focus-visible{outline:3px solid var(--ais-ochre);outline-offset:3px;}
+@media(max-width:767px){.ais-wafab{right:14px;bottom:14px;padding:0;justify-content:center;width:56px;height:56px;}.ais-wafab__t{display:none;}.ais-wafab--lift{bottom:78px;}}
+@media print{.ais-wafab{display:none;}}

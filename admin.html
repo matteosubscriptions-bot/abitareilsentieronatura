@@ -459,6 +459,14 @@ dialog#pick{width:min(860px,96vw)}
         if (Object.keys(m).length) pmo[slug] = { media: m };
       });
       x.pagemedia = pmo;
+      if (x.whatsapp) {
+        var w = x.whatsapp, nw = {};
+        if (w.show === false) nw.show = false;
+        var dn = String(w.number || "").replace(/\D/g, ""); if (dn && dn !== "393667187733") nw.number = dn;
+        if (w.message && String(w.message).trim()) nw.message = String(w.message).trim();
+        if (w.hide && JSON.stringify(w.hide.slice().sort()) !== JSON.stringify(["aziende", "scuole-gruppi"])) nw.hide = w.hide.slice().sort();
+        if (Object.keys(nw).length) x.whatsapp = nw; else delete x.whatsapp;
+      }
       var ph = {};
       Object.keys(x.pagesHidden || {}).sort().forEach(function (k) { if (x.pagesHidden[k] === "menu" || x.pagesHidden[k] === "off") ph[k] = x.pagesHidden[k]; });
       if (Object.keys(ph).length) x.pagesHidden = ph; else delete x.pagesHidden;
@@ -1511,12 +1519,44 @@ dialog#pick{width:min(860px,96vw)}
       panel.appendChild(viewPageEditor(p[2], p[0], "page"));
       return panel;
     }
+    /* ---- pulsante WhatsApp */
+    function waControl() {
+      var DEF_HIDE = ["scuole-gruppi", "aziende"];
+      data.whatsapp = data.whatsapp || {};
+      var W = data.whatsapp;
+      var wrap = el("div", { class: "pgrp", style: "padding:14px 16px;margin-bottom:14px" });
+      wrap.appendChild(el("h3", { class: "sec", style: "margin-top:0", text: "Pulsante WhatsApp fluttuante" }));
+      var on = el("input", { type: "checkbox" }); on.checked = W.show !== false;
+      on.addEventListener("change", function () { if (on.checked) delete W.show; else W.show = false; touch(); });
+      wrap.appendChild(el("label", { class: "check" }, [on, document.createTextNode(" Mostra il pulsante in basso a destra")]));
+      wrap.appendChild(el("div", { class: "grid", style: "margin-top:10px" }, [
+        field("Numero (con prefisso, senza +) — es. 393667187733", inp(W, "number", { ph: "393667187733", inputmode: "numeric" }))
+      ]));
+      wrap.appendChild(el("div", { style: "height:8px" }));
+      wrap.appendChild(field("Messaggio che si prepara", area(W, "message", 2)));
+      wrap.appendChild(el("p", { class: "hint", text: "Se lo lasci vuoto: “Ciao Matteo, ti scrivo dal sito Abitare il Sentiero.” Nelle pagine interne si aggiunge il nome della pagina." }));
+      wrap.appendChild(el("div", { class: "lbl2", text: "Non mostrare in queste pagine" }));
+      var hide = (W.hide || DEF_HIDE).slice();
+      var boxes = el("div", { class: "chk" }, SITEPAGES.map(function (p) {
+        var c = el("input", { type: "checkbox" }); c.checked = hide.indexOf(p[0]) >= 0;
+        c.addEventListener("change", function () {
+          var i = hide.indexOf(p[0]);
+          if (c.checked && i < 0) hide.push(p[0]); else if (!c.checked && i >= 0) hide.splice(i, 1);
+          W.hide = hide.slice(); touch();
+        });
+        return el("label", { class: "check sm" }, [c, document.createTextNode(p[1])]);
+      }));
+      wrap.appendChild(boxes);
+      wrap.appendChild(el("p", { class: "hint", text: "Di solito Scuole & Gruppi e Aziende restano senza: lì il contatto è solo via email. Le pagine delle esperienze mostrano sempre il pulsante." }));
+      return wrap;
+    }
     function viewGlobal() {
       var panel = el("div", { class: "panel" });
       panel.appendChild(el("div", { class: "row", style: "justify-content:space-between" }, [
         el("div", {}, [el("h2", { text: "Globale" }), el("p", { class: "sub", text: "Barra annunci in alto e footer: valgono per tutte le pagine" })]),
         el("div", { class: "row" }, [el("button", { class: "btn sm", type: "button", text: "Anteprima", onclick: function () { preview("index.html"); } })])
       ]));
+      panel.appendChild(waControl());
       panel.appendChild(viewPageEditor("index.html", "_global", "global"));
       return panel;
     }

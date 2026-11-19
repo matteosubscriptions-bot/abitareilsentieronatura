@@ -113,6 +113,10 @@ YouTube/Vimeo (consigliato) o carica un file, scegli la copertina e i testi (sop
 ### Più video nella stessa pagina
 Nella scheda **Video** puoi aggiungere quanti video vuoi (YouTube/Vimeo o file), riordinarli e dare a ciascuno copertina e didascalia. Con uno solo il video è grande; con due o tre diventa una griglia.
 
+## Pulsante WhatsApp fluttuante
+In basso a destra su tutte le pagine (su telefono è solo l'icona). In admin → Pagine del sito → **Globale**: mostra/nascondi, numero, messaggio preimpostato e pagine dove non compare
+(di default Scuole & Gruppi e Aziende, dove il contatto è solo via email).
+
 ## Nascondere pagine
 Da admin: per ogni pagina del sito (Pagine del sito → pagina → **Visibilità della pagina**) e per ogni esperienza (scheda **Generale**):
 - **Nascosta**: sparisce da menu (computer e telefono), footer e pulsanti delle altre pagine; il link diretto funziona e la pagina non viene indicizzata.
