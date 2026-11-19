@@ -534,9 +534,13 @@ dialog#pick{width:min(860px,96vw)}
 
     /* ---- stato / bozza */
     var saveT;
+    var previewOn = false; // se hai aperto un'anteprima, la teniamo aggiornata mentre modifichi
     function touch() {
       clearTimeout(saveT);
-      saveT = setTimeout(function () { try { localStorage.setItem(DRAFT_KEY, JSON.stringify(data)); } catch (e) {} }, 250);
+      saveT = setTimeout(function () {
+        try { localStorage.setItem(DRAFT_KEY, JSON.stringify(data)); } catch (e) {}
+        if (previewOn) { try { localStorage.setItem("ais_preview", JSON.stringify(clean(data))); } catch (e) {} }
+      }, 250);
       status();
     }
     function status() {
@@ -1556,7 +1560,7 @@ dialog#pick{width:min(860px,96vw)}
     }
 
     function preview(page) {
-      try { localStorage.setItem("ais_preview", JSON.stringify(clean(data))); } catch (e) { toast("Anteprima non disponibile in questo browser", true); return; }
+      try { localStorage.setItem("ais_preview", JSON.stringify(clean(data))); previewOn = true; } catch (e) { toast("Anteprima non disponibile in questo browser", true); return; }
       if (Object.keys(pending).length) toast("Le foto appena caricate si vedono sul sito dopo la pubblicazione");
       window.open(page + "?preview=1", "_blank");
     }
@@ -1574,6 +1578,7 @@ dialog#pick{width:min(860px,96vw)}
       Object.keys(pending).forEach(function (s) { idb("readwrite", function (st) { return st.delete(s); }); });
       pending = {}; data = clone(PUBLISHED); restored = false;
       try { localStorage.removeItem(DRAFT_KEY); } catch (e) {}
+      previewOn = false; try { localStorage.removeItem("ais_preview"); } catch (e) {}
       render(); toast("Modifiche annullate");
     });
     $("b-import").addEventListener("click", function () { $("file").click(); });
@@ -1658,6 +1663,7 @@ dialog#pick{width:min(860px,96vw)}
     }
     function markPublished(msg) {
       PUBLISHED = clone(clean(data)); data = clone(PUBLISHED); restored = false;
+      previewOn = false; try { localStorage.removeItem("ais_preview"); } catch (e) {}
       try { localStorage.removeItem(DRAFT_KEY); } catch (e) {}
       logp(msg, "ok"); render();
     }
@@ -1745,6 +1751,7 @@ dialog#pick{width:min(860px,96vw)}
       chain.then(function () { logp("Pubblico i dati…"); return putFile("events.js", b64(build(data)), "Aggiornamento contenuti esperienze da admin"); })
         .then(function () {
           PUBLISHED = clone(clean(data)); data = clone(PUBLISHED); restored = false;
+          previewOn = false; try { localStorage.removeItem("ais_preview"); } catch (e) {}
           try { localStorage.removeItem(DRAFT_KEY); } catch (e) {}
           logp("Pubblicato" + (srcs.length ? " (" + srcs.length + (srcs.length === 1 ? " foto + dati" : " foto + dati") + ")" : "") + ". Il sito si aggiorna appena il repository viene ripubblicato dal tuo hosting (di solito in uno-due minuti).", "ok");
           render(); $("p-go").disabled = false;

@@ -11,6 +11,9 @@ Ogni aggiornamento ti viene indicato così: *"prendi questi file"* + *"non tocca
 
 ## Registro aggiornamenti (dal più recente)
 
+### Anteprima bozza che non si aggiornava
+Prendi da GitHub: `admin.html`, `site.js`, `AGGIORNAMENTI.md`. Non toccare: `events.js`, `images/`, `videos/`, `documenti/`.
+
 ### Tutti i testi delle pagine modificabili (chip con icona, titoli con icona, etichette dei moduli, anni nelle liste)
 Prendi da GitHub (sono cambiate tutte le pagine con testi accanto a icone): `admin.html`, `index.html`, `esperienze.html`, `aziende.html`, `scuole-gruppi.html`, `metodologia.html`, `chi-sono.html`,
 `escape-the-city.html`, `accendi-il-tuo-fuoco.html`, `orienteering-sensoriale.html`, `elementi-di-convivenza.html`, `tribu-del-bosco.html`, `guardiani-del-fuoco.html`,

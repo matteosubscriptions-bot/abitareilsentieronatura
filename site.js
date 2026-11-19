@@ -456,20 +456,27 @@
 
   // Dati: window.AIS_DATA (events.js). Con ?preview=1 usa la bozza salvata da admin.html.
   var PREVIEW = /[?&]preview=1/.test(location.search);
-  function getData() {
+  var PV; // bozza dell'admin (solo con ?preview=1 e solo se diversa da events.js)
+  function previewData() {
+    if (PV !== undefined) return PV;
+    PV = null;
     if (PREVIEW) {
       try {
-        var pv = JSON.parse(localStorage.getItem("ais_preview") || "null");
-        if (pv && pv.experiences && pv.events) return pv;
+        var x = JSON.parse(localStorage.getItem("ais_preview") || "null");
+        if (x && x.experiences && x.events && JSON.stringify(x) !== JSON.stringify(window.AIS_DATA)) PV = x;
       } catch (e) {}
     }
-    return window.AIS_DATA;
+    return PV;
   }
+  function getData() { return previewData() || window.AIS_DATA; }
   if (PREVIEW) {
+    // quando l'admin aggiorna (o chiude) la bozza, l'anteprima si ricarica da sola
+    window.addEventListener("storage", function (ev) { if (ev.key === "ais_preview") location.reload(); });
     document.addEventListener("DOMContentLoaded", function () {
+      if (!previewData()) return; // bozza uguale a events.js (gia' salvata): niente avviso
       var b = document.createElement("div");
       b.className = "ais-previewbar";
-      b.textContent = "Anteprima bozza \u2014 non ancora pubblicata";
+      b.textContent = "Anteprima bozza \u2014 non ancora salvata o pubblicata";
       document.body.appendChild(b);
     });
   }
