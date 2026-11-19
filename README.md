@@ -110,6 +110,15 @@ come sfondo della home lascia vuoto il campo video. Le foto singole (card, riqua
 Ogni pagina esperienza ha un blocco scuro "Guarda com'è" prima di "Cosa impari". In admin → esperienza → scheda **Video**: spunta "Mostra il video nella pagina", incolla il link
 YouTube/Vimeo (consigliato) o carica un file, scegli la copertina e i testi (sopratitolo, titolo, etichetta, frase). Spento o senza video, il blocco non compare.
 
+### Più video nella stessa pagina
+Nella scheda **Video** puoi aggiungere quanti video vuoi (YouTube/Vimeo o file), riordinarli e dare a ciascuno copertina e didascalia. Con uno solo il video è grande; con due o tre diventa una griglia.
+
+## Nascondere pagine
+Da admin: per ogni pagina del sito (Pagine del sito → pagina → **Visibilità della pagina**) e per ogni esperienza (scheda **Generale**):
+- **Nascosta**: sparisce da menu (computer e telefono), footer e pulsanti delle altre pagine; il link diretto funziona e la pagina non viene indicizzata.
+- **Disattivata**: come Nascosta, e chi apre il link va alla home.
+La home non si può nascondere. Il dato sta in `events.js` (`pagesHidden`).
+
 ## Video o foto: sfondi, slide, testimonianze
 - **Sfondo in alto** di ogni pagina (home, esperienze, calendario, testimonianze, Scuole, Aziende, Metodo, Chi sono, pagine esperienza): in admin → Media scegli **Foto** oppure **Video**.
   Con il video la foto resta come copertina. Meglio clip brevi (5–15 s), senza audio, sotto 5–8 MB.

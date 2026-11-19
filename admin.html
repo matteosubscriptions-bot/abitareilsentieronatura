@@ -430,9 +430,13 @@ dialog#pick{width:min(860px,96vw)}
         if (e.related) e.related = e.related.filter(Boolean);
         if (e.video) {
           var vv = e.video, nv = {};
+          var its = (vv.items && vv.items.length ? vv.items : vv.url ? [{ url: vv.url, poster: vv.poster, label: vv.label }] : [])
+            .map(function (q) { var r = {}; if (q.url && String(q.url).trim()) r.url = String(q.url).trim(); if (q.poster) r.poster = q.poster; if (q.label && String(q.label).trim()) r.label = String(q.label).trim(); return r; })
+            .filter(function (q) { return q.url; });
           if (vv.show) nv.show = true;
-          ["url", "poster", "eyebrow", "title", "text", "label"].forEach(function (k) { if (vv[k] && String(vv[k]).trim()) nv[k] = String(vv[k]).trim(); });
-          if (nv.url || nv.show) e.video = nv; else delete e.video;
+          ["eyebrow", "title", "text"].forEach(function (k) { if (vv[k] && String(vv[k]).trim()) nv[k] = String(vv[k]).trim(); });
+          if (its.length) nv.items = its;
+          if (nv.items || nv.show) e.video = nv; else delete e.video;
         }
         if (e.media) {
           var m = e.media;
@@ -455,6 +459,9 @@ dialog#pick{width:min(860px,96vw)}
         if (Object.keys(m).length) pmo[slug] = { media: m };
       });
       x.pagemedia = pmo;
+      var ph = {};
+      Object.keys(x.pagesHidden || {}).sort().forEach(function (k) { if (x.pagesHidden[k] === "menu" || x.pagesHidden[k] === "off") ph[k] = x.pagesHidden[k]; });
+      if (Object.keys(ph).length) x.pagesHidden = ph; else delete x.pagesHidden;
       var pg = {};
       Object.keys(x.pages || {}).sort().forEach(function (slug) {
         var src = x.pages[slug], out = {};
@@ -507,9 +514,14 @@ dialog#pick{width:min(860px,96vw)}
         if (rel.length < 2 || rel.length > 3) errs.push(n + ": scegli 2 o 3 esperienze collegate");
         else if (rel.some(function (r, i) { return rel.indexOf(r) !== i; })) errs.push(n + ": esperienze collegate ripetute");
         else if (rel.some(function (r) { return r === s || !data.experiences[r]; })) errs.push(n + ": esperienza collegata non valida");
-        if (e.video && e.video.show && !e.video.url) errs.push(n + ": “Video” attivo ma senza link o file (inseriscilo, o disattiva)");
-        else if (e.video && e.video.show && !parseVideo(e.video.url)) errs.push(n + ": “Video”: link non riconosciuto (YouTube, Vimeo o file .mp4)");
-        if (e.video && e.video.poster && !inLib(e.video.poster)) errs.push(n + ": copertina del video non presente nella libreria");
+        if (e.video) {
+          var vitems = e.video.items || (e.video.url ? [{ url: e.video.url, poster: e.video.poster }] : []);
+          if (e.video.show && !vitems.some(function (q) { return q.url; })) errs.push(n + ": “Video” attivo ma senza nessun video (aggiungine uno, o disattiva)");
+          vitems.forEach(function (q, k) {
+            if (q.url && !parseVideo(q.url)) errs.push(n + ": video " + (k + 1) + ": link non riconosciuto (YouTube, Vimeo o file .mp4)");
+            if (q.poster && !inLib(q.poster)) errs.push(n + ": video " + (k + 1) + ": copertina non presente nella libreria");
+          });
+        }
         var m = e.media || {};
         if (m.hero && "video" in m.hero && !m.hero.video) errs.push(n + ": sfondo in modalità Video ma senza video (scegli Foto o indica il video)");
         if (m.slider && m.slider.length > 0 && m.slider.length < 3) errs.push(n + ": lo slider ha bisogno di almeno 3 foto (o svuotalo)");
@@ -622,7 +634,7 @@ dialog#pick{width:min(860px,96vw)}
         if ((m.slider || []).some(function (x) { return x.img === src; })) where.push("slider");
         if ((m.gallery || []).indexOf(src) >= 0) where.push("galleria");
         if ((e.learn || []).some(function (c) { return c.img === src; })) where.push("cosa impari");
-        if (e.video && e.video.poster === src) where.push("video");
+        if (e.video && ((e.video.poster === src) || (e.video.items || []).some(function (q) { return q.poster === src; }))) where.push("video");
         if (where.length) out.push((e.name || s) + " (" + where.join(", ") + ")");
       });
       if (data.testimonials.some(function (t) { return t.poster === src; })) out.push("Testimonianze");
@@ -745,6 +757,7 @@ dialog#pick{width:min(860px,96vw)}
       var men = el("input", { type: "checkbox" }); men.checked = e.menu === true;
       men.addEventListener("change", function () { e.menu = men.checked; touch(); });
       return el("div", {}, [
+        visControl(String(e.url || "").replace(/\.html$/, "")),
         el("div", { class: "grid" }, [
           field("Nome", inp(e, "name", { after: renderSide })),
           field("Tipologia", sel(e, "type", Object.keys(TYPES).map(function (k) { return [k, TYPES[k]]; }), { after: renderSide })),
@@ -923,33 +936,44 @@ dialog#pick{width:min(860px,96vw)}
     function tabVideo(e) {
       e.video = e.video || {};
       var v = e.video, wrap = el("div");
+      if (!v.items) { v.items = v.url ? [{ url: v.url, poster: v.poster || "", label: v.label || "" }] : []; delete v.url; delete v.poster; delete v.label; }
       var on = el("input", { type: "checkbox" }); on.checked = !!v.show;
       on.addEventListener("change", function () { v.show = on.checked; touch(); render(); });
       wrap.appendChild(el("label", { class: "check", style: "font-size:16px" }, [on, document.createTextNode(" Mostra il video nella pagina")]));
-      wrap.appendChild(el("p", { class: "hint", text: "Appare come blocco scuro con il video grande, prima della sezione “Cosa impari”. Se lo disattivi (o non c’è il video) il blocco non compare e la pagina resta com’è." }));
-      var info = el("div", { class: "vinfo" });
-      function paint() {
-        var p = parseVideo(v.url);
-        if (!v.url) { info.className = "vinfo"; info.textContent = ""; return; }
-        if (!p) { info.className = "vinfo bad"; info.textContent = "Link non riconosciuto. Incolla un link YouTube o Vimeo, oppure il percorso di un file (es. videos/nome.mp4)."; return; }
-        info.className = "vinfo ok";
-        info.textContent = p.type === "yt" ? "YouTube riconosciuto (" + p.id + ")" : p.type === "vimeo" ? "Vimeo riconosciuto (" + p.id + ") — consigliata una copertina" : "File video";
-      }
-      wrap.appendChild(el("p", { class: "hint", style: "margin:12px 0 6px" }, [el("b", { text: "Consiglio: " }), "carica il video su YouTube (anche “non in elenco”) e incolla il link. Non pesa sul sito e parte veloce da telefono. Il file va bene solo per clip brevi e leggere."]));
-      var vf = videoField("Video (link YouTube / Vimeo, oppure file)", v, "url", {});
-      vf.querySelector("input").addEventListener("input", paint);
-      wrap.appendChild(el("div", { style: "max-width:560px" }, [vf, info]));
-      paint();
-      wrap.appendChild(el("div", { style: "margin-top:14px" }, [imgField("Copertina (opzionale: con YouTube si usa quella del video)", function () { return v.poster; }, function (x) { v.poster = x; }, { clearable: true })]));
+      wrap.appendChild(el("p", { class: "hint", text: "Blocco scuro prima della sezione “Cosa impari”. Con un video è grande; con due o più diventa una griglia. Se lo disattivi (o non c’è nessun video) il blocco non compare e la pagina resta com’è." }));
+      wrap.appendChild(el("p", { class: "hint", style: "margin:6px 0 10px" }, [el("b", { text: "Consiglio: " }), "carica i video su YouTube (anche “non in elenco”) e incolla il link: non pesano sul sito e partono veloci da telefono. I file vanno bene solo per clip brevi e leggere."]));
+      wrap.appendChild(el("h3", { class: "sec", text: "Video (" + v.items.length + ")" }));
+      if (!v.items.length) wrap.appendChild(el("div", { class: "empty", text: "Nessun video. Aggiungine uno." }));
+      v.items.forEach(function (it, k) {
+        var info = el("div", { class: "vinfo" });
+        function paint() {
+          var p = parseVideo(it.url);
+          if (!it.url) { info.className = "vinfo"; info.textContent = ""; return; }
+          if (!p) { info.className = "vinfo bad"; info.textContent = "Link non riconosciuto. Incolla un link YouTube o Vimeo, oppure il percorso di un file (es. videos/nome.mp4)."; return; }
+          info.className = "vinfo ok";
+          info.textContent = p.type === "yt" ? "YouTube riconosciuto (" + p.id + ")" : p.type === "vimeo" ? "Vimeo riconosciuto (" + p.id + ") — consigliata una copertina" : "File video";
+        }
+        var vf = videoField("Video " + (k + 1) + " — link YouTube / Vimeo, oppure file", it, "url", {});
+        vf.querySelector("input").addEventListener("input", paint);
+        paint();
+        wrap.appendChild(el("div", { class: "item" }, [
+          el("div", { style: "max-width:560px" }, [vf, info]),
+          el("div", { style: "margin-top:10px" }, [imgField("Copertina (opzionale: con YouTube si usa quella del video)", function () { return it.poster; }, function (x) { it.poster = x; }, { clearable: true })]),
+          el("div", { style: "margin-top:10px;max-width:560px" }, [field("Didascalia (opzionale)", inp(it, "label", { ph: "es. 1:48 · edizione 2026" }))]),
+          el("div", { class: "tools" }, [
+            el("button", { class: "btn sm", type: "button", "aria-label": "Sposta su", text: "↑", onclick: function () { move(v.items, k, -1); } }),
+            el("button", { class: "btn sm", type: "button", "aria-label": "Sposta giù", text: "↓", onclick: function () { move(v.items, k, 1); } }),
+            el("button", { class: "btn sm danger", type: "button", text: "Elimina", onclick: function () { v.items.splice(k, 1); touch(); render(); } })
+          ])
+        ]));
+      });
+      wrap.appendChild(el("button", { class: "btn", type: "button", text: "+ Aggiungi un video", onclick: function () { v.items.push({ url: "", poster: "", label: "" }); touch(); render(); } }));
       wrap.appendChild(el("h3", { class: "sec", text: "Testi del blocco" }));
-      wrap.appendChild(el("div", { class: "grid" }, [
-        field("Sopratitolo", inp(v, "eyebrow", { ph: "Guarda com’è" })),
-        field("Etichetta sul video (es. 1:48 · edizione 2026)", inp(v, "label"))
-      ]));
+      wrap.appendChild(el("div", { class: "grid" }, [field("Sopratitolo", inp(v, "eyebrow", { ph: "Guarda com’è" }))]));
       wrap.appendChild(el("div", { style: "height:8px" }));
       wrap.appendChild(field("Titolo — invio per andare a capo, //corsivo//", area(v, "title", 2)));
-      wrap.appendChild(el("p", { class: "hint", text: "Se lo lasci vuoto: “Un assaggio, prima di partire.”" }));
-      wrap.appendChild(field("Frase sotto il video (opzionale)", area(v, "text", 2)));
+      wrap.appendChild(el("p", { class: "hint", text: "Se lo lasci vuoto: “Un assaggio, prima di partire.” (con più video: “Guarda cosa succede, prima di partire.”)" }));
+      wrap.appendChild(field("Frase sotto i video (opzionale)", area(v, "text", 2)));
       wrap.appendChild(el("div", { class: "row", style: "margin-top:14px" }, [el("button", { class: "btn", type: "button", text: "Anteprima di questa pagina", onclick: function () { preview(e.url + "#video"); } })]));
       return wrap;
     }
@@ -1440,12 +1464,30 @@ dialog#pick{width:min(860px,96vw)}
       });
       return wrap;
     }
+    /* ---- visibilità delle pagine */
+    var VIS = [["", "Visibile"], ["menu", "Nascosta: via da menu, footer e link (il link diretto funziona)"], ["off", "Disattivata: via da menu, footer e link; chi apre il link va alla home"]];
+    function visControl(slug) {
+      data.pagesHidden = data.pagesHidden || {};
+      var sl = el("select", {}, VIS.map(function (o) { return el("option", { value: o[0], text: o[1] }); }));
+      sl.value = data.pagesHidden[slug] || "";
+      sl.addEventListener("change", function () {
+        if (sl.value) data.pagesHidden[slug] = sl.value; else delete data.pagesHidden[slug];
+        touch(); renderSide();
+        hint.textContent = hintText();
+      });
+      function hintText() { return sl.value ? "Questa pagina non compare nel menu (computer e telefono), nel footer né nei pulsanti delle altre pagine. Non viene indicizzata da Google." : "La pagina è visibile in menu, footer e link."; }
+      var hint = el("p", { class: "hint", style: "margin:6px 0 0", text: hintText() });
+      return el("div", { class: "pgrp", style: "padding:12px 16px;margin-bottom:14px" }, [el("label", { class: "f" }, [el("span", { text: "Visibilità della pagina" }), sl]), hint]);
+    }
+    function pageHidden(slug) { return !!(data.pagesHidden && data.pagesHidden[slug]); }
+
     function viewSitePage(p) {
       var panel = el("div", { class: "panel" });
       panel.appendChild(el("div", { class: "row", style: "justify-content:space-between" }, [
         el("div", {}, [el("h2", { text: p[1] }), el("p", { class: "sub", text: p[2] + " · testi e foto della pagina" })]),
         el("div", { class: "row" }, [el("button", { class: "btn sm", type: "button", text: "Anteprima di questa pagina", onclick: function () { preview(p[2]); } })])
       ]));
+      if (p[0] !== "index") panel.appendChild(visControl(p[0]));
       var PM = {
         "index": [["index", "Media della home: sfondo in alto, slider e galleria"], ["escape-card", "Slider della scheda “Escape the City” (home e catalogo)", ["slider"]]],
         "esperienze": [["esperienze", "Sfondo in alto della pagina", ["hero"]], ["escape-card", "Slider della scheda “Escape the City” (condiviso con la home)", ["slider"]]],
@@ -1562,7 +1604,7 @@ dialog#pick{width:min(860px,96vw)}
         var key = p[0] === "_global" ? "page:_global" : "page:" + p[0];
         var n = Object.keys(data.pages[p[0]] || {}).length;
         s.appendChild(el("button", { class: "exp", type: "button", "aria-current": cur === key ? "true" : "false", onclick: function () { cur = key; render(); } }, [
-          el("b", { text: p[1] }), el("span", { text: n ? n + " modifiche" : "testi e foto" })
+          el("b", { text: p[1] }), el("span", {}, [pageHidden(p[0]) ? el("span", { class: "tag off", text: "nascosta" }) : null, document.createTextNode(n ? n + " modifiche" : "testi e foto")])
         ]));
       });
       s.appendChild(el("h2", { class: "sidehead", text: "Esperienze" }));
@@ -1571,7 +1613,7 @@ dialog#pick{width:min(860px,96vw)}
         var n = data.events.filter(function (v) { return v.exp === slug && v.start >= todayStr(); }).length;
         s.appendChild(el("button", { class: "exp", type: "button", "aria-current": slug === cur ? "true" : "false", onclick: function () { cur = slug; render(); } }, [
           el("b", { text: e.name || slug }),
-          el("span", {}, [el("span", { class: "tag", text: TYPES[e.type] || e.type }), e.active === false ? el("span", { class: "tag off", text: "nascosta" }) : null, document.createTextNode(n + (n === 1 ? " data" : " date"))])
+          el("span", {}, [el("span", { class: "tag", text: TYPES[e.type] || e.type }), e.active === false ? el("span", { class: "tag off", text: "fuori calendario" }) : null, pageHidden(String(e.url || "").replace(/\.html$/, "")) ? el("span", { class: "tag off", text: "pagina nascosta" }) : null, document.createTextNode(n + (n === 1 ? " data" : " date"))])
         ]));
       });
     }

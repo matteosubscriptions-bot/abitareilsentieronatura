@@ -11,6 +11,11 @@ Ogni aggiornamento ti viene indicato così: *"prendi questi file"* + *"non tocca
 
 ## Registro aggiornamenti (dal più recente)
 
+### Più video nella pagina esperienza + pagine del sito nascondibili
+Prendi da GitHub: `admin.html`, `site.js`, `styles.css`, `README.md`, `AGGIORNAMENTI.md`.
+Non toccare: `events.js`, `images/`, `videos/`, `documenti/`. Nessun file nuovo da copiare.
+Un eventuale video già impostato con la versione precedente continua a funzionare (diventa il primo della lista).
+
 ### Video dell'esperienza (blocco "Guarda com'è") in tutte le pagine esperienza
 Prendi da GitHub: `admin.html`, `site.js`, `styles.css`, `escape-the-city.html`, `accendi-il-tuo-fuoco.html`, `orienteering-sensoriale.html`, `elementi-di-convivenza.html`,
 `tribu-del-bosco.html`, `guardiani-del-fuoco.html`, `la-mappa-del-tuo-viaggio.html`, `via-degli-dei.html`, `cammino.html`, `README.md`, `AGGIORNAMENTI.md`.

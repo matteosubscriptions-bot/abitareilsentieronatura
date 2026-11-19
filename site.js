@@ -719,34 +719,72 @@
     });
   }
 
-  // Video dell'esperienza (gestito da admin: scheda "Video"). Visibile solo se attivato e con un video.
+  // Video dell'esperienza (gestito da admin: scheda "Video"). Uno o piu' video; visibile solo se attivato.
   function initExpVideo() {
     var D = getData();
     if (!D || !D.experiences) return;
     function esc(t) { return String(t == null ? "" : t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
     Array.prototype.forEach.call(document.querySelectorAll("[data-expvideo]"), function (sec) {
-      var x = D.experiences[sec.getAttribute("data-exp")], v = x && x.video;
-      var p = v && v.show && v.url ? parseVideo(v.url) : null;
-      if (!p) { sec.hidden = true; sec.innerHTML = ""; return; }
-      var poster = v.poster || p.poster || "", title = v.title || "Un assaggio,\n//prima di partire.//";
-      var media;
-      if (p.type === "file") {
-        media = '<video controls preload="metadata" playsinline' + (poster ? ' poster="' + esc(poster) + '"' : "") + ' src="' + esc(p.src) + '"></video>';
-      } else {
-        media = '<button type="button" class="ais-yt" data-embed="' + esc(p.embed) + '" data-watch="' + esc(p.watch || "") + '" data-title="' + esc("Video: " + (x.name || "")) + '" aria-label="' + esc("Guarda il video: " + (x.name || "")) + '"' +
+      var x = D.experiences[sec.getAttribute("data-exp")], v = (x && x.video) || {};
+      var raw = v.items && v.items.length ? v.items : v.url ? [{ url: v.url, poster: v.poster, label: v.label }] : [];
+      var items = raw.map(function (it) { return { it: it, p: parseVideo(it.url) }; }).filter(function (o) { return o.p; });
+      if (!v.show || !items.length) { sec.hidden = true; sec.innerHTML = ""; return; }
+      var title = v.title || (items.length > 1 ? "Guarda cosa succede,\n//prima di partire.//" : "Un assaggio,\n//prima di partire.//");
+      function media(o) {
+        var p = o.p, poster = o.it.poster || p.poster || "";
+        if (p.type === "file") return '<video controls preload="metadata" playsinline' + (poster ? ' poster="' + esc(poster) + '"' : "") + ' src="' + esc(p.src) + '"></video>';
+        return '<button type="button" class="ais-yt" data-embed="' + esc(p.embed) + '" data-watch="' + esc(p.watch || "") + '" data-title="' + esc("Video: " + (o.it.label || (x && x.name) || "")) + '" aria-label="' + esc("Guarda il video: " + (o.it.label || (x && x.name) || "")) + '"' +
           (poster ? ' style="background-image:url(\'' + esc(poster) + '\')"' : "") + '><span class="ais-yt__play" aria-hidden="true"></span></button>';
+      }
+      var body;
+      if (items.length === 1) {
+        body = '<div class="ais-expvideo__frame">' + media(items[0]) + (items[0].it.label ? '<span class="ais-expvideo__label">' + esc(items[0].it.label) + "</span>" : "") + "</div>";
+      } else {
+        body = '<div class="ais-expvideo__grid ais-expvideo__grid--' + (items.length === 3 ? "3" : "2") + '">' + items.map(function (o) {
+          return '<figure class="ais-expvideo__item"><div class="ais-expvideo__frame">' + media(o) + "</div>" + (o.it.label ? "<figcaption>" + esc(o.it.label) + "</figcaption>" : "") + "</figure>";
+        }).join("") + "</div>";
       }
       var ts = document.querySelector("[data-testimonials]"), tsec = ts && ts.closest("section");
       if (tsec && !tsec.id) tsec.id = "voci";
       sec.innerHTML = '<div class="ais-wrap"><div class="ais-narrow ais-center"><span class="ais-eyebrow">' + esc(v.eyebrow || "Guarda com\u2019\u00e8") + '</span>' +
         '<h2 class="ais-display" style="color:#fff">' + liteToHtml(title, document.createElement("div")).replace(/<span class="it">/g, '<span class="it" style="color:#f1dfba">') + '</h2></div>' +
-        '<div class="ais-expvideo__frame">' + media + (v.label ? '<span class="ais-expvideo__label">' + esc(v.label) + "</span>" : "") + "</div>" +
-        (v.text ? '<p class="ais-expvideo__text">' + esc(v.text) + "</p>" : "") +
+        body + (v.text ? '<p class="ais-expvideo__text">' + esc(v.text) + "</p>" : "") +
         '<div class="ais-cta-row" style="justify-content:center;margin-top:26px"><a class="ais-btn-ochre ais-arrow" href="#date">Prenota il tuo posto</a>' +
         (tsec ? '<a class="ais-btn-ghost ais-expvideo__ghost" href="#' + esc(tsec.id) + '">Le voci di chi c\u2019era</a>' : "") + "</div></div>";
       sec.hidden = false; sec.classList.add("ais-shown");
     });
   }
+
+  // Pagine nascoste da admin: "menu" = via da menu, footer e link (il link diretto funziona, non indicizzata);
+  // "off" = come "menu" e chi apre il link va alla home.
+  function initPageVisibility() {
+    var D = getData(), H = D && D.pagesHidden;
+    if (!H) return;
+    var hid = Object.keys(H).filter(function (k) { return H[k]; });
+    if (!hid.length) return;
+    var cur = pageSlug();
+    if (H[cur]) {
+      var mm = document.createElement("meta"); mm.name = "robots"; mm.content = "noindex,nofollow"; document.head.appendChild(mm);
+      if (H[cur] === "off" && !PREVIEW) { location.replace("index.html"); return; }
+    }
+    var touched = [];
+    Array.prototype.forEach.call(document.querySelectorAll("a[href]"), function (a) {
+      var h = (a.getAttribute("href") || "").split("#")[0].split("?")[0];
+      if (!/\.html$/.test(h) || /^(https?:)?\/\//.test(h)) return;
+      var slug = h.split("/").pop().replace(/\.html$/, "");
+      if (!H[slug] || slug === cur) return;
+      var box = a.closest("li, .ais-ecard, .ais-pathcard, .ais-pcard") || a;
+      box.hidden = true; box.style.display = "none"; touched.push(box);
+    });
+    // griglie rimaste vuote: nasconde anche la sezione
+    touched.forEach(function (b) {
+      var grid = b.parentElement;
+      if (!grid || !/ais-catalog|ais-pgrid|ais-pathgrid/.test(grid.className)) return;
+      var left = Array.prototype.filter.call(grid.children, function (c) { return c.style.display !== "none"; });
+      if (!left.length) { var sec = grid.closest("section"); if (sec) sec.style.display = "none"; }
+    });
+  }
+  onReady(initPageVisibility);
   onReady(initExpVideo);
   onReady(initDocLinks);
   onReady(initTabs);
