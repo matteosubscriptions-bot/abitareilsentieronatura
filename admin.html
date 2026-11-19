@@ -428,6 +428,12 @@ dialog#pick{width:min(860px,96vw)}
         if (!e.group) delete e.group;
         if (!e.badge) delete e.badge;
         if (e.related) e.related = e.related.filter(Boolean);
+        if (e.video) {
+          var vv = e.video, nv = {};
+          if (vv.show) nv.show = true;
+          ["url", "poster", "eyebrow", "title", "text", "label"].forEach(function (k) { if (vv[k] && String(vv[k]).trim()) nv[k] = String(vv[k]).trim(); });
+          if (nv.url || nv.show) e.video = nv; else delete e.video;
+        }
         if (e.media) {
           var m = e.media;
           if (m.hero) { if (!m.hero.video) delete m.hero.video; if (!m.hero.img) delete m.hero; }
@@ -501,6 +507,9 @@ dialog#pick{width:min(860px,96vw)}
         if (rel.length < 2 || rel.length > 3) errs.push(n + ": scegli 2 o 3 esperienze collegate");
         else if (rel.some(function (r, i) { return rel.indexOf(r) !== i; })) errs.push(n + ": esperienze collegate ripetute");
         else if (rel.some(function (r) { return r === s || !data.experiences[r]; })) errs.push(n + ": esperienza collegata non valida");
+        if (e.video && e.video.show && !e.video.url) errs.push(n + ": “Video” attivo ma senza link o file (inseriscilo, o disattiva)");
+        else if (e.video && e.video.show && !parseVideo(e.video.url)) errs.push(n + ": “Video”: link non riconosciuto (YouTube, Vimeo o file .mp4)");
+        if (e.video && e.video.poster && !inLib(e.video.poster)) errs.push(n + ": copertina del video non presente nella libreria");
         var m = e.media || {};
         if (m.hero && "video" in m.hero && !m.hero.video) errs.push(n + ": sfondo in modalità Video ma senza video (scegli Foto o indica il video)");
         if (m.slider && m.slider.length > 0 && m.slider.length < 3) errs.push(n + ": lo slider ha bisogno di almeno 3 foto (o svuotalo)");
@@ -613,6 +622,7 @@ dialog#pick{width:min(860px,96vw)}
         if ((m.slider || []).some(function (x) { return x.img === src; })) where.push("slider");
         if ((m.gallery || []).indexOf(src) >= 0) where.push("galleria");
         if ((e.learn || []).some(function (c) { return c.img === src; })) where.push("cosa impari");
+        if (e.video && e.video.poster === src) where.push("video");
         if (where.length) out.push((e.name || s) + " (" + where.join(", ") + ")");
       });
       if (data.testimonials.some(function (t) { return t.poster === src; })) out.push("Testimonianze");
@@ -909,6 +919,40 @@ dialog#pick{width:min(860px,96vw)}
     function todayStr() { var n = new Date(); return fixLocal(n); }
     function fixLocal(d) { return d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2); }
     function it(s) { var p = s.split("-"); return p[2] + "/" + p[1] + "/" + p[0]; }
+
+    function tabVideo(e) {
+      e.video = e.video || {};
+      var v = e.video, wrap = el("div");
+      var on = el("input", { type: "checkbox" }); on.checked = !!v.show;
+      on.addEventListener("change", function () { v.show = on.checked; touch(); render(); });
+      wrap.appendChild(el("label", { class: "check", style: "font-size:16px" }, [on, document.createTextNode(" Mostra il video nella pagina")]));
+      wrap.appendChild(el("p", { class: "hint", text: "Appare come blocco scuro con il video grande, prima della sezione “Cosa impari”. Se lo disattivi (o non c’è il video) il blocco non compare e la pagina resta com’è." }));
+      var info = el("div", { class: "vinfo" });
+      function paint() {
+        var p = parseVideo(v.url);
+        if (!v.url) { info.className = "vinfo"; info.textContent = ""; return; }
+        if (!p) { info.className = "vinfo bad"; info.textContent = "Link non riconosciuto. Incolla un link YouTube o Vimeo, oppure il percorso di un file (es. videos/nome.mp4)."; return; }
+        info.className = "vinfo ok";
+        info.textContent = p.type === "yt" ? "YouTube riconosciuto (" + p.id + ")" : p.type === "vimeo" ? "Vimeo riconosciuto (" + p.id + ") — consigliata una copertina" : "File video";
+      }
+      wrap.appendChild(el("p", { class: "hint", style: "margin:12px 0 6px" }, [el("b", { text: "Consiglio: " }), "carica il video su YouTube (anche “non in elenco”) e incolla il link. Non pesa sul sito e parte veloce da telefono. Il file va bene solo per clip brevi e leggere."]));
+      var vf = videoField("Video (link YouTube / Vimeo, oppure file)", v, "url", {});
+      vf.querySelector("input").addEventListener("input", paint);
+      wrap.appendChild(el("div", { style: "max-width:560px" }, [vf, info]));
+      paint();
+      wrap.appendChild(el("div", { style: "margin-top:14px" }, [imgField("Copertina (opzionale: con YouTube si usa quella del video)", function () { return v.poster; }, function (x) { v.poster = x; }, { clearable: true })]));
+      wrap.appendChild(el("h3", { class: "sec", text: "Testi del blocco" }));
+      wrap.appendChild(el("div", { class: "grid" }, [
+        field("Sopratitolo", inp(v, "eyebrow", { ph: "Guarda com’è" })),
+        field("Etichetta sul video (es. 1:48 · edizione 2026)", inp(v, "label"))
+      ]));
+      wrap.appendChild(el("div", { style: "height:8px" }));
+      wrap.appendChild(field("Titolo — invio per andare a capo, //corsivo//", area(v, "title", 2)));
+      wrap.appendChild(el("p", { class: "hint", text: "Se lo lasci vuoto: “Un assaggio, prima di partire.”" }));
+      wrap.appendChild(field("Frase sotto il video (opzionale)", area(v, "text", 2)));
+      wrap.appendChild(el("div", { class: "row", style: "margin-top:14px" }, [el("button", { class: "btn", type: "button", text: "Anteprima di questa pagina", onclick: function () { preview(e.url + "#video"); } })]));
+      return wrap;
+    }
 
     function tabPrezzo(e) {
       var box = el("div");
@@ -1498,7 +1542,7 @@ dialog#pick{width:min(860px,96vw)}
     }
 
     /* ---- render */
-    var TABS = [["generale", "Generale"], ["media", "Media"], ["related", "Collegate"], ["prezzo", "Prezzo"], ["date", "Date e luoghi"], ["faq", "Domande"], ["info", "Info utili"], ["activities", "Attività"], ["learn", "Cosa impari"], ["testi", "Testi pagina"]];
+    var TABS = [["generale", "Generale"], ["media", "Media"], ["video", "Video"], ["related", "Collegate"], ["prezzo", "Prezzo"], ["date", "Date e luoghi"], ["faq", "Domande"], ["info", "Info utili"], ["activities", "Attività"], ["learn", "Cosa impari"], ["testi", "Testi pagina"]];
     function count(e, k) {
       if (k === "date") return data.events.filter(function (v) { return v.exp === cur; }).length;
       if (k === "faq" || k === "info" || k === "learn" || k === "activities") return (e[k] || []).length;
@@ -1548,7 +1592,7 @@ dialog#pick{width:min(860px,96vw)}
         return el("button", { class: "tab", type: "button", role: "tab", "aria-selected": String(t[0] === tab), onclick: function () { tab = t[0]; render(); } },
           [document.createTextNode(t[1]), c != null ? el("i", { text: "(" + c + ")" }) : null]);
       }));
-      var body = { generale: tabGenerale, media: function (x) { return tabMedia(x, null, { file: x.url, slug: String(x.url || "").replace(/\.html$/, ""), key: cur }); }, related: tabRelated, prezzo: tabPrezzo, date: tabDate, faq: tabFaq, info: tabInfo, activities: tabActivities, learn: tabLearn, testi: tabPageTexts }[tab](e);
+      var body = { generale: tabGenerale, video: tabVideo, media: function (x) { return tabMedia(x, null, { file: x.url, slug: String(x.url || "").replace(/\.html$/, ""), key: cur }); }, related: tabRelated, prezzo: tabPrezzo, date: tabDate, faq: tabFaq, info: tabInfo, activities: tabActivities, learn: tabLearn, testi: tabPageTexts }[tab](e);
       m.appendChild(el("div", { class: "panel" }, [
         el("div", { class: "row", style: "justify-content:space-between" }, [
           el("div", {}, [el("h2", { text: e.name || cur }), el("p", { class: "sub", text: (TYPES[e.type] || "") + " · " + (e.duration || "") })]),
@@ -1562,7 +1606,8 @@ dialog#pick{width:min(860px,96vw)}
     function preview(page) {
       try { localStorage.setItem("ais_preview", JSON.stringify(clean(data))); previewOn = true; } catch (e) { toast("Anteprima non disponibile in questo browser", true); return; }
       if (Object.keys(pending).length) toast("Le foto appena caricate si vedono sul sito dopo la pubblicazione");
-      window.open(page + "?preview=1", "_blank");
+      var pp = page.split("#");
+      window.open(pp[0] + "?preview=1" + (pp[1] ? "#" + pp[1] : ""), "_blank");
     }
 
     /* ---- azioni globali */

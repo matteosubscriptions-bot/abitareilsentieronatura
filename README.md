@@ -106,6 +106,10 @@ In admin → **Home** trovi **Media della home** (sfondo in alto: foto e/o video
 (lo stesso della scheda nel **catalogo Esperienze**). Come nelle altre pagine puoi cambiare, aggiungere, togliere e riordinare le foto. Per usare solo una foto
 come sfondo della home lascia vuoto il campo video. Le foto singole (card, riquadri) si cambiano da "Testi e foto" della pagina.
 
+## Video dell'esperienza
+Ogni pagina esperienza ha un blocco scuro "Guarda com'è" prima di "Cosa impari". In admin → esperienza → scheda **Video**: spunta "Mostra il video nella pagina", incolla il link
+YouTube/Vimeo (consigliato) o carica un file, scegli la copertina e i testi (sopratitolo, titolo, etichetta, frase). Spento o senza video, il blocco non compare.
+
 ## Video o foto: sfondi, slide, testimonianze
 - **Sfondo in alto** di ogni pagina (home, esperienze, calendario, testimonianze, Scuole, Aziende, Metodo, Chi sono, pagine esperienza): in admin → Media scegli **Foto** oppure **Video**.
   Con il video la foto resta come copertina. Meglio clip brevi (5–15 s), senza audio, sotto 5–8 MB.

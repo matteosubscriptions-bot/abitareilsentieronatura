@@ -11,6 +11,11 @@ Ogni aggiornamento ti viene indicato così: *"prendi questi file"* + *"non tocca
 
 ## Registro aggiornamenti (dal più recente)
 
+### Video dell'esperienza (blocco "Guarda com'è") in tutte le pagine esperienza
+Prendi da GitHub: `admin.html`, `site.js`, `styles.css`, `escape-the-city.html`, `accendi-il-tuo-fuoco.html`, `orienteering-sensoriale.html`, `elementi-di-convivenza.html`,
+`tribu-del-bosco.html`, `guardiani-del-fuoco.html`, `la-mappa-del-tuo-viaggio.html`, `via-degli-dei.html`, `cammino.html`, `README.md`, `AGGIORNAMENTI.md`.
+Non toccare: `events.js`, `images/`, `videos/`, `documenti/`. Il blocco è spento finché non lo attivi da admin → esperienza → scheda Video.
+
 ### Video YouTube: errore 153
 Prendi da GitHub: `site.js`, `AGGIORNAMENTI.md`. Non toccare: `events.js`, `images/`, `videos/`, `documenti/`.
 

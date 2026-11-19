@@ -718,6 +718,36 @@
       } catch (e) {}
     });
   }
+
+  // Video dell'esperienza (gestito da admin: scheda "Video"). Visibile solo se attivato e con un video.
+  function initExpVideo() {
+    var D = getData();
+    if (!D || !D.experiences) return;
+    function esc(t) { return String(t == null ? "" : t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+    Array.prototype.forEach.call(document.querySelectorAll("[data-expvideo]"), function (sec) {
+      var x = D.experiences[sec.getAttribute("data-exp")], v = x && x.video;
+      var p = v && v.show && v.url ? parseVideo(v.url) : null;
+      if (!p) { sec.hidden = true; sec.innerHTML = ""; return; }
+      var poster = v.poster || p.poster || "", title = v.title || "Un assaggio,\n//prima di partire.//";
+      var media;
+      if (p.type === "file") {
+        media = '<video controls preload="metadata" playsinline' + (poster ? ' poster="' + esc(poster) + '"' : "") + ' src="' + esc(p.src) + '"></video>';
+      } else {
+        media = '<button type="button" class="ais-yt" data-embed="' + esc(p.embed) + '" data-watch="' + esc(p.watch || "") + '" data-title="' + esc("Video: " + (x.name || "")) + '" aria-label="' + esc("Guarda il video: " + (x.name || "")) + '"' +
+          (poster ? ' style="background-image:url(\'' + esc(poster) + '\')"' : "") + '><span class="ais-yt__play" aria-hidden="true"></span></button>';
+      }
+      var ts = document.querySelector("[data-testimonials]"), tsec = ts && ts.closest("section");
+      if (tsec && !tsec.id) tsec.id = "voci";
+      sec.innerHTML = '<div class="ais-wrap"><div class="ais-narrow ais-center"><span class="ais-eyebrow">' + esc(v.eyebrow || "Guarda com\u2019\u00e8") + '</span>' +
+        '<h2 class="ais-display" style="color:#fff">' + liteToHtml(title, document.createElement("div")).replace(/<span class="it">/g, '<span class="it" style="color:#f1dfba">') + '</h2></div>' +
+        '<div class="ais-expvideo__frame">' + media + (v.label ? '<span class="ais-expvideo__label">' + esc(v.label) + "</span>" : "") + "</div>" +
+        (v.text ? '<p class="ais-expvideo__text">' + esc(v.text) + "</p>" : "") +
+        '<div class="ais-cta-row" style="justify-content:center;margin-top:26px"><a class="ais-btn-ochre ais-arrow" href="#date">Prenota il tuo posto</a>' +
+        (tsec ? '<a class="ais-btn-ghost ais-expvideo__ghost" href="#' + esc(tsec.id) + '">Le voci di chi c\u2019era</a>' : "") + "</div></div>";
+      sec.hidden = false; sec.classList.add("ais-shown");
+    });
+  }
+  onReady(initExpVideo);
   onReady(initDocLinks);
   onReady(initTabs);
   onReady(initComposer);
