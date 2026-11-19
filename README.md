@@ -106,6 +106,14 @@ Aprendo l'admin (e con "Sincronizza con la cartella") la libreria legge la carte
 l'API GitHub del repository (se privato serve il token). I file trovati compaiono in libreria; quelli caricati dall'admin finiscono in `images/` pubblicando.
 Le voci il cui file non c'è più sono segnate "file non trovato" e si possono rimuovere in blocco.
 
+## Lavorare in locale (senza GitHub)
+Scaricata la cartella del sito sul computer, puoi aprire `admin.html` direttamente (doppio clic) e modificare tutto. In **Pubblica sul sito** trovi:
+- **Salva nella cartella del sito…** (Chrome o Edge): scegli la cartella (quella con `index.html`) e l'admin scrive `events.js` e le foto nuove in `images/`.
+  Il pulsante **Collega cartella** in alto fa la stessa scelta in anticipo, così l'admin legge anche l'elenco di `images/` e le pagine da modificare (da file locale il browser non le legge da solo).
+- **Scarica pacchetto (.zip)** (qualsiasi browser): contiene `events.js` e le foto nuove; decomprimilo dentro la cartella del sito sostituendo `events.js`.
+- **Pubblica su GitHub**: come prima, con il token.
+Dopo il salvataggio in locale apri `index.html` dalla cartella per vedere le modifiche. Il collegamento alla cartella vale per la sessione: dopo aver ricaricato l'admin va ripetuto.
+
 ## Pagine temporaneamente nascoste
 Per ora **nessun link** porta a queste 5 pagine (i file restano nel repo, raggiungibili solo con l'URL diretto):
 `la-mappa-del-tuo-viaggio.html` · `via-degli-dei.html` · `cammino.html` · `tribu-del-bosco.html` · `guardiani-del-fuoco.html`.

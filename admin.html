@@ -76,6 +76,10 @@ dialog form{padding:24px}
 dialog h3{font:500 26px "Cormorant Garamond",Georgia,serif;margin:0 0 6px;color:var(--forest-deep)}
 .errs{background:#fbeaea;border:1px solid #e5b9bb;border-radius:10px;padding:10px 14px;margin:0 0 14px;color:#6d1b20;font-size:13.5px}
 .errs ul{margin:6px 0 0;padding-left:18px}
+.pubopt{border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:0 0 12px;background:var(--cream)}
+.pubopt h4{margin:0 0 4px;font-size:16px;color:var(--forest-deep)}.pubopt h4 small{font-weight:400;color:var(--muted);font-size:13px;margin-left:6px}
+.pubopt>summary{cursor:pointer;font-weight:600;color:var(--forest-deep)}
+.pubopt .sub{margin:0 0 10px;color:var(--muted);font-size:13.5px}
 .log{font-size:13.5px;margin-top:12px;padding:10px 12px;border-radius:10px;background:var(--sand);white-space:pre-wrap}
 .log.ok{background:#e4f1e6;color:#1d4a28}
 .log.bad{background:#fbeaea;color:#6d1b20}
@@ -161,6 +165,7 @@ dialog#pick{width:min(860px,96vw)}
   <span class="chip" id="status">Nessuna modifica</span>
   <a class="btn ghost sm" href="index.html" target="_blank" rel="noopener">Apri il sito</a>
   <button class="btn ghost sm" id="b-import" type="button">Importa</button>
+  <button class="btn ghost sm" id="b-folder" type="button" hidden title="Collega la cartella del sito sul tuo computer per leggere e salvare direttamente i file">Collega cartella</button>
   <button class="btn ghost sm" id="b-download" type="button">Scarica events.js</button>
   <button class="btn ghost sm" id="b-reset" type="button">Annulla modifiche</button>
   <button class="btn ghost sm" id="b-logout" type="button">Esci</button>
@@ -191,19 +196,29 @@ dialog#pick{width:min(860px,96vw)}
 <dialog id="pub">
   <form method="dialog" id="pub-form">
     <h3>Pubblica sul sito</h3>
-    <p class="sub" style="margin:0 0 6px;color:var(--muted)" id="p-what"></p>
-    <p class="sub" style="margin:0 0 14px;color:var(--muted)">Salva i file nel repository GitHub: il sito si aggiorna quando il repository viene ripubblicato dal tuo hosting.</p>
+    <p class="sub" style="margin:0 0 14px;color:var(--muted)" id="p-what"></p>
     <div id="pub-errs"></div>
-    <div class="grid" style="margin-bottom:12px">
-      <label class="f"><span>Repository (utente/nome)</span><input type="text" id="p-repo" autocomplete="off"/></label>
-      <label class="f"><span>Branch</span><input type="text" id="p-branch" autocomplete="off"/></label>
+    <div class="pubopt">
+      <h4>Salva in locale <small>senza GitHub</small></h4>
+      <p class="sub">Aggiorna i file della cartella del sito che hai sul computer (events.js e le foto nuove in images/). Poi apri il sito da quella cartella o caricala dove preferisci.</p>
+      <div class="row">
+        <button class="btn primary" type="button" id="p-local">Salva nella cartella del sito…</button>
+        <button class="btn" type="button" id="p-zip">Scarica pacchetto (.zip)</button>
+      </div>
+      <p class="sub" id="p-local-hint" style="margin-top:8px"></p>
     </div>
-    <label class="f" style="margin-bottom:12px"><span>Token GitHub (permesso “Contents: Read and write” solo su questo repository)</span><input type="password" id="p-token" autocomplete="off" placeholder="github_pat_…"/></label>
-    <label class="check" style="font-weight:500;margin-bottom:14px"><input type="checkbox" id="p-remember"/> Ricorda il token su questo browser</label>
-    <div class="row" style="justify-content:flex-end">
-      <button class="btn" type="button" id="p-cancel">Chiudi</button>
-      <button class="btn primary" type="button" id="p-go">Pubblica ora</button>
-    </div>
+    <details class="pubopt" id="p-gh">
+      <summary>Pubblica su GitHub</summary>
+      <p class="sub" style="margin:8px 0 12px;color:var(--muted)">Salva i file nel repository GitHub: il sito si aggiorna quando il repository viene ripubblicato dal tuo hosting.</p>
+      <div class="grid" style="margin-bottom:12px">
+        <label class="f"><span>Repository (utente/nome)</span><input type="text" id="p-repo" autocomplete="off"/></label>
+        <label class="f"><span>Branch</span><input type="text" id="p-branch" autocomplete="off"/></label>
+      </div>
+      <label class="f" style="margin-bottom:12px"><span>Token GitHub (permesso “Contents: Read and write” solo su questo repository)</span><input type="password" id="p-token" autocomplete="off" placeholder="github_pat_…"/></label>
+      <label class="check" style="font-weight:500;margin-bottom:14px"><input type="checkbox" id="p-remember"/> Ricorda il token su questo browser</label>
+      <div class="row" style="justify-content:flex-end"><button class="btn primary" type="button" id="p-go">Pubblica ora</button></div>
+    </details>
+    <div class="row" style="justify-content:flex-end;margin-top:12px"><button class="btn" type="button" id="p-cancel">Chiudi</button></div>
     <div id="p-log" class="log" hidden></div>
   </form>
 </dialog>
@@ -341,6 +356,7 @@ dialog#pick{width:min(860px,96vw)}
     var tab = "generale";
     var restored = false;
     var pending = {};          // src -> dataUrl (foto caricate, non ancora pubblicate)
+    var localDir = null;       // cartella del sito sul computer (File System Access API)
     var mediaFilter = "";
 
     try {
@@ -1102,12 +1118,29 @@ dialog#pick{width:min(860px,96vw)}
       ["metodologia", "Metodo", "metodologia.html"], ["testimonianze", "Testimonianze", "testimonianze.html"]
     ];
     var pageCache = {};
+    function fetchText(file) {
+      return fetch(file, { cache: "no-store" }).then(function (r) { if (!r.ok) throw new Error(r.status); return r.text(); });
+    }
+    function readLocalText(file) {
+      return localDir.getFileHandle(file).then(function (h) { return h.getFile(); }).then(function (f) { return f.text(); });
+    }
+    function listLocal() {
+      return localDir.getDirectoryHandle("images").then(function (d) {
+        var out = [];
+        function next(it) {
+          return it.next().then(function (r) {
+            if (r.done) return out;
+            if (r.value[1].kind === "file" && IMG_RE.test(r.value[0])) out.push(r.value[0]);
+            return next(it);
+          });
+        }
+        return next(d.entries());
+      });
+    }
     function loadPage(file) {
       if (!pageCache[file]) {
-        pageCache[file] = fetch(file, { cache: "no-store" }).then(function (r) {
-          if (!r.ok) throw new Error(r.status);
-          return r.text();
-        }).then(function (t) { return new DOMParser().parseFromString(t, "text/html"); });
+        var got = localDir ? readLocalText(file).catch(function () { return fetchText(file); }) : fetchText(file);
+        pageCache[file] = got.then(function (t) { return new DOMParser().parseFromString(t, "text/html"); });
         pageCache[file].catch(function () { delete pageCache[file]; });
       }
       return pageCache[file];
@@ -1240,7 +1273,7 @@ dialog#pick{width:min(860px,96vw)}
         });
       }).catch(function () {
         box.innerHTML = "";
-        box.appendChild(el("div", { class: "empty", text: "Non riesco a leggere la pagina (" + file + "). Apri l’admin dal sito pubblicato (non da file locale) e controlla che il file esista." }));
+        box.appendChild(el("div", { class: "empty", text: "Non riesco a leggere la pagina (" + file + "). Se hai aperto l’admin da un file sul computer, premi “Collega cartella” in alto e scegli la cartella del sito (Chrome o Edge); altrimenti apri l’admin dal sito pubblicato." }));
       });
       return wrap;
     }
@@ -1305,12 +1338,15 @@ dialog#pick{width:min(860px,96vw)}
     function syncMedia(quiet) {
       if (folder.busy) return Promise.resolve();
       folder.busy = true;
-      return Promise.all([listServer().then(function (x) { return x; }, function () { return null; }), listRepo().then(function (x) { return x; }, function () { return null; })]).then(function (r) {
+      return Promise.all([(localDir ? listLocal() : listServer()).then(function (x) { return x; }, function () { return null; }), listRepo().then(function (x) { return x; }, function () { return null; })]).then(function (r) {
         folder.busy = false;
         folder.server = r[0]; folder.repo = r[1]; folder.at = new Date();
         var all = {};
         (r[0] || []).concat(r[1] || []).forEach(function (n) { all["images/" + n] = true; });
         folder.files = (r[0] || r[1]) ? all : null;
+        Object.keys(pending).forEach(function (src) {
+          if (all[src] && r[0]) { delete pending[src]; idb("readwrite", function (st) { return st.delete(src); }); }
+        });
         var added = 0;
         Object.keys(all).sort().forEach(function (src) {
           if (!inLib(src)) {
@@ -1449,9 +1485,107 @@ dialog#pick{width:min(860px,96vw)}
       $("p-repo").value = cfg.repo; $("p-branch").value = cfg.branch; $("p-token").value = cfg.token;
       $("p-remember").checked = !!cfg.token; $("p-log").hidden = true;
       $("p-go").disabled = errs.length > 0;
+      $("p-local").disabled = errs.length > 0; $("p-zip").disabled = errs.length > 0;
+      $("p-gh").open = !!cfg.token;
+      $("p-local").hidden = !canPickDir;
+      $("p-local").textContent = localDir ? "Salva nella cartella collegata" : "Salva nella cartella del sito…";
+      $("p-local-hint").textContent = canPickDir
+        ? (localDir ? "Cartella collegata: “" + localDir.name + "”." : "Scegli la cartella del sito (quella con index.html): il browser ti chiederà il permesso di scrivere.")
+        : "Il tuo browser non può scrivere direttamente nella cartella (serve Chrome o Edge): scarica il pacchetto .zip e copia i file nella cartella del sito, accettando di sostituire quelli esistenti.";
       $("pub").showModal();
     });
     $("p-cancel").addEventListener("click", function () { $("pub").close(); });
+    /* ---- salvataggio in locale (senza GitHub) */
+    var canPickDir = typeof window.showDirectoryPicker === "function";
+    function dirLooksOk(d) {
+      return d.getFileHandle("events.js").catch(function () { return d.getFileHandle("index.html"); });
+    }
+    function connectDir() {
+      if (!canPickDir) { toast("Serve Chrome o Edge per collegare la cartella", true); return Promise.reject(); }
+      return window.showDirectoryPicker({ mode: "readwrite" }).then(function (d) {
+        return dirLooksOk(d).then(function () { return d; }, function () {
+          throw { msg: "Questa non sembra la cartella del sito (non trovo index.html né events.js)." };
+        });
+      }).then(function (d) {
+        localDir = d; pageCache = {};
+        $("b-folder").textContent = "Cartella: " + d.name + " ✓";
+        toast("Cartella collegata: " + d.name);
+        syncMedia(true);
+        if (cur !== MEDIA) render();
+        return d;
+      }, function (e) {
+        if (e && e.msg) toast(e.msg, true);
+        throw e;
+      });
+    }
+    function writeLocalFile(dir, path, data) {
+      var parts = path.split("/"), name = parts.pop();
+      return parts.reduce(function (p, seg) { return p.then(function (d) { return d.getDirectoryHandle(seg, { create: true }); }); }, Promise.resolve(dir))
+        .then(function (d) { return d.getFileHandle(name, { create: true }); })
+        .then(function (h) { return h.createWritable(); })
+        .then(function (w) { return w.write(data).then(function () { return w.close(); }); });
+    }
+    function dataUrlBytes(u) {
+      var bin = atob(u.split(",")[1] || ""), a = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) a[i] = bin.charCodeAt(i);
+      return a;
+    }
+    function markPublished(msg) {
+      PUBLISHED = clone(clean(data)); data = clone(PUBLISHED); restored = false;
+      try { localStorage.removeItem(DRAFT_KEY); } catch (e) {}
+      logp(msg, "ok"); render();
+    }
+    $("b-folder").hidden = !canPickDir;
+    $("b-folder").addEventListener("click", function () { connectDir().catch(function () {}); });
+    $("p-local").addEventListener("click", function () {
+      var go = function (dir) {
+        var srcs = Object.keys(pending), n = 0;
+        logp("Salvo i file nella cartella…");
+        return srcs.reduce(function (p, src) {
+          return p.then(function () { return writeLocalFile(dir, src, dataUrlBytes(pending[src])).then(function () { n++; }); });
+        }, Promise.resolve()).then(function () {
+          return writeLocalFile(dir, "events.js", build(data));
+        }).then(function () {
+          srcs.forEach(function (src) { delete pending[src]; idb("readwrite", function (st) { return st.delete(src); }); });
+          markPublished("Salvato in “" + dir.name + "”: events.js" + (n ? " + " + n + (n === 1 ? " foto" : " foto") + " in images/" : "") + ".\nApri il sito da quella cartella (index.html) per vedere le modifiche; per metterlo online carica la cartella sul tuo hosting.");
+        });
+      };
+      (localDir ? Promise.resolve(localDir) : connectDir()).then(go).catch(function (e) {
+        if (e && (e.name === "AbortError" || !e)) { return; }
+        logp("Non sono riuscito a salvare nella cartella" + (e && e.message ? " (" + e.message + ")" : "") + ".\nProva con “Scarica pacchetto (.zip)”.", "bad");
+      });
+    });
+
+    var CRC_T = null;
+    function crc32(a) {
+      if (!CRC_T) { CRC_T = []; for (var n = 0; n < 256; n++) { var c = n; for (var k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; CRC_T[n] = c >>> 0; } }
+      var c2 = 0xFFFFFFFF; for (var i = 0; i < a.length; i++) c2 = CRC_T[(c2 ^ a[i]) & 255] ^ (c2 >>> 8);
+      return (c2 ^ 0xFFFFFFFF) >>> 0;
+    }
+    function zipStore(files) { // files: [{name, bytes}]  (senza compressione)
+      var enc = new TextEncoder(), parts = [], central = [], off = 0, d = new Date();
+      var dt = ((d.getFullYear() - 1980) << 9) | ((d.getMonth() + 1) << 5) | d.getDate(), tm = (d.getHours() << 11) | (d.getMinutes() << 5) | (d.getSeconds() >> 1);
+      function u16(v) { return [v & 255, (v >> 8) & 255]; }
+      function u32(v) { return [v & 255, (v >>> 8) & 255, (v >>> 16) & 255, (v >>> 24) & 255]; }
+      files.forEach(function (f) {
+        var nm = enc.encode(f.name), crc = crc32(f.bytes), sz = f.bytes.length;
+        var lh = new Uint8Array([0x50, 0x4b, 3, 4].concat(u16(20), u16(0x0800), u16(0), u16(tm), u16(dt), u32(crc), u32(sz), u32(sz), u16(nm.length), u16(0)));
+        parts.push(lh, nm, f.bytes);
+        central.push(new Uint8Array([0x50, 0x4b, 1, 2].concat(u16(20), u16(20), u16(0x0800), u16(0), u16(tm), u16(dt), u32(crc), u32(sz), u32(sz), u16(nm.length), u16(0), u16(0), u16(0), u16(0), u32(0), u32(off))), nm);
+        off += lh.length + nm.length + sz;
+      });
+      var csz = 0; central.forEach(function (c) { csz += c.length; });
+      var end = new Uint8Array([0x50, 0x4b, 5, 6].concat(u16(0), u16(0), u16(files.length), u16(files.length), u32(csz), u32(off), u16(0)));
+      return new Blob(parts.concat(central, [end]), { type: "application/zip" });
+    }
+    $("p-zip").addEventListener("click", function () {
+      var files = [{ name: "events.js", bytes: new TextEncoder().encode(build(data)) }], srcs = Object.keys(pending);
+      srcs.forEach(function (src) { files.push({ name: src, bytes: dataUrlBytes(pending[src]) }); });
+      var a = el("a", { href: URL.createObjectURL(zipStore(files)), download: "abitare-il-sentiero-modifiche.zip" });
+      document.body.appendChild(a); a.click(); a.remove();
+      logp("Scaricato abitare-il-sentiero-modifiche.zip (events.js" + (srcs.length ? " + " + srcs.length + " foto in images/" : "") + ").\nDecomprimilo dentro la cartella del sito, accettando di sostituire events.js: le foto vanno in images/.", "ok");
+    });
+
     function b64(t) { return btoa(unescape(encodeURIComponent(t))); }
     $("p-go").addEventListener("click", function () {
       var repo = $("p-repo").value.trim(), branch = $("p-branch").value.trim() || "main", token = $("p-token").value.trim();
