@@ -493,9 +493,9 @@
     u = String(u || "").trim();
     if (!u) return null;
     var m = u.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/|v\/))([\w-]{11})/i);
-    if (m) return { type: "yt", id: m[1], embed: "https://www.youtube-nocookie.com/embed/" + m[1] + "?autoplay=1&rel=0", poster: "https://i.ytimg.com/vi/" + m[1] + "/hqdefault.jpg" };
+    if (m) return { type: "yt", id: m[1], embed: "https://www.youtube-nocookie.com/embed/" + m[1] + "?autoplay=1&rel=0&playsinline=1", watch: "https://www.youtube.com/watch?v=" + m[1], poster: "https://i.ytimg.com/vi/" + m[1] + "/hqdefault.jpg" };
     m = u.match(/vimeo\.com\/(?:video\/)?(\d+)/i);
-    if (m) return { type: "vimeo", id: m[1], embed: "https://player.vimeo.com/video/" + m[1] + "?autoplay=1", poster: "" };
+    if (m) return { type: "vimeo", id: m[1], embed: "https://player.vimeo.com/video/" + m[1] + "?autoplay=1", watch: "https://vimeo.com/" + m[1], poster: "" };
     if (/\.(mp4|webm|mov|m4v)(\?.*)?$/i.test(u)) return { type: "file", src: u };
     return null;
   }
@@ -520,7 +520,7 @@
             media = '<video controls preload="metadata" playsinline' + (t.poster ? ' poster="' + esc(t.poster) + '"' : "") + ' src="' + esc(v.src) + '"></video>';
           } else {
             var po = t.poster || v.poster;
-            media = '<button type="button" class="ais-yt" data-embed="' + esc(v.embed) + '" data-title="' + esc("Video di " + (t.name || "")) + '" aria-label="' + esc("Guarda il video di " + (t.name || "")) + '"' +
+            media = '<button type="button" class="ais-yt" data-embed="' + esc(v.embed) + '" data-title="' + esc("Video di " + (t.name || "")) + '" aria-label="' + esc("Guarda il video di " + (t.name || "")) + '" data-watch="' + esc(v.watch || "") + '"' +
               (po ? ' style="background-image:url(\'' + esc(po) + '\')"' : "") + '><span class="ais-yt__play" aria-hidden="true"></span></button>';
           }
           html += '<article class="ais-vtest__card"><div class="ais-vtest__media">' + media + '</div><div class="ais-vtest__body"><p class="ais-vtest__name">' + esc(t.name) + "</p>" +
@@ -563,7 +563,14 @@
   document.addEventListener("click", function (e) {
     var b = e.target.closest && e.target.closest(".ais-yt");
     if (!b) return;
+    // YouTube/Vimeo rifiutano l'incorporamento (errore 153) se la pagina non e' servita da http(s):
+    // aprendo il sito da file locale, il video si apre direttamente sul sito originale.
+    if (!/^https?:$/.test(location.protocol) && b.getAttribute("data-watch")) {
+      window.open(b.getAttribute("data-watch"), "_blank", "noopener");
+      return;
+    }
     var f = document.createElement("iframe");
+    f.referrerPolicy = "strict-origin-when-cross-origin";
     f.src = b.getAttribute("data-embed");
     f.title = b.getAttribute("data-title") || "Video";
     f.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";

@@ -11,6 +11,9 @@ Ogni aggiornamento ti viene indicato così: *"prendi questi file"* + *"non tocca
 
 ## Registro aggiornamenti (dal più recente)
 
+### Video YouTube: errore 153
+Prendi da GitHub: `site.js`, `AGGIORNAMENTI.md`. Non toccare: `events.js`, `images/`, `videos/`, `documenti/`.
+
 ### Anteprima bozza che non si aggiornava
 Prendi da GitHub: `admin.html`, `site.js`, `AGGIORNAMENTI.md`. Non toccare: `events.js`, `images/`, `videos/`, `documenti/`.
 
