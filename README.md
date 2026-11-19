@@ -106,6 +106,15 @@ In admin → **Home** trovi **Media della home** (sfondo in alto: foto e/o video
 (lo stesso della scheda nel **catalogo Esperienze**). Come nelle altre pagine puoi cambiare, aggiungere, togliere e riordinare le foto. Per usare solo una foto
 come sfondo della home lascia vuoto il campo video. Le foto singole (card, riquadri) si cambiano da "Testi e foto" della pagina.
 
+## Video o foto: sfondi, slide, testimonianze
+- **Sfondo in alto** di ogni pagina (home, esperienze, calendario, testimonianze, Scuole, Aziende, Metodo, Chi sono, pagine esperienza): in admin → Media scegli **Foto** oppure **Video**.
+  Con il video la foto resta come copertina. Meglio clip brevi (5–15 s), senza audio, sotto 5–8 MB.
+- **Slide sotto l'header**: ogni slide può avere, oltre alla foto, un **video** (la foto fa da copertina).
+- **Gallerie**: per ogni foto puoi **Cambia**, spostare o togliere; "Parti da quelle attuali della pagina" riempie l'elenco con quello che la pagina mostra oggi.
+- **Testimonianze**: il più funzionale è **YouTube** (anche "non in elenco"): non pesa sul sito, parte veloce da telefono, si adatta alla connessione. Il **file** (`videos/…`)
+  va bene solo per clip brevi e leggere; i file molto pesanti rallentano il sito e GitHub accetta file fino a ~100 MB. L'admin offre entrambe le strade.
+- I video caricati dall'admin finiscono in `videos/` (max 40 MB da qui; oltre, copiali a mano in `videos/` e scrivi il percorso).
+
 ## Libreria media = cartella `images/`
 Aprendo l'admin (e con "Sincronizza con la cartella") la libreria legge la cartella `images/`: prova l'elenco file del server (serve l'indice di directory attivo) e
 l'API GitHub del repository (se privato serve il token). I file trovati compaiono in libreria; quelli caricati dall'admin finiscono in `images/` pubblicando.

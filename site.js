@@ -286,6 +286,11 @@
     (D.media || []).forEach(function (m) { lib[m.src] = m.alt || ""; });
     function esc(t) { return String(t == null ? "" : t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
     var PATTERN = ["g-wide g-tall", "", "", "", "", "g-wide", "", ""];
+    function slideMedia(it, i, lazy) {
+      var alt = esc(lib[it.img] || it.cap || "");
+      if (it.video) return '<video muted loop playsinline autoplay preload="metadata" poster="' + esc(it.img) + '" src="' + esc(it.video) + '" aria-label="' + alt + '"></video>';
+      return '<img alt="' + alt + '" src="' + esc(it.img) + '"' + (lazy && i > 0 ? ' loading="lazy"' : "") + "/>";
+    }
     Array.prototype.forEach.call(document.querySelectorAll("[data-media]"), function (node) {
       var x = D.experiences[node.getAttribute("data-exp")] || (D.pagemedia && D.pagemedia[node.getAttribute("data-exp")]);
       var m = x && x.media;
@@ -309,10 +314,11 @@
         if (!list.length) return;
         var trk = node.querySelector(".ais-slider__track");
         if (trk) { // variante "scheda" (home / catalogo): solo foto, niente didascalie
-          var cs = Array.prototype.slice.call(trk.querySelectorAll("img")).map(function (i) { return i.getAttribute("src"); });
-          if (cs.length === list.length && cs.every(function (src, i) { return src === list[i].img; })) return;
+          var cs = Array.prototype.slice.call(trk.querySelectorAll("figure")).map(function (f) { var v = f.querySelector("video"), i = f.querySelector("img"); return v ? "v:" + v.getAttribute("src") : i ? i.getAttribute("src") : ""; });
+          var want = list.map(function (it) { return it.video ? "v:" + it.video : it.img; });
+          if (cs.length === want.length && cs.every(function (src, i) { return src === want[i]; })) return;
           trk.innerHTML = list.map(function (it, i) {
-            return '<figure class="ais-slider__slide"><img alt="' + esc(lib[it.img] || it.cap || "") + '" src="' + esc(it.img) + '"' + (i > 0 ? ' loading="lazy"' : "") + "/></figure>";
+            return '<figure class="ais-slider__slide">' + slideMedia(it, i, true) + "</figure>";
           }).join("");
           return;
         }
@@ -320,9 +326,9 @@
         if (!stage) return;
         var old = Array.prototype.slice.call(stage.querySelectorAll(".ais-peek__slide"));
         var same = old.length === list.length && old.every(function (f, i) {
-          var fi = f.querySelector("img"), fc = f.querySelector("figcaption");
-          return fi && fi.getAttribute("src") === list[i].img && (fc ? fc.textContent : "") === (list[i].cap || "") &&
-            fi.getAttribute("alt") === (lib[list[i].img] || list[i].cap || "");
+          var fi = f.querySelector("img"), fv = f.querySelector("video"), fc = f.querySelector("figcaption");
+          var okm = list[i].video ? (fv && fv.getAttribute("src") === list[i].video) : (fi && !fv && fi.getAttribute("src") === list[i].img && fi.getAttribute("alt") === (lib[list[i].img] || list[i].cap || ""));
+          return okm && (fc ? fc.textContent : "") === (list[i].cap || "");
         });
         if (same) return;
         var first = stage.querySelector(".ais-peek__btn");
@@ -332,7 +338,7 @@
           f.className = "ais-peek__slide" + (i === 0 ? " is-active" : "");
           f.setAttribute("role", "group"); f.setAttribute("aria-roledescription", "slide");
           f.setAttribute("aria-label", (i + 1) + " di " + list.length);
-          f.innerHTML = '<img alt="' + esc(lib[s.img] || s.cap || "") + '" src="' + esc(s.img) + '"' + (i > 1 ? ' loading="lazy"' : "") + "/>" +
+          f.innerHTML = slideMedia(s, i > 1 ? 1 : 0, true) +
             (s.cap ? '<figcaption class="ais-peek__cap">' + esc(s.cap) + "</figcaption>" : "");
           stage.insertBefore(f, first);
         });
@@ -723,6 +729,9 @@
     var D = getData();
     if (!D || !D.pages) return;
     var P = D.pages[pageSlug()] || {}, G = D.pages._global || {};
+    // pagina rifatta: le vecchie modifiche (numerate sul vecchio layout) non valgono piu'
+    var mainEl = document.querySelector("main[data-edit-ver]");
+    if (mainEl && P["@ver"] !== mainEl.getAttribute("data-edit-ver")) P = {};
     Array.prototype.forEach.call(document.querySelectorAll("[data-edit]"), function (n) {
       var k = n.getAttribute("data-edit"), S = k.indexOf("g-") === 0 ? G : P;
       if (typeof S[k] === "string" && S[k] !== "") n.innerHTML = liteToHtml(S[k], n);
