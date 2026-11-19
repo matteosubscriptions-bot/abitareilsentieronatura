@@ -746,7 +746,8 @@ dialog#pick{width:min(860px,96vw)}
       ]);
     }
 
-    function tabMedia(e) {
+    function tabMedia(e, only) {
+      function want(k) { return !only || only.indexOf(k) >= 0; }
       e.media = e.media || {};
       var m = e.media;
       m.hero = m.hero || { img: "" };
@@ -754,10 +755,12 @@ dialog#pick{width:min(860px,96vw)}
       m.gallery = m.gallery || [];
       var wrap = el("div");
       // header principale
+      if (want("hero")) {
       wrap.appendChild(el("h3", { class: "sec", text: "Header principale" }));
-      wrap.appendChild(el("p", { class: "hint", text: "La foto grande in cima alla pagina. Se c’è un video di sfondo, la foto resta come copertina." }));
+      wrap.appendChild(el("p", { class: "hint", text: "La foto grande in cima alla pagina (nella home è lo sfondo). Se indichi un video, la foto resta come copertina; lascia vuoto il video per usare solo la foto." }));
       wrap.appendChild(imgField("Foto dell’header", function () { return m.hero.img; }, function (v) { m.hero.img = v; }, { big: true }));
       wrap.appendChild(el("div", { style: "margin-top:12px;max-width:420px" }, [field("Video di sfondo (opzionale, es. videos/nome.mp4)", inp(m.hero, "video", { ph: "videos/…" }))]));
+      }
       // slider
       wrap.appendChild(el("h3", { class: "sec", text: "Slider (sotto l’header)" }));
       wrap.appendChild(el("p", { class: "hint", text: "Le foto che scorrono sotto l’header, con didascalia breve. Servono almeno 3 foto." }));
@@ -780,6 +783,7 @@ dialog#pick{width:min(860px,96vw)}
         pick({ title: "Aggiungi allo slider", multi: true }).then(function (r) { r.forEach(function (src) { m.slider.push({ img: src, cap: "" }); }); if (r.length) { touch(); render(); } });
       } }));
       // galleria
+      if (want("gallery")) {
       wrap.appendChild(el("h3", { class: "sec", text: "Galleria" }));
       wrap.appendChild(el("p", { class: "hint", text: "La griglia di foto più in basso. La prima è grande. La griglia risulta piena con 8 foto (o 16)." }));
       if (!m.gallery.length) wrap.appendChild(el("div", { class: "empty", text: "Nessuna foto: la pagina mostra la galleria originale." }));
@@ -798,6 +802,7 @@ dialog#pick{width:min(860px,96vw)}
       wrap.appendChild(el("button", { class: "btn", type: "button", style: "margin-top:12px", text: "+ Aggiungi foto alla galleria", onclick: function () {
         pick({ title: "Aggiungi alla galleria", multi: true }).then(function (r) { r.forEach(function (src) { m.gallery.push(src); }); if (r.length) { touch(); render(); } });
       } }));
+      }
       return wrap;
     }
 
@@ -1283,12 +1288,17 @@ dialog#pick{width:min(860px,96vw)}
         el("div", {}, [el("h2", { text: p[1] }), el("p", { class: "sub", text: p[2] + " · testi e foto della pagina" })]),
         el("div", { class: "row" }, [el("button", { class: "btn sm", type: "button", text: "Anteprima di questa pagina", onclick: function () { preview(p[2]); } })])
       ]));
-      if (p[0] === "scuole-gruppi" || p[0] === "aziende" || p[0] === "metodologia" || p[0] === "chi-sono") {
-        if (!data.pagemedia[p[0]]) data.pagemedia[p[0]] = { media: {} };
-        var md = el("details", { class: "pgrp", open: true }, [el("summary", { text: "Media: header, slider sotto l’header e galleria" })]);
-        md.appendChild(el("div", { class: "pf" }, [tabMedia(data.pagemedia[p[0]])]));
+      var PM = {
+        "index": [["index", "Media della home: sfondo in alto, slider e galleria"], ["escape-card", "Slider della scheda “Escape the City” (home e catalogo)", ["slider"]]],
+        "esperienze": [["escape-card", "Slider della scheda “Escape the City” (condiviso con la home)", ["slider"]]]
+      };
+      ["scuole-gruppi", "aziende", "metodologia", "chi-sono"].forEach(function (k) { PM[k] = [[k, "Media: header, slider sotto l’header e galleria"]]; });
+      (PM[p[0]] || []).forEach(function (pm, pi) {
+        if (!data.pagemedia[pm[0]]) data.pagemedia[pm[0]] = { media: {} };
+        var md = el("details", { class: "pgrp", open: pi === 0 }, [el("summary", { text: pm[1] })]);
+        md.appendChild(el("div", { class: "pf" }, [tabMedia(data.pagemedia[pm[0]], pm[2])]));
         panel.appendChild(md);
-      }
+      });
       panel.appendChild(viewPageEditor(p[2], p[0], "page"));
       return panel;
     }

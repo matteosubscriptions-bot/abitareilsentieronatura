@@ -193,6 +193,7 @@
   // Slider di foto (scroll-snap nativo + frecce, puntini e autoplay opzionale).
   // Script classico: senza JS lo slider resta scorrevole con swipe/trackpad.
   function initSliders() {
+    initMedia(); // le foto scelte da admin devono esserci prima di avviare lo slider
     var reduce = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
     var roots = document.querySelectorAll("[data-slider]");
     Array.prototype.forEach.call(roots, function (root) {
@@ -306,6 +307,15 @@
       } else if (kind === "slider") {
         var list = m.slider || [];
         if (!list.length) return;
+        var trk = node.querySelector(".ais-slider__track");
+        if (trk) { // variante "scheda" (home / catalogo): solo foto, niente didascalie
+          var cs = Array.prototype.slice.call(trk.querySelectorAll("img")).map(function (i) { return i.getAttribute("src"); });
+          if (cs.length === list.length && cs.every(function (src, i) { return src === list[i].img; })) return;
+          trk.innerHTML = list.map(function (it, i) {
+            return '<figure class="ais-slider__slide"><img alt="' + esc(lib[it.img] || it.cap || "") + '" src="' + esc(it.img) + '"' + (i > 0 ? ' loading="lazy"' : "") + "/></figure>";
+          }).join("");
+          return;
+        }
         var stage = node.querySelector(".ais-peek__stage");
         if (!stage) return;
         var old = Array.prototype.slice.call(stage.querySelectorAll(".ais-peek__slide"));

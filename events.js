@@ -2272,6 +2272,85 @@ window.AIS_DATA = {
           "images/team-land-art.jpg"
         ]
       }
+    },
+    "index": {
+      "media": {
+        "hero": {
+          "img": "images/hero-forest.jpg",
+          "video": "videos/hero.mp4"
+        },
+        "slider": [
+          {
+            "img": "images/escape-the-city.jpg",
+            "cap": "Una notte nel bosco"
+          },
+          {
+            "img": "images/accendi-fuoco.jpg",
+            "cap": "Accendere il fuoco con le mani"
+          },
+          {
+            "img": "images/full-avventura.jpg",
+            "cap": "Camminare lenti"
+          },
+          {
+            "img": "images/mappa-viaggio.jpg",
+            "cap": "Leggere dove sei"
+          },
+          {
+            "img": "images/cammino-cerchio.jpg",
+            "cap": "Il cerchio"
+          },
+          {
+            "img": "images/full-bosco.jpg",
+            "cap": "Il bosco"
+          },
+          {
+            "img": "images/cammino-giorno2.jpg",
+            "cap": "Il rifugio"
+          },
+          {
+            "img": "images/furgone.jpg",
+            "cap": "Case in cammino"
+          }
+        ],
+        "gallery": [
+          "images/cammino-cerchio.jpg",
+          "images/accendi-fuoco.jpg",
+          "images/full-bosco.jpg",
+          "images/cammino-eroe.jpg",
+          "images/convivenza.jpg",
+          "images/full-natura.jpg",
+          "images/via-degli-dei.jpg",
+          "images/cammino-giorno2.jpg",
+          "images/full-avventura.jpg"
+        ]
+      }
+    },
+    "escape-card": {
+      "media": {
+        "hero": {
+          "img": ""
+        },
+        "slider": [
+          {
+            "img": "images/escape-the-city.jpg",
+            "cap": ""
+          },
+          {
+            "img": "images/cammino-cerchio.jpg",
+            "cap": ""
+          },
+          {
+            "img": "images/accendi-fuoco.jpg",
+            "cap": ""
+          },
+          {
+            "img": "images/full-avventura.jpg",
+            "cap": ""
+          }
+        ],
+        "gallery": []
+      }
     }
   }
 };

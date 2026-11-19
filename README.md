@@ -101,6 +101,11 @@ dentro ogni esperienza, la scheda **Testi pagina**. L'admin legge la pagina pubb
 Se aggiungi a mano nuovi testi in una pagina, lancia lo strumento di marcatura (o chiedi) per renderli modificabili.
 Le sezioni dinamiche (date, domande, info utili, cosa impari, media, testimonianze, menu) si gestiscono dalle loro schede dedicate.
 
+## Sfondo, slider e gallerie modificabili
+In admin → **Home** trovi **Media della home** (sfondo in alto: foto e/o video, slider sotto l'header, galleria) e lo **slider della scheda Escape the City**
+(lo stesso della scheda nel **catalogo Esperienze**). Come nelle altre pagine puoi cambiare, aggiungere, togliere e riordinare le foto. Per usare solo una foto
+come sfondo della home lascia vuoto il campo video. Le foto singole (card, riquadri) si cambiano da "Testi e foto" della pagina.
+
 ## Libreria media = cartella `images/`
 Aprendo l'admin (e con "Sincronizza con la cartella") la libreria legge la cartella `images/`: prova l'elenco file del server (serve l'indice di directory attivo) e
 l'API GitHub del repository (se privato serve il token). I file trovati compaiono in libreria; quelli caricati dall'admin finiscono in `images/` pubblicando.
