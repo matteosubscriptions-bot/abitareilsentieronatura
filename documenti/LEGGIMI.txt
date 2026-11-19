@@ -1,0 +1,5 @@
+Metti qui il PDF della guida "Dalla sopravvivenza alla convivenza" con questo nome esatto:
+
+    dalla-sopravvivenza-alla-convivenza.pdf
+
+Il link "Scarica la guida (PDF)" nella home compare da solo quando il file e' presente.

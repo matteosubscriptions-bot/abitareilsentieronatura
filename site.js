@@ -673,6 +673,22 @@
     });
   }
   function onReady(fn) { if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", fn); else fn(); }
+
+  // Link di download (es. la guida in PDF): compare solo se il file esiste davvero.
+  function initDocLinks() {
+    Array.prototype.forEach.call(document.querySelectorAll("a[data-doc]"), function (a) {
+      var href = a.getAttribute("href") || "";
+      function show() { a.hidden = false; }
+      if (!href || /^(https?:)?\/\//.test(href) || location.protocol === "file:") { show(); return; }
+      try {
+        fetch(href, { method: "HEAD", cache: "no-store" }).then(function (r) {
+          var t = r.headers.get("content-type") || "";
+          if (r.ok && t.indexOf("text/html") < 0) show();
+        }, function () {});
+      } catch (e) {}
+    });
+  }
+  onReady(initDocLinks);
   onReady(initTabs);
   onReady(initComposer);
 
