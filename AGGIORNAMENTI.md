@@ -11,6 +11,12 @@ Ogni aggiornamento ti viene indicato così: *"prendi questi file"* + *"non tocca
 
 ## Registro aggiornamenti (dal più recente)
 
+### Tutti i testi delle pagine modificabili (chip con icona, titoli con icona, etichette dei moduli, anni nelle liste)
+Prendi da GitHub (sono cambiate tutte le pagine con testi accanto a icone): `admin.html`, `index.html`, `esperienze.html`, `aziende.html`, `scuole-gruppi.html`, `metodologia.html`, `chi-sono.html`,
+`escape-the-city.html`, `accendi-il-tuo-fuoco.html`, `orienteering-sensoriale.html`, `elementi-di-convivenza.html`, `tribu-del-bosco.html`, `guardiani-del-fuoco.html`,
+`la-mappa-del-tuo-viaggio.html`, `via-degli-dei.html`, `cammino.html`, `AGGIORNAMENTI.md`.
+Non toccare: `events.js`, `images/`, `videos/`, `documenti/`. Le modifiche già fatte restano valide: le chiavi esistenti non cambiano, quelle nuove sono aggiunte in coda.
+
 ### Sfondo/slide con video, gallerie con "Cambia", testimonianze, protezione delle modifiche
 Prendi da GitHub: `admin.html`, `site.js`, `styles.css`, `index.html`, `esperienze.html`, `calendario.html`, `testimonianze.html`, `chi-sono.html`, `README.md`, `AGGIORNAMENTI.md`.
 Non toccare: `events.js`, `images/`, `videos/`.

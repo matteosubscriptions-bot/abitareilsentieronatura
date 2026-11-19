@@ -1425,7 +1425,11 @@ dialog#pick{width:min(860px,96vw)}
     }
     function tabPageTexts(e) {
       var slug = (e.url || "").replace(/\.html$/, "");
-      return viewPageEditor(e.url, slug, "page");
+      var top = el("div", { class: "row", style: "margin-bottom:10px;align-items:center" }, [
+        el("span", { class: "hint", style: "margin:0", text: "Qui trovi tutti i testi e le foto della pagina. Sfondo in alto, slider e galleria si cambiano da “Media”; prezzo, date, domande, info, attività e “cosa impari” dalle loro schede." }),
+        el("button", { class: "btn sm", type: "button", text: "Vai a Media (sfondo in alto)", onclick: function () { tab = "media"; render(); } })
+      ]);
+      return el("div", {}, [top, viewPageEditor(e.url, slug, "page")]);
     }
 
     /* ---- sincronizzazione con la cartella images/ ---- */
