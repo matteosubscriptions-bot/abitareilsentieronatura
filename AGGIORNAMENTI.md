@@ -11,6 +11,9 @@ Ogni aggiornamento ti viene indicato così: *"prendi questi file"* + *"non tocca
 
 ## Registro aggiornamenti (dal più recente)
 
+### Sfondo in alto con video YouTube (home e pagine)
+Prendi da GitHub: `admin.html`, `site.js`, `styles.css`, `README.md`, `AGGIORNAMENTI.md`. Non toccare: `events.js`, `images/`, `videos/`, `documenti/`. Nessun file nuovo.
+
 ### Più video nella pagina esperienza + pagine del sito nascondibili
 Prendi da GitHub: `admin.html`, `site.js`, `styles.css`, `README.md`, `AGGIORNAMENTI.md`.
 Non toccare: `events.js`, `images/`, `videos/`, `documenti/`. Nessun file nuovo da copiare.

@@ -1264,3 +1264,10 @@ mark.ais-hl{background:linear-gradient(transparent 56%,rgba(176,84,45,.26) 56%);
 .ais-expvideo__grid .ais-expvideo__frame{margin:0;border-radius:16px;}
 .ais-expvideo__item figcaption{margin-top:10px;color:rgba(255,255,255,.88);font:500 15px/1.4 Inter,system-ui,sans-serif;text-align:center;}
 @media(max-width:820px){.ais-expvideo__grid,.ais-expvideo__grid--3{grid-template-columns:1fr;}}
+
+/* Sfondo in alto con YouTube */
+.ais-hero__bg{overflow:hidden;}
+.ais-yt-bg{position:absolute;inset:0;overflow:hidden;opacity:0;transition:opacity 1s ease;pointer-events:none;container-type:size;}
+.ais-yt-bg.is-playing{opacity:1;}
+.ais-yt-bg iframe{position:absolute;top:50%;left:50%;width:177.78vh;height:56.25vw;min-width:100%;min-height:100%;transform:translate(-50%,-50%);border:0;pointer-events:none;}
+@supports (width:1cqw){.ais-yt-bg iframe{width:max(100cqw,177.78cqh);height:max(56.25cqw,100cqh);min-width:0;min-height:0;}}

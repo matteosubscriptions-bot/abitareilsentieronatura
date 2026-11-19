@@ -279,6 +279,35 @@
 
   // Media gestiti da admin.html: header principale, slider e galleria di ogni esperienza.
   // Il markup statico resta come riserva e viene sostituito solo se i dati sono diversi.
+  // Sfondo in alto con video YouTube: parte da solo, senza audio, in loop. La foto resta come sfondo finche' il video non parte
+  // (e per sempre se il video non puo' partire: da file locale, risparmio movimento, autoplay bloccato).
+  function heroYouTube(node, h, p, alt) {
+    if (node.querySelector('.ais-yt-bg[data-yt="' + p.id + '"]') && node.querySelector("img") && node.querySelector("img").getAttribute("src") === h.img) return;
+    function esc(t) { return String(t == null ? "" : t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+    node.innerHTML = '<img alt="' + esc(alt) + '" src="' + esc(h.img) + '"/><div class="ais-yt-bg" data-yt="' + esc(p.id) + '" aria-hidden="true"></div>';
+    var reduce = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    if (reduce || !/^https?:$/.test(location.protocol)) return; // YouTube rifiuta l'incorporamento da file locale (errore 153)
+    var box = node.querySelector(".ais-yt-bg"), f = document.createElement("iframe"), heard = false, shown = false;
+    function show() { if (!shown) { shown = true; box.classList.add("is-playing"); } }
+    f.src = "https://www.youtube-nocookie.com/embed/" + p.id + "?autoplay=1&mute=1&loop=1&playlist=" + p.id + "&controls=0&rel=0&playsinline=1&modestbranding=1&disablekb=1&iv_load_policy=3&fs=0&enablejsapi=1&origin=" + encodeURIComponent(location.origin);
+    f.allow = "autoplay; encrypted-media"; f.referrerPolicy = "strict-origin-when-cross-origin";
+    f.setAttribute("tabindex", "-1"); f.setAttribute("aria-hidden", "true"); f.title = "";
+    window.addEventListener("message", function (ev) {
+      if (ev.source !== f.contentWindow) return;
+      heard = true;
+      var d = ev.data; if (typeof d === "string") { try { d = JSON.parse(d); } catch (e) { return; } }
+      if (!d) return;
+      if ((d.event === "onStateChange" && d.info === 1) || (d.event === "infoDelivery" && d.info && d.info.playerState === 1)) show();
+    });
+    f.addEventListener("load", function () {
+      try { f.contentWindow.postMessage(JSON.stringify({ event: "listening", id: 1, channel: "widget" }), "*"); } catch (e) {}
+      try { f.contentWindow.postMessage(JSON.stringify({ event: "command", func: "addEventListener", args: ["onStateChange"] }), "*"); } catch (e) {}
+      // se il player non risponde per niente ai messaggi, dopo qualche secondo lo mostriamo comunque
+      setTimeout(function () { if (!heard) show(); }, 6000);
+    });
+    box.appendChild(f);
+  }
+
   function initMedia() {
     var D = getData();
     if (!D || !D.experiences) return;
@@ -301,6 +330,8 @@
         if (!h || !h.img) return;
         var v = node.querySelector("video"), im = node.querySelector("img");
         var a = lib[h.img] || x.name || "";
+        var hp = h.video ? parseVideo(h.video) : null;
+        if (hp && hp.type === "yt") { heroYouTube(node, h, hp, a); return; }
         if (h.video) {
           if (v && v.getAttribute("src") === h.video && v.getAttribute("poster") === h.img) return;
           node.innerHTML = '<video autoplay="" loop="" muted="" playsinline="" poster="' + esc(h.img) + '" src="' + esc(h.video) + '"></video>';

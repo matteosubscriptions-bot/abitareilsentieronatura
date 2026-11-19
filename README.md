@@ -120,6 +120,9 @@ Da admin: per ogni pagina del sito (Pagine del sito → pagina → **Visibilità
 La home non si può nascondere. Il dato sta in `events.js` (`pagesHidden`).
 
 ## Video o foto: sfondi, slide, testimonianze
+- **Sfondo con video YouTube**: in Media → sfondo in alto → Video, incolla il link YouTube (o indica un file). Parte da solo, senza audio, in loop; la **copertina** (foto) resta come sfondo
+  finché il video non parte, e resta se non può partire (apertura da file locale, "riduci movimento" attivo, autoplay bloccato). Per lo sfondo non è supportato Vimeo.
+
 - **Sfondo in alto** di ogni pagina (home, esperienze, calendario, testimonianze, Scuole, Aziende, Metodo, Chi sono, pagine esperienza): in admin → Media scegli **Foto** oppure **Video**.
   Con il video la foto resta come copertina. Meglio clip brevi (5–15 s), senza audio, sotto 5–8 MB.
 - **Slide sotto l'header**: ogni slide può avere, oltre alla foto, un **video** (la foto fa da copertina).
