@@ -835,6 +835,89 @@
     document.body.appendChild(a);
   }
   onReady(initWhatsApp);
+
+  // Popup promo all'apertura della pagina. Configurabile/nascondibile da admin ("Popup promo").
+  var POPUP_DEF = { show: true, pages: ["index", "escape-the-city"], freq: "session", to: "2026-12-31", eyebrow: "Promo Natale",
+    title: "Escape the City 2027\n//€115 fino al 31 dicembre.//",
+    text: "Iscriviti entro il 31 dicembre: due giorni e una notte nel selvatico, in un piccolo gruppo, senza segnale.",
+    img: "images/escape-the-city.jpg", cta: "Prenota il tuo posto", href: "escape-the-city.html#date" };
+  function initPromoPopup() {
+    var D = getData(), W = {};
+    var src = (D && D.popup) || {};
+    Object.keys(POPUP_DEF).forEach(function (k) { W[k] = src[k] !== undefined ? src[k] : POPUP_DEF[k]; });
+    W.from = src.from || "";
+    var FORCE = /[?&]popup=1/.test(location.search); // anteprima dall'admin: mostra sempre
+    if ((W.show === false && !FORCE) || !W.title) return;
+    var slug = pageSlug();
+    if (["privacy", "cookie-policy", "admin"].indexOf(slug) >= 0) return;
+    if (!FORCE) {
+      if (W.pages.indexOf(slug) < 0) return;
+      var now = new Date(), today = now.getFullYear() + "-" + ("0" + (now.getMonth() + 1)).slice(-2) + "-" + ("0" + now.getDate()).slice(-2);
+      if (W.from && today < W.from) return;
+      if (W.to && today > W.to) return;
+    }
+    var sig = (function (str) { var h = 0; for (var i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) | 0; return String(h); })(JSON.stringify([W.eyebrow, W.title, W.text, W.img, W.cta, W.href]));
+    function seen() {
+      try {
+        if (W.freq === "always") return false;
+        if (W.freq === "once") return localStorage.getItem("ais_popup_seen") === sig;
+        return sessionStorage.getItem("ais_popup_seen") === sig;
+      } catch (e) { return false; }
+    }
+    function mark() { try { if (W.freq === "once") localStorage.setItem("ais_popup_seen", sig); else if (W.freq !== "always") sessionStorage.setItem("ais_popup_seen", sig); } catch (e) {} }
+    if (!FORCE && seen()) return;
+    function esc(t) { return String(t == null ? "" : t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+    function open() {
+      if (document.querySelector(".ais-popup")) return;
+      mark();
+      var ov = document.createElement("div");
+      ov.className = "ais-popup"; ov.setAttribute("role", "dialog"); ov.setAttribute("aria-modal", "true"); ov.setAttribute("aria-labelledby", "ais-popup-t");
+      var ext = /^https?:\/\//.test(W.href || "");
+      ov.innerHTML = '<div class="ais-popup__card">' +
+        '<button type="button" class="ais-popup__x" aria-label="Chiudi">&times;</button>' +
+        (W.img ? '<div class="ais-popup__img"><img alt="" src="' + esc(W.img) + '"/></div>' : "") +
+        '<div class="ais-popup__body">' + (W.eyebrow ? '<span class="ais-eyebrow">' + esc(W.eyebrow) + "</span>" : "") +
+        '<h2 class="ais-display" id="ais-popup-t">' + liteToHtml(W.title, document.createElement("div")) + "</h2>" +
+        (W.text ? "<p>" + esc(W.text) + "</p>" : "") +
+        '<div class="ais-popup__cta">' + (W.cta && W.href ? '<a class="ais-btn-ochre ais-arrow" href="' + esc(W.href) + '"' + (ext ? ' target="_blank" rel="noopener noreferrer"' : "") + ">" + esc(W.cta) + "</a>" : "") +
+        '<button type="button" class="ais-popup__later">Magari più tardi</button></div></div></div>';
+      var last = document.activeElement;
+      document.body.appendChild(ov);
+      document.documentElement.classList.add("ais-popup-open");
+      requestAnimationFrame(function () { ov.classList.add("is-on"); });
+      var x = ov.querySelector(".ais-popup__x");
+      function close() {
+        ov.classList.remove("is-on"); document.documentElement.classList.remove("ais-popup-open");
+        document.removeEventListener("keydown", key);
+        setTimeout(function () { if (ov.parentNode) ov.parentNode.removeChild(ov); }, 250);
+        try { if (last && last.focus) last.focus(); } catch (e) {}
+      }
+      function key(e) {
+        if (e.key === "Escape") { close(); return; }
+        if (e.key !== "Tab") return;
+        var f = Array.prototype.slice.call(ov.querySelectorAll("a[href],button")).filter(function (n) { return n.offsetParent !== null; });
+        if (!f.length) return;
+        var i = f.indexOf(document.activeElement);
+        if (e.shiftKey && i <= 0) { e.preventDefault(); f[f.length - 1].focus(); }
+        else if (!e.shiftKey && (i === f.length - 1 || i < 0)) { e.preventDefault(); f[0].focus(); }
+      }
+      document.addEventListener("keydown", key);
+      x.addEventListener("click", close);
+      ov.querySelector(".ais-popup__later").addEventListener("click", close);
+      ov.addEventListener("click", function (e) { if (e.target === ov) close(); });
+      var cta = ov.querySelector(".ais-popup__cta a"); if (cta) cta.addEventListener("click", function () { if (!ext) close(); });
+      (cta || x).focus();
+    }
+    // aspetta la scelta sui cookie (se il banner e' in attesa), poi apre dopo un attimo
+    var tries = 0;
+    (function wait() {
+      var pending = false;
+      try { pending = !FORCE && !localStorage.getItem("ais_cookie_consent_v1") && !!document.querySelector('script[src*="cookies.js"]'); } catch (e) {}
+      if (pending && tries++ < 600) { setTimeout(wait, 600); return; }
+      setTimeout(open, 1100);
+    })();
+  }
+  onReady(initPromoPopup);
   onReady(initPageVisibility);
   onReady(initExpVideo);
   onReady(initDocLinks);

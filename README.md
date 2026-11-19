@@ -113,6 +113,11 @@ YouTube/Vimeo (consigliato) o carica un file, scegli la copertina e i testi (sop
 ### Più video nella stessa pagina
 Nella scheda **Video** puoi aggiungere quanti video vuoi (YouTube/Vimeo o file), riordinarli e dare a ciascuno copertina e didascalia. Con uno solo il video è grande; con due o tre diventa una griglia.
 
+## Popup promo
+Si apre poco dopo il caricamento della pagina (dopo la scelta sui cookie). In admin → **Popup promo**: spunta per mostrarlo/nasconderlo, sopratitolo, titolo, testo, immagine, pulsante e link,
+pagine in cui compare, quante volte (una per visita / una sola / sempre) e le date di inizio e fine: alla scadenza sparisce da solo. "Anteprima popup" lo mostra subito.
+Senza impostazioni parte con la promo Natale (home ed Escape, fino al 31/12/2026).
+
 ## Pulsante WhatsApp fluttuante
 In basso a destra su tutte le pagine (su telefono è solo l'icona). In admin → Pagine del sito → **Globale**: mostra/nascondi, numero, messaggio preimpostato e pagine dove non compare
 (di default Scuole & Gruppi e Aziende, dove il contatto è solo via email).

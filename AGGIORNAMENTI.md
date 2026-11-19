@@ -11,6 +11,10 @@ Ogni aggiornamento ti viene indicato così: *"prendi questi file"* + *"non tocca
 
 ## Registro aggiornamenti (dal più recente)
 
+### Popup promo all'apertura della pagina
+Prendi da GitHub: `admin.html`, `site.js`, `styles.css`, `README.md`, `AGGIORNAMENTI.md`. Non toccare: `events.js`, `images/`, `videos/`, `documenti/`. Nessun file nuovo.
+Senza nessuna impostazione il popup parte già con la promo di Natale (home e Escape, fino al 31/12/2026): per spegnerlo o cambiarlo usa admin → Popup promo.
+
 ### Pulsante fluttuante WhatsApp
 Prendi da GitHub: `admin.html`, `site.js`, `styles.css`, `README.md`, `AGGIORNAMENTI.md`. Non toccare: `events.js`, `images/`, `videos/`, `documenti/`. Nessun file nuovo.
 

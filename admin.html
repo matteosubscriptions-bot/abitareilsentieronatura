@@ -228,7 +228,7 @@ dialog#pick{width:min(860px,96vw)}
 (function () {
   "use strict";
   var DRAFT_KEY = "ais_admin_draft", CFG_KEY = "ais_admin_cfg", SESSION_KEY = "ais_admin_ok";
-  var MEDIA = "__media", TESTI = "__testi";
+  var MEDIA = "__media", TESTI = "__testi", POPUP = "__popup";
   var TYPES = { soglia: "Soglia", avventura: "Avventura", immersione: "Immersione" };
   var ICONS = ["fire","leaf","eye","heart","moon","tent","compass","hand","sparkles","route","idea","drop","users","clock","pin","calendar"];
   var HEADER = '/* Abitare il Sentiero — DATI DELLE ESPERIENZE (unica fonte)\n' +
@@ -459,6 +459,18 @@ dialog#pick{width:min(860px,96vw)}
         if (Object.keys(m).length) pmo[slug] = { media: m };
       });
       x.pagemedia = pmo;
+      if (x.popup) {
+        var q = x.popup, nq = {}, D0 = { pages: ["index", "escape-the-city"], freq: "session", to: "2026-12-31", eyebrow: "Promo Natale",
+          title: "Escape the City 2027\n//€115 fino al 31 dicembre.//", text: "Iscriviti entro il 31 dicembre: due giorni e una notte nel selvatico, in un piccolo gruppo, senza segnale.",
+          img: "images/escape-the-city.jpg", cta: "Prenota il tuo posto", href: "escape-the-city.html#date" };
+        if (q.show === false) nq.show = false;
+        ["eyebrow", "title", "text", "img", "cta", "href", "to", "from", "freq"].forEach(function (k) {
+          var val = q[k] == null ? "" : String(q[k]).trim();
+          if (val !== String(D0[k] == null ? "" : D0[k])) nq[k] = val;
+        });
+        if (q.pages && JSON.stringify(q.pages.slice().sort()) !== JSON.stringify(D0.pages.slice().sort())) nq.pages = q.pages.slice().sort();
+        if (Object.keys(nq).length) x.popup = nq; else delete x.popup;
+      }
       if (x.whatsapp) {
         var w = x.whatsapp, nw = {};
         if (w.show === false) nw.show = false;
@@ -551,6 +563,15 @@ dialog#pick{width:min(860px,96vw)}
         var missing = used.filter(function (u) { return u && !inLib(u); });
         if (missing.length) errs.push(n + ": foto non presente nella libreria (" + missing[0] + ")");
       });
+      if (data.popup) {
+        var pq = data.popup;
+        if (pq.show !== false && !String(pq.title || "").trim()) errs.push("Popup promo: scrivi il titolo (o spegnilo)");
+        if (pq.from && !isDate(pq.from)) errs.push("Popup promo: data di inizio non valida");
+        if (pq.to && !isDate(pq.to)) errs.push("Popup promo: data di fine non valida");
+        if (pq.from && pq.to && isDate(pq.from) && isDate(pq.to) && pq.to < pq.from) errs.push("Popup promo: la fine è prima dell’inizio");
+        if (pq.img && !inLib(pq.img)) errs.push("Popup promo: immagine non presente nella libreria");
+        if (pq.cta && !pq.href) errs.push("Popup promo: manca il link del pulsante");
+      }
       data.testimonials.forEach(function (t, i) {
         var n = "Testimonianza " + (i + 1) + (t.name ? " (" + t.name + ")" : "");
         if (!t.name) errs.push(n + ": manca il nome");
@@ -652,6 +673,7 @@ dialog#pick{width:min(860px,96vw)}
         if (where.length) out.push((e.name || s) + " (" + where.join(", ") + ")");
       });
       if (data.testimonials.some(function (t) { return t.poster === src; })) out.push("Testimonianze");
+      if (data.popup && data.popup.img === src) out.push("Popup promo");
       Object.keys(data.pagemedia || {}).forEach(function (slug) {
         var m = (data.pagemedia[slug] || {}).media || {};
         if ((m.hero && m.hero.img === src) || (m.slider || []).some(function (x) { return x.img === src; }) || (m.gallery || []).indexOf(src) >= 0) out.push("Media pagina " + slug);
@@ -1550,6 +1572,59 @@ dialog#pick{width:min(860px,96vw)}
       wrap.appendChild(el("p", { class: "hint", text: "Di solito Scuole & Gruppi e Aziende restano senza: lì il contatto è solo via email. Le pagine delle esperienze mostrano sempre il pulsante." }));
       return wrap;
     }
+    /* ---- popup promo */
+    var POP_DEF = { pages: ["index", "escape-the-city"], freq: "session", to: "2026-12-31", eyebrow: "Promo Natale",
+      title: "Escape the City 2027\n//€115 fino al 31 dicembre.//", text: "Iscriviti entro il 31 dicembre: due giorni e una notte nel selvatico, in un piccolo gruppo, senza segnale.",
+      img: "images/escape-the-city.jpg", cta: "Prenota il tuo posto", href: "escape-the-city.html#date" };
+    function viewPopup() {
+      data.popup = data.popup || {};
+      var P = data.popup;
+      // mostra i valori predefiniti come valori veri, così si possono modificare
+      Object.keys(POP_DEF).forEach(function (k) { if (P[k] === undefined) P[k] = Array.isArray(POP_DEF[k]) ? POP_DEF[k].slice() : POP_DEF[k]; });
+      if (P.from === undefined) P.from = "";
+      var panel = el("div", { class: "panel" });
+      panel.appendChild(el("div", { class: "row", style: "justify-content:space-between" }, [
+        el("div", {}, [el("h2", { text: "Popup promo" }), el("p", { class: "sub", text: "Finestra che si apre quando qualcuno entra in una pagina (dopo la scelta sui cookie)" })]),
+        el("div", { class: "row" }, [el("button", { class: "btn sm", type: "button", text: "Anteprima popup", onclick: function () {
+          try { localStorage.setItem("ais_preview", JSON.stringify(clean(data))); previewOn = true; } catch (e) { toast("Anteprima non disponibile", true); return; }
+          window.open("index.html?preview=1&popup=1", "_blank");
+        } })])
+      ]));
+      var on = el("input", { type: "checkbox" }); on.checked = P.show !== false;
+      on.addEventListener("change", function () { if (on.checked) delete P.show; else P.show = false; touch(); renderSide(); });
+      panel.appendChild(el("label", { class: "check", style: "font-size:16px" }, [on, document.createTextNode(" Mostra il popup (togli la spunta per nasconderlo, senza perdere le impostazioni)")]));
+      panel.appendChild(el("h3", { class: "sec", text: "Contenuto" }));
+      panel.appendChild(el("div", { style: "max-width:640px" }, [
+        field("Sopratitolo", inp(P, "eyebrow", { ph: "Promo Natale" })),
+        el("div", { style: "height:8px" }),
+        field("Titolo — invio per andare a capo, //corsivo//", area(P, "title", 2)),
+        el("div", { style: "height:8px" }),
+        field("Testo", area(P, "text", 3)),
+        el("div", { style: "height:8px" }),
+        el("div", { class: "grid" }, [field("Testo del pulsante", inp(P, "cta", { ph: "Prenota il tuo posto" })), field("Link del pulsante", inp(P, "href", { ph: "escape-the-city.html#date" }))])
+      ]));
+      panel.appendChild(el("p", { class: "hint", text: "Lascia vuoto il testo o il link del pulsante per non mostrarlo." }));
+      panel.appendChild(el("div", { style: "margin-top:10px" }, [imgField("Immagine in alto (opzionale)", function () { return P.img; }, function (x) { P.img = x; }, { clearable: true })]));
+      panel.appendChild(el("h3", { class: "sec", text: "Quando compare" }));
+      var fq = el("select", {}, [["session", "Una volta per visita (consigliato)"], ["once", "Una volta sola per visitatore (finché non cambi il contenuto)"], ["always", "Ad ogni apertura di pagina"]].map(function (o) { return el("option", { value: o[0], text: o[1] }); }));
+      fq.value = P.freq || "session"; fq.addEventListener("change", function () { P.freq = fq.value; touch(); });
+      panel.appendChild(el("div", { class: "grid", style: "max-width:640px" }, [
+        field("Quante volte", fq),
+        field("Dal giorno (opzionale)", inp(P, "from", { type: "date", min: "2000-01-01", max: "2100-12-31" })),
+        field("Fino al giorno incluso (vuoto = senza scadenza)", inp(P, "to", { type: "date", min: "2000-01-01", max: "2100-12-31" }))
+      ]));
+      panel.appendChild(el("div", { class: "lbl2", text: "In quali pagine" }));
+      var pages = P.pages.slice();
+      var list = SITEPAGES.map(function (p) { return [p[0], p[1]]; }).concat(Object.keys(data.experiences).map(function (k) { var e = data.experiences[k]; return [String(e.url || "").replace(/\.html$/, ""), e.name || k]; }));
+      panel.appendChild(el("div", { class: "chk" }, list.map(function (p) {
+        var c = el("input", { type: "checkbox" }); c.checked = pages.indexOf(p[0]) >= 0;
+        c.addEventListener("change", function () { var i = pages.indexOf(p[0]); if (c.checked && i < 0) pages.push(p[0]); else if (!c.checked && i >= 0) pages.splice(i, 1); P.pages = pages.slice(); touch(); });
+        return el("label", { class: "check sm" }, [c, document.createTextNode(p[1])]);
+      })));
+      panel.appendChild(el("p", { class: "hint", text: "Il popup non compare mai nelle pagine privacy e cookie, e aspetta che il visitatore scelga sui cookie. Alla scadenza sparisce da solo." }));
+      return panel;
+    }
+
     function viewGlobal() {
       var panel = el("div", { class: "panel" });
       panel.appendChild(el("div", { class: "row", style: "justify-content:space-between" }, [
@@ -1643,6 +1718,9 @@ dialog#pick{width:min(860px,96vw)}
       s.appendChild(el("button", { class: "exp", type: "button", "aria-current": cur === MEDIA ? "true" : "false", onclick: function () { cur = MEDIA; render(); } }, [
         el("b", { text: "Libreria media" }), el("span", { text: data.media.length + " foto" })
       ]));
+      s.appendChild(el("button", { class: "exp", type: "button", "aria-current": cur === POPUP ? "true" : "false", onclick: function () { cur = POPUP; render(); } }, [
+        el("b", { text: "Popup promo" }), el("span", {}, [data.popup && data.popup.show === false ? el("span", { class: "tag off", text: "spento" }) : el("span", { class: "tag", text: "attivo" })])
+      ]));
       s.appendChild(el("button", { class: "exp", type: "button", "aria-current": cur === TESTI ? "true" : "false", onclick: function () { cur = TESTI; render(); } }, [
         el("b", { text: "Testimonianze" }), el("span", { text: data.testimonials.length + " testimonianze" })
       ]));
@@ -1669,6 +1747,7 @@ dialog#pick{width:min(860px,96vw)}
       var m = $("main"); m.innerHTML = "";
       if (cur === MEDIA) { m.appendChild(viewMedia()); status(); return; }
       if (cur === TESTI) { m.appendChild(viewTesti()); status(); return; }
+      if (cur === POPUP) { m.appendChild(viewPopup()); status(); return; }
       if (cur.indexOf("page:") === 0) {
         var pk = cur.slice(5);
         if (pk === "_global") m.appendChild(viewGlobal());
