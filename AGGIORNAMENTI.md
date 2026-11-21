@@ -11,6 +11,9 @@ Ogni aggiornamento ti viene indicato così: *"prendi questi file"* + *"non tocca
 
 ## Registro aggiornamenti (dal più recente)
 
+### Popup senza i 4 punti · Scuole & Gruppi senza prezzi e luoghi, con le scuole internazionali in evidenza
+**Prendi da GitHub:** `admin.html`, `site.js`, `styles.css`, `scuole-gruppi.html`, `AGGIORNAMENTI.md`. **Non toccare:** `events.js`, `images/`, `videos/`, `documenti/`. Nessun file nuovo da copiare.
+
 ### Escape: promo €115 fino al 31/12 poi early bird €125 · popup · home · Scuole & Gruppi · pagina inglese International Schools
 **Prendi da GitHub (sostituisci):** `admin.html`, `site.js`, `styles.css`, **`patches.js` (nuovo)**, `index.html`, `esperienze.html`, `calendario.html`, `chi-sono.html`, `metodologia.html`,
 `testimonianze.html`, `scuole-gruppi.html`, `aziende.html`, `privacy.html`, `cookie-policy.html`, **`international-schools.html` (nuovo)**, le 9 pagine esperienza (`escape-the-city.html`, `accendi-il-tuo-fuoco.html`,

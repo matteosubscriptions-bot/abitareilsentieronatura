@@ -1326,3 +1326,5 @@ html.ais-no-topbar .mobile-menu{top:72px;}
 .ais-ilist li{position:relative;padding-left:20px;font:400 15px/1.45 Inter,system-ui,sans-serif;color:#4b5646;}
 .ais-ilist li::before{content:"";position:absolute;left:0;top:.6em;width:7px;height:7px;border-radius:50%;background:var(--ais-ochre);}
 @media(max-width:900px){.ais-icols{grid-template-columns:1fr;}}
+
+.ais-photopanel--intl{padding:clamp(88px,12vw,140px) 0;}

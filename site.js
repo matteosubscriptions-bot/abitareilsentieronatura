@@ -855,7 +855,7 @@
   var POPUP_DEF = { show: true, pages: ["index", "esperienze"], freq: "session", to: "2026-12-31", eyebrow: "Cos\u2019\u00e8 Escape the City",
     title: "Due giorni nel bosco,\n//senza telefono.//",
     text: "Escape the City è un weekend per uscire dal rumore: si cammina, ci si orienta, si accende un fuoco e si dorme nel bosco, in un piccolo gruppo. Non serve esperienza n\u00e9 allenamento.",
-    points: "Da sabato mattina a domenica pranzo\nPiccoli gruppi, max 12 persone\nNessun segnale: il telefono resta in tasca\nToscana, Emilia, Lombardia",
+    points: "",
     badge: "Promo Natale: \u20ac{promo} fino al {promoUntil} \u00b7 poi \u20ac{early}",
     img: "images/escape-the-city.jpg", cta: "Scopri Escape the City", href: "escape-the-city.html" };
   function initPromoPopup() {
