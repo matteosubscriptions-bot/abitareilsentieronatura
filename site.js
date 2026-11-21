@@ -657,7 +657,19 @@
       function v(k) { return F[k] ? F[k].value.trim() : ""; }
       function build() {
         var L = ["Ciao Matteo,"], g = [];
-        if (kind === "aziende") {
+        if (kind === "intl") {
+          L = ["Hello Matteo,"];
+          L.push("I’m writing on behalf of " + (v("name") || "our school") + ".");
+          if (v("n")) g.push("about " + v("n") + " students");
+          if (v("age")) g.push(v("age"));
+          if (g.length) L.push("We are " + g.join(", ") + ".");
+          if (v("when")) L.push("Preferred period: " + v("when") + ".");
+          var namedI = props.filter(function (p) { return p !== "__adhoc"; });
+          if (namedI.length) L.push("We’re interested in: " + namedI.join(", ") + ".");
+          if (props.indexOf("__adhoc") >= 0) L.push("We’d like to co-create a custom experience" + (v("adhoc") ? ": " + v("adhoc") : "") + ".");
+          if (v("note")) L.push(v("note"));
+          L.push("Could we have a call to design the day together?");
+        } else if (kind === "aziende") {
           L.push("scrivo per il team di " + (v("name") || "un’azienda") + ".");
           if (v("n")) g.push("circa " + v("n") + " persone");
           if (v("where")) g.push("a " + v("where"));
@@ -676,6 +688,9 @@
           if (g.length) L.push("Siamo " + g.join(", ") + (v("where") ? ", a " + v("where") : "") + ".");
           else if (v("where")) L.push("Siamo a " + v("where") + ".");
           if (v("when")) L.push("Periodo: " + v("when") + ".");
+          var named2 = props.filter(function (p) { return p !== "__adhoc"; });
+          if (named2.length) L.push("Ci interessano: " + named2.join(", ") + ".");
+          if (props.indexOf("__adhoc") >= 0) L.push("Vorremmo costruire insieme un\u2019esperienza nuova" + (v("adhoc") ? ": " + v("adhoc") : "") + ".");
           if (themes.length) L.push("Ci piacerebbe: " + themes.join(", ").toLowerCase() + ".");
           if (v("note")) L.push(v("note"));
           L.push("Possiamo sentirci per costruire una proposta insieme?");
@@ -688,7 +703,7 @@
         if (msgEl && !edited && "value" in msgEl) msgEl.value = m;
         if (resetBtn) resetBtn.hidden = !edited;
         if (wa) wa.href = WA + "?text=" + encodeURIComponent(m);
-        if (mail) mail.href = "mailto:" + MAIL + "?subject=" + encodeURIComponent(kind === "aziende" ? "Richiesta di proposta per il team" : "Richiesta di proposta: " + TL[type]) + "&body=" + encodeURIComponent(m);
+        if (mail) mail.href = "mailto:" + MAIL + "?subject=" + encodeURIComponent(kind === "intl" ? "Request for a proposal: outdoor team day" : kind === "aziende" ? "Richiesta di proposta per il team" : "Richiesta di proposta: " + TL[type]) + "&body=" + encodeURIComponent(m);
       }
       if (msgEl) msgEl.addEventListener("input", function () { edited = true; update(); });
       if (resetBtn) resetBtn.addEventListener("click", function () { edited = false; update(); });
@@ -820,7 +835,7 @@
   function initWhatsApp() {
     var D = getData(), W = (D && D.whatsapp) || {};
     if (W.show === false || document.querySelector(".ais-wafab")) return;
-    var slug = pageSlug(), hide = W.hide || ["scuole-gruppi", "aziende"];
+    var slug = pageSlug(), hide = W.hide || ["scuole-gruppi", "aziende", "international-schools"];
     if (hide.indexOf(slug) >= 0) return;
     var num = String(W.number || "393667187733").replace(/\D/g, "");
     var msg = String(W.message || "Ciao Matteo, ti scrivo dal sito Abitare il Sentiero.");
@@ -837,10 +852,12 @@
   onReady(initWhatsApp);
 
   // Popup promo all'apertura della pagina. Configurabile/nascondibile da admin ("Popup promo").
-  var POPUP_DEF = { show: true, pages: ["index", "escape-the-city"], freq: "session", to: "2026-12-31", eyebrow: "Promo Natale",
-    title: "Escape the City 2027\n//€115 fino al 31 dicembre.//",
-    text: "Iscriviti entro il 31 dicembre: due giorni e una notte nel selvatico, in un piccolo gruppo, senza segnale.",
-    img: "images/escape-the-city.jpg", cta: "Prenota il tuo posto", href: "escape-the-city.html#date" };
+  var POPUP_DEF = { show: true, pages: ["index", "esperienze"], freq: "session", to: "2026-12-31", eyebrow: "Cos\u2019\u00e8 Escape the City",
+    title: "Due giorni nel bosco,\n//senza telefono.//",
+    text: "Escape the City è un weekend per uscire dal rumore: si cammina, ci si orienta, si accende un fuoco e si dorme nel bosco, in un piccolo gruppo. Non serve esperienza n\u00e9 allenamento.",
+    points: "Da sabato mattina a domenica pranzo\nPiccoli gruppi, max 12 persone\nNessun segnale: il telefono resta in tasca\nToscana, Emilia, Lombardia",
+    badge: "Promo Natale: \u20ac{promo} fino al {promoUntil} \u00b7 poi \u20ac{early}",
+    img: "images/escape-the-city.jpg", cta: "Scopri Escape the City", href: "escape-the-city.html" };
   function initPromoPopup() {
     var D = getData(), W = {};
     var src = (D && D.popup) || {};
@@ -856,7 +873,10 @@
       if (W.from && today < W.from) return;
       if (W.to && today > W.to) return;
     }
-    var sig = (function (str) { var h = 0; for (var i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) | 0; return String(h); })(JSON.stringify([W.eyebrow, W.title, W.text, W.img, W.cta, W.href]));
+    // segnaposto prezzo dall'esperienza Escape: {promo} {promoUntil} {early} {regular}
+    var ex = D && D.experiences && D.experiences["escape-the-city"], px = ex && ex.price || {}, pro = px.promo || {};
+    function tok(t) { return String(t == null ? "" : t).replace(/\{promo\}/g, pro.price || "\u2014").replace(/\{promoUntil\}/g, pro.until ? longDateIso(pro.until) : "").replace(/\{early\}/g, px.early || "\u2014").replace(/\{regular\}/g, px.regular || "\u2014"); }
+    var sig = (function (str) { var h = 0; for (var i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) | 0; return String(h); })(JSON.stringify([W.eyebrow, W.title, W.text, W.points, W.badge, W.img, W.cta, W.href]));
     function seen() {
       try {
         if (W.freq === "always") return false;
@@ -877,8 +897,10 @@
         '<button type="button" class="ais-popup__x" aria-label="Chiudi">&times;</button>' +
         (W.img ? '<div class="ais-popup__img"><img alt="" src="' + esc(W.img) + '"/></div>' : "") +
         '<div class="ais-popup__body">' + (W.eyebrow ? '<span class="ais-eyebrow">' + esc(W.eyebrow) + "</span>" : "") +
-        '<h2 class="ais-display" id="ais-popup-t">' + liteToHtml(W.title, document.createElement("div")) + "</h2>" +
-        (W.text ? "<p>" + esc(W.text) + "</p>" : "") +
+        '<h2 class="ais-display" id="ais-popup-t">' + liteToHtml(tok(W.title), document.createElement("div")) + "</h2>" +
+        (W.text ? "<p>" + esc(tok(W.text)) + "</p>" : "") +
+        (W.points && String(W.points).trim() ? '<ul class="ais-popup__pts">' + String(W.points).split("\n").filter(function (l) { return l.trim(); }).map(function (l) { return "<li>" + esc(tok(l.trim())) + "</li>"; }).join("") + "</ul>" : "") +
+        (W.badge && String(W.badge).trim() ? '<p class="ais-popup__badge">' + esc(tok(W.badge)) + "</p>" : "") +
         '<div class="ais-popup__cta">' + (W.cta && W.href ? '<a class="ais-btn-ochre ais-arrow" href="' + esc(W.href) + '"' + (ext ? ' target="_blank" rel="noopener noreferrer"' : "") + ">" + esc(W.cta) + "</a>" : "") +
         '<button type="button" class="ais-popup__later">Magari più tardi</button></div></div></div>';
       var last = document.activeElement;
@@ -918,6 +940,7 @@
     })();
   }
   onReady(initPromoPopup);
+  onReady(initPromoState);
   onReady(initPageVisibility);
   onReady(initExpVideo);
   onReady(initDocLinks);
@@ -1021,9 +1044,10 @@
       var price = "";
       if (x.price) {
         var dl = addDays(i.s, -x.price.daysBefore);
+        var pl = promoActive(x) ? "\u20ac" + x.price.promo.price + " promo fino al " + longDateIso(x.price.promo.until).replace(/ (\w{3})\w*$/, " $1") + " &middot; poi " : "";
         price = today <= dl
-          ? '<p class="ais-cal__meta ais-cal__price">\u20ac' + x.price.early + " early bird fino al " + short(dl) + " &middot; poi \u20ac" + x.price.regular + "</p>"
-          : '<p class="ais-cal__meta ais-cal__price">\u20ac' + x.price.regular + "</p>";
+          ? '<p class="ais-cal__meta ais-cal__price">' + pl + "\u20ac" + x.price.early + " early bird fino al " + short(dl) + " &middot; poi \u20ac" + x.price.regular + "</p>"
+          : '<p class="ais-cal__meta ais-cal__price">' + pl + "\u20ac" + x.price.regular + "</p>";
       }
       var href, label, ext = "";
       if (o.cta === "book") {
@@ -1061,9 +1085,10 @@
       var price = "";
       if (x.price) {
         var dl = addDays(i.s, -x.price.daysBefore);
+        var pl2 = promoActive(x) ? "<b>\u20ac" + x.price.promo.price + "</b> promo fino al " + longDateIso(x.price.promo.until).replace(/ (\w{3})\w*$/, " $1") + " &middot; poi " : "";
         price = today <= dl
-          ? '<p class="ais-calcard__price"><b>\u20ac' + x.price.early + "</b> early bird fino al " + short(dl) + " &middot; poi \u20ac" + x.price.regular + "</p>"
-          : '<p class="ais-calcard__price"><b>\u20ac' + x.price.regular + "</b></p>";
+          ? '<p class="ais-calcard__price">' + pl2 + (pl2 ? "" : "<b>") + "\u20ac" + x.price.early + (pl2 ? "" : "</b>") + " early bird fino al " + short(dl) + " &middot; poi \u20ac" + x.price.regular + "</p>"
+          : '<p class="ais-calcard__price">' + pl2 + (pl2 ? "" : "<b>") + "\u20ac" + x.price.regular + (pl2 ? "" : "</b>") + "</p>";
       }
       var href = (x.url || "#") + "#date", label = "Scopri e prenota", ext = "";
       if (cta === "book") {
@@ -1158,6 +1183,33 @@
 
   // Contenuti gestiti da admin.html: domande, info utili, "cosa impari", prezzi.
   // Il markup statico resta come riserva se i dati mancano o JavaScript non parte.
+  // Promo a scadenza: price.promo = { price, until:"AAAA-MM-GG", from? }. Dopo la scadenza sparisce da sola e vale l'early bird.
+  function todayIso() { var n = new Date(); return n.getFullYear() + "-" + ("0" + (n.getMonth() + 1)).slice(-2) + "-" + ("0" + n.getDate()).slice(-2); }
+  function promoActive(x) {
+    var p = x && x.price && x.price.promo;
+    if (!p || !(Number(p.price) > 0) || !p.until) return false;
+    var t = todayIso();
+    return t <= p.until && (!p.from || t >= p.from);
+  }
+  function longDateIso(iso) {
+    var M = ["gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno", "luglio", "agosto", "settembre", "ottobre", "novembre", "dicembre"], a = String(iso || "").split("-");
+    return a.length === 3 ? parseInt(a[2], 10) + " " + M[parseInt(a[1], 10) - 1] : "";
+  }
+  function initPromoState() {
+    var D = getData();
+    if (!D || !D.experiences) return;
+    Array.prototype.forEach.call(document.querySelectorAll("[data-promo]"), function (n) {
+      var x = D.experiences[n.getAttribute("data-exp")], on = promoActive(x), want = n.getAttribute("data-promo") === "on";
+      n.hidden = want ? !on : on;
+      n.style.display = n.hidden ? "none" : "";
+    });
+    // barra annunci in alto: sparisce dopo la data impostata (admin → Globale)
+    var tb = (D && D.topbar) || {};
+    var until = tb.until !== undefined ? tb.until : "2026-12-31";
+    var off = tb.show === false || (until && todayIso() > until);
+    document.documentElement.classList.toggle("ais-no-topbar", !!off);
+  }
+
   function initContent() {
     var D = getData();
     if (!D || !D.experiences) return;
@@ -1167,6 +1219,9 @@
     function fmt(text, x) {
       var p = x && x.price;
       var t = esc(text == null ? "" : text);
+      var pr = p && p.promo, on = promoActive(x);
+      t = t.replace(/\{promoline\}/g, on ? "In promo **\u20ac" + pr.price + "** fino al " + longDateIso(pr.until) + ", poi " : "")
+        .replace(/\{promo\}/g, pr ? pr.price : "\u2014").replace(/\{promoUntil\}/g, pr ? longDateIso(pr.until) : "");
       t = t.replace(/\{early\}/g, p ? p.early : "\u2014").replace(/\{regular\}/g, p ? p.regular : "\u2014").replace(/\{days\}/g, p ? p.daysBefore : "\u2014");
       t = t.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>").replace(/\[([^\]]+)\]/g, '<span class="todo">[$1]</span>');
       return t;
@@ -1228,7 +1283,8 @@
       var p = x && x.price;
       if (!p) return;
       var k = n.getAttribute("data-price");
-      var v = k === "early" ? p.early : k === "regular" ? p.regular : p.daysBefore;
+      var pr = p.promo, on = promoActive(x);
+      var v = k === "early" ? p.early : k === "regular" ? p.regular : k === "current" ? (on ? pr.price : p.early) : k === "promo" ? (pr ? pr.price : null) : k === "promoUntil" ? (pr ? longDateIso(pr.until) : null) : p.daysBefore;
       if (v != null) n.textContent = v;
     });
   }

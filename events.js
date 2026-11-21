@@ -31,14 +31,18 @@ window.AIS_DATA = {
       "name": "Escape the City",
       "type": "immersione",
       "duration": "2 giorni",
-      "place": "Appennino",
+      "place": "Toscana, Emilia, Lombardia",
       "img": "images/escape-the-city.jpg",
       "url": "escape-the-city.html",
       "active": true,
       "price": {
-        "early": 115,
+        "early": 125,
         "regular": 135,
-        "daysBefore": 15
+        "daysBefore": 15,
+        "promo": {
+          "price": 115,
+          "until": "2026-12-31"
+        }
       },
       "info": [
         {
@@ -48,12 +52,12 @@ window.AIS_DATA = {
         },
         {
           "k": "Luogo",
-          "v": "Appennino Tosco-Emiliano [punto di ritrovo da comunicare agli iscritti]",
+          "v": "Toscana, Emilia, Lombardia [il luogo cambia a ogni edizione: punto di ritrovo da comunicare agli iscritti]",
           "ico": "pin"
         },
         {
           "k": "Gruppo",
-          "v": "6–10 partecipanti.",
+          "v": "Piccoli gruppi, massimo 12 partecipanti.",
           "ico": "users"
         },
         {
@@ -62,7 +66,7 @@ window.AIS_DATA = {
         },
         {
           "k": "Prezzo",
-          "v": "**€{early}** early bird — iscrivendoti fino a {days} giorni prima — poi **€{regular}**."
+          "v": "{promoline}**€{early}** early bird — iscrivendoti fino a {days} giorni prima — poi **€{regular}**."
         },
         {
           "k": "Telefono",
@@ -89,7 +93,7 @@ window.AIS_DATA = {
       "faq": [
         {
           "q": "Quanto costa?",
-          "a": "€{early} con l'early bird, iscrivendoti fino a {days} giorni prima dell'edizione; dopo, €{regular}. Scrivimi per sapere cosa è incluso nell'edizione specifica."
+          "a": "{promoline}€{early} con l'early bird, iscrivendoti fino a {days} giorni prima dell'edizione; dopo, €{regular}. Scrivimi per sapere cosa è incluso nell'edizione specifica."
         },
         {
           "q": "Davvero nessun segnale?",
@@ -132,8 +136,7 @@ window.AIS_DATA = {
           "chips": [
             "Fuoco",
             "Nodi",
-            "Campo base",
-            "Coltello"
+            "Campo base"
           ]
         },
         {
@@ -215,7 +218,7 @@ window.AIS_DATA = {
       },
       "menu": true,
       "blurb": "Due giorni nel selvatico, da sabato mattina a domenica pranzo: cammino, orientamento, fuoco, notte nel bosco. Il weekend di punta.",
-      "group": "6–10",
+      "group": "max 12",
       "badge": "Esperienza di punta",
       "related": [
         "elementi-di-convivenza",
@@ -239,8 +242,8 @@ window.AIS_DATA = {
         },
         {
           "icon": "hand",
-          "title": "Nodi, corde e coltello",
-          "text": "Fibre naturali, nodi essenziali, un utensile intagliato nel legno, in sicurezza."
+          "title": "Nodi e corde",
+          "text": "Fibre naturali e nodi essenziali, per legare, costruire e fissare."
         },
         {
           "icon": "leaf",
@@ -249,8 +252,8 @@ window.AIS_DATA = {
         },
         {
           "icon": "eye",
-          "title": "Il sit spot",
-          "text": "Un tempo da solo nel bosco, in silenzio, a osservare."
+          "title": "Riflessione e condivisione",
+          "text": "Un momento da solo nel bosco per fermarti e riflettere, poi il confronto con il gruppo."
         }
       ]
     },
@@ -1949,7 +1952,7 @@ window.AIS_DATA = {
       "id": "t7",
       "name": "Paolo",
       "label": "dopo Escape the City",
-      "title": "Il sit spot, da solo nel bosco",
+      "title": "Da solo nel bosco, in silenzio",
       "text": "Il momento in cui mi sono seduto da solo, al buio, è stato il più potente. Nessuno mi diceva cosa sentire.",
       "home": false,
       "page": true,
@@ -2352,5 +2355,8 @@ window.AIS_DATA = {
         "gallery": []
       }
     }
-  }
+  },
+  "patchesApplied": [
+    "2026-11-21-escape"
+  ]
 };

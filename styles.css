@@ -1296,3 +1296,33 @@ mark.ais-hl{background:linear-gradient(transparent 56%,rgba(176,84,45,.26) 56%);
 .ais-popup__later{background:none;border:0;padding:6px 10px;color:#5c6656;font:500 14px Inter,system-ui,sans-serif;text-decoration:underline;text-underline-offset:3px;cursor:pointer;}
 .ais-popup-open{overflow:hidden;}
 @media print{.ais-popup{display:none;}}
+
+/* barra annunci scaduta o spenta */
+html.ais-no-topbar .ais-topbar{display:none;}
+html.ais-no-topbar .site-header{top:0;}
+html.ais-no-topbar .mobile-menu{top:72px;}
+
+.ais-popup__body .ais-popup__pts{list-style:none;margin:16px 0 0;padding:0;text-align:left;display:inline-block;max-width:100%;}
+.ais-popup__pts li{position:relative;padding-left:24px;margin:7px 0;font:500 15px/1.4 Inter,system-ui,sans-serif;color:var(--ais-forest-deep);}
+.ais-popup__pts li::before{content:"";position:absolute;left:2px;top:.35em;width:11px;height:6px;border-left:2.5px solid var(--ais-ochre);border-bottom:2.5px solid var(--ais-ochre);transform:rotate(-45deg);}
+.ais-popup__body .ais-popup__badge{display:inline-block;margin:16px auto 0;padding:8px 16px;border-radius:999px;background:var(--ais-ochre-tint,#f3dccd);color:var(--ais-ochre-deep,#8a3d1c);font:700 14px Inter,system-ui,sans-serif;}
+@media(max-height:780px){.ais-popup__img{aspect-ratio:16/7;}.ais-popup__body{padding:18px 22px 20px;}.ais-popup__cta{margin-top:16px;}}
+
+/* dettagli a comparsa (esperienze scuole) */
+.ais-more{margin-top:16px;border-top:1px solid var(--ais-line);padding-top:12px;}
+.ais-more summary{cursor:pointer;font:600 15px Inter,system-ui,sans-serif;color:var(--ais-forest-deep);list-style:none;display:flex;align-items:center;gap:8px;}
+.ais-more summary::-webkit-details-marker{display:none;}
+.ais-more summary::after{content:"+";font-size:20px;line-height:1;color:var(--ais-ochre);margin-left:auto;}
+.ais-more[open] summary::after{content:"\2212";}
+.ais-more ol{margin:12px 0 0;padding-left:20px;display:grid;gap:10px;font:400 15px/1.5 Inter,system-ui,sans-serif;color:#4b5646;}
+.ais-more li b{color:var(--ais-forest-deep);font-weight:600;display:block;}
+.ais-more li span{display:block;}
+
+/* tre colonne di elenchi (pagina International Schools) */
+.ais-icols{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:40px;}
+.ais-icol{background:#fff;border:1px solid var(--ais-line);border-radius:18px;padding:22px 22px 24px;}
+.ais-icol .ais-h3c{margin:0 0 12px;text-align:left;font-size:22px;}
+.ais-ilist{list-style:none;margin:0;padding:0;display:grid;gap:10px;}
+.ais-ilist li{position:relative;padding-left:20px;font:400 15px/1.45 Inter,system-ui,sans-serif;color:#4b5646;}
+.ais-ilist li::before{content:"";position:absolute;left:0;top:.6em;width:7px;height:7px;border-radius:50%;background:var(--ais-ochre);}
+@media(max-width:900px){.ais-icols{grid-template-columns:1fr;}}

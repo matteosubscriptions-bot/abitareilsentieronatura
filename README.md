@@ -113,6 +113,18 @@ YouTube/Vimeo (consigliato) o carica un file, scegli la copertina e i testi (sop
 ### Più video nella stessa pagina
 Nella scheda **Video** puoi aggiungere quanti video vuoi (YouTube/Vimeo o file), riordinarli e dare a ciascuno copertina e didascalia. Con uno solo il video è grande; con due o tre diventa una griglia.
 
+## Promo a scadenza (es. Promo Natale)
+In admin → esperienza → **Prezzo** → "Promo a scadenza": prezzo promo e data di fine. Finché è attiva il sito la mostra (calendario, schede, pagina); dopo la data sparisce da sola e restano early bird e intero.
+Escape è impostata con promo €115 fino al 31/12/2026, poi early bird €125 e intero €135. La barra annunci in alto sparisce dopo la data impostata in admin → Globale (di default 31/12/2026).
+
+## Aggiornamenti dei contenuti (patches.js)
+Quando cambio dati che stanno in `events.js` (tuo), te li consegno in `patches.js`: in admin compare "Aggiornamento dei contenuti disponibile" e con un clic li applico al tuo `events.js`
+senza toccare ciò che hai modificato tu. Ogni aggiornamento si applica una sola volta.
+
+## Pagina in inglese: International Schools
+`international-schools.html`: pagina per scuole internazionali (es. a Firenze), stessa grafica del sito, contenuti dal documento "TB International Schools". Si raggiunge da Scuole & Gruppi e dal footer;
+ha header e footer in inglese e un modulo email in inglese. Si può nascondere da admin come le altre pagine. Foto di gruppo: verifica di avere il consenso per pubblicarle.
+
 ## Popup promo
 Si apre poco dopo il caricamento della pagina (dopo la scelta sui cookie). In admin → **Popup promo**: spunta per mostrarlo/nasconderlo, sopratitolo, titolo, testo, immagine, pulsante e link,
 pagine in cui compare, quante volte (una per visita / una sola / sempre) e le date di inizio e fine: alla scadenza sparisce da solo. "Anteprima popup" lo mostra subito.

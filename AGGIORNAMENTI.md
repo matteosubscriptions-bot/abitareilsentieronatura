@@ -11,6 +11,17 @@ Ogni aggiornamento ti viene indicato così: *"prendi questi file"* + *"non tocca
 
 ## Registro aggiornamenti (dal più recente)
 
+### Escape: promo €115 fino al 31/12 poi early bird €125 · popup · home · Scuole & Gruppi · pagina inglese International Schools
+**Prendi da GitHub (sostituisci):** `admin.html`, `site.js`, `styles.css`, **`patches.js` (nuovo)**, `index.html`, `esperienze.html`, `calendario.html`, `chi-sono.html`, `metodologia.html`,
+`testimonianze.html`, `scuole-gruppi.html`, `aziende.html`, `privacy.html`, `cookie-policy.html`, **`international-schools.html` (nuovo)**, le 9 pagine esperienza (`escape-the-city.html`, `accendi-il-tuo-fuoco.html`,
+`orienteering-sensoriale.html`, `elementi-di-convivenza.html`, `tribu-del-bosco.html`, `guardiani-del-fuoco.html`, `la-mappa-del-tuo-viaggio.html`, `via-degli-dei.html`, `cammino.html`), `partials/footer.html`, `README.md`, `AGGIORNAMENTI.md`.
+**Copia in `images/` (solo i file nuovi, senza toccare gli altri):** `intl-acchiappasogni.jpg`, `intl-codice-foresta.jpg`, `intl-fiducia.jpg`, `intl-fuoco.jpg`, `intl-indizi.jpg`, `intl-labirinto.jpg`,
+`intl-mappa.jpg`, `intl-riparo.jpg`, `scuole-custodi-semi.jpg`, `scuole-noi-siamo-foresta.jpg`, `scuole-tribu-rifugio.jpg`.
+**Non toccare:** `events.js`, `videos/`, `documenti/`, `config.js` e le altre cartelle tue.
+**Poi apri `admin.html`:** compare "Aggiornamento dei contenuti disponibile". Premi **Applica**: i dati di Escape (prezzo promo/early bird, luogo, gruppo max 12, testi senza coltello e sit spot) vengono aggiornati sul TUO `events.js`
+senza toccare le tue modifiche (dove hai già cambiato un valore, lo lascia com'è e te lo dice). Poi "Pubblica sul sito" o salva in locale.
+Le pagine Chi sono, Home, Scuole ecc. non cambiano numerazione dei tuoi testi: i testi che avevi modificato restano; i testi nuovi/riscritti hanno chiavi nuove.
+
 ### Popup promo all'apertura della pagina
 Prendi da GitHub: `admin.html`, `site.js`, `styles.css`, `README.md`, `AGGIORNAMENTI.md`. Non toccare: `events.js`, `images/`, `videos/`, `documenti/`. Nessun file nuovo.
 Senza nessuna impostazione il popup parte già con la promo di Natale (home e Escape, fino al 31/12/2026): per spegnerlo o cambiarlo usa admin → Popup promo.

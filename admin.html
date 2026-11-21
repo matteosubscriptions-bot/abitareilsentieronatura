@@ -80,6 +80,11 @@ dialog h3{font:500 26px "Cormorant Garamond",Georgia,serif;margin:0 0 6px;color:
 .pubopt h4{margin:0 0 4px;font-size:16px;color:var(--forest-deep)}.pubopt h4 small{font-weight:400;color:var(--muted);font-size:13px;margin-left:6px}
 .pubopt>summary{cursor:pointer;font-weight:600;color:var(--forest-deep)}
 .pubopt .sub{margin:0 0 10px;color:var(--muted);font-size:13.5px}
+.patchbar{margin:0 22px;padding:14px 18px;border-radius:14px;background:#fff3df;border:1px solid #e8cfa0;color:#5b3d12}
+.patchbar h3{margin:0 0 4px;font:600 16px Inter,system-ui,sans-serif}
+.patchbar ul{margin:8px 0 0;padding-left:20px;font-size:13.5px}
+.patchbar li.skip{color:#8a4b12}
+.patchbar .row{margin-top:10px}
 .log{font-size:13.5px;margin-top:12px;padding:10px 12px;border-radius:10px;background:var(--sand);white-space:pre-wrap}
 .log.ok{background:#e4f1e6;color:#1d4a28}
 .log.bad{background:#fbeaea;color:#6d1b20}
@@ -172,6 +177,7 @@ dialog#pick{width:min(860px,96vw)}
   <button class="btn primary" id="b-publish" type="button">Pubblica sul sito</button>
   <input type="file" id="file" accept=".js,.json,.txt" hidden/>
 </header>
+<div id="patchbar"></div>
 <div class="layout">
   <aside aria-label="Esperienze"><div id="side"></div></aside>
   <main id="main" aria-live="polite"></main>
@@ -224,6 +230,7 @@ dialog#pick{width:min(860px,96vw)}
 </dialog>
 
 <script src="events.js"></script>
+<script src="patches.js"></script>
 <script>
 (function () {
   "use strict";
@@ -417,6 +424,9 @@ dialog#pick{width:min(860px,96vw)}
           e.price.early = Number(e.price.early) || 0;
           e.price.regular = Number(e.price.regular) || 0;
           e.price.daysBefore = Math.max(0, parseInt(e.price.daysBefore, 10) || 0);
+          var pm = e.price.promo;
+          if (pm && Number(pm.price) > 0 && pm.until) { e.price.promo = { price: Number(pm.price), until: String(pm.until) }; if (pm.from) e.price.promo.from = String(pm.from); }
+          else delete e.price.promo;
         }
         (e.info || []).forEach(function (r) { if (!r.ico) delete r.ico; });
         if (!e.info || !e.info.length) delete e.info;
@@ -459,12 +469,22 @@ dialog#pick{width:min(860px,96vw)}
         if (Object.keys(m).length) pmo[slug] = { media: m };
       });
       x.pagemedia = pmo;
+      if (x.topbar) {
+        var tq = x.topbar, nt = {};
+        if (tq.show === false) nt.show = false;
+        var tu = tq.until == null ? "2026-12-31" : String(tq.until).trim();
+        if (tu !== "2026-12-31") nt.until = tu;
+        if (Object.keys(nt).length) x.topbar = nt; else delete x.topbar;
+      }
       if (x.popup) {
-        var q = x.popup, nq = {}, D0 = { pages: ["index", "escape-the-city"], freq: "session", to: "2026-12-31", eyebrow: "Promo Natale",
-          title: "Escape the City 2027\n//€115 fino al 31 dicembre.//", text: "Iscriviti entro il 31 dicembre: due giorni e una notte nel selvatico, in un piccolo gruppo, senza segnale.",
-          img: "images/escape-the-city.jpg", cta: "Prenota il tuo posto", href: "escape-the-city.html#date" };
+        var q = x.popup, nq = {}, D0 = { pages: ["index", "esperienze"], freq: "session", to: "2026-12-31", eyebrow: "Cos’è Escape the City",
+          title: "Due giorni nel bosco,\n//senza telefono.//",
+          text: "Escape the City è un weekend per uscire dal rumore: si cammina, ci si orienta, si accende un fuoco e si dorme nel bosco, in un piccolo gruppo. Non serve esperienza né allenamento.",
+          points: "Da sabato mattina a domenica pranzo\nPiccoli gruppi, max 12 persone\nNessun segnale: il telefono resta in tasca\nToscana, Emilia, Lombardia",
+          badge: "Promo Natale: €{promo} fino al {promoUntil} · poi €{early}",
+          img: "images/escape-the-city.jpg", cta: "Scopri Escape the City", href: "escape-the-city.html" };
         if (q.show === false) nq.show = false;
-        ["eyebrow", "title", "text", "img", "cta", "href", "to", "from", "freq"].forEach(function (k) {
+        ["eyebrow", "title", "text", "points", "badge", "img", "cta", "href", "to", "from", "freq"].forEach(function (k) {
           var val = q[k] == null ? "" : String(q[k]).trim();
           if (val !== String(D0[k] == null ? "" : D0[k])) nq[k] = val;
         });
@@ -476,7 +496,7 @@ dialog#pick{width:min(860px,96vw)}
         if (w.show === false) nw.show = false;
         var dn = String(w.number || "").replace(/\D/g, ""); if (dn && dn !== "393667187733") nw.number = dn;
         if (w.message && String(w.message).trim()) nw.message = String(w.message).trim();
-        if (w.hide && JSON.stringify(w.hide.slice().sort()) !== JSON.stringify(["aziende", "scuole-gruppi"])) nw.hide = w.hide.slice().sort();
+        if (w.hide && JSON.stringify(w.hide.slice().sort()) !== JSON.stringify(["aziende", "international-schools", "scuole-gruppi"])) nw.hide = w.hide.slice().sort();
         if (Object.keys(nw).length) x.whatsapp = nw; else delete x.whatsapp;
       }
       var ph = {};
@@ -525,6 +545,13 @@ dialog#pick{width:min(860px,96vw)}
         if (e.price) {
           if (!(Number(e.price.early) > 0) || !(Number(e.price.regular) > 0)) errs.push(n + ": prezzo early e intero devono essere maggiori di zero");
           else if (Number(e.price.early) > Number(e.price.regular)) errs.push(n + ": il prezzo early bird è più alto di quello intero");
+          var pmo = e.price.promo;
+          if (pmo && (pmo.price || pmo.until || pmo.from)) {
+            if (!(Number(pmo.price) > 0)) errs.push(n + ": promo: indica il prezzo");
+            else if (!isDate(pmo.until)) errs.push(n + ": promo: indica la data di fine (AAAA-MM-GG)");
+            else if (pmo.from && !isDate(pmo.from)) errs.push(n + ": promo: data di inizio non valida");
+            else if (pmo.from && pmo.until < pmo.from) errs.push(n + ": promo: la fine è prima dell’inizio");
+          }
         }
         (e.faq || []).forEach(function (f, i) { if (!f.q || !f.a) errs.push(n + ": domanda " + (i + 1) + " incompleta"); });
         (e.info || []).forEach(function (r, i) { if (!r.k || !r.v) errs.push(n + ": riga info " + (i + 1) + " incompleta"); });
@@ -563,6 +590,7 @@ dialog#pick{width:min(860px,96vw)}
         var missing = used.filter(function (u) { return u && !inLib(u); });
         if (missing.length) errs.push(n + ": foto non presente nella libreria (" + missing[0] + ")");
       });
+      if (data.topbar && data.topbar.until && !isDate(data.topbar.until)) errs.push("Barra annunci: data di fine non valida");
       if (data.popup) {
         var pq = data.popup;
         if (pq.show !== false && !String(pq.title || "").trim()) errs.push("Popup promo: scrivi il titolo (o spegnilo)");
@@ -1049,6 +1077,22 @@ dialog#pick{width:min(860px,96vw)}
         ]));
         box.appendChild(ex);
         example();
+        // promo a scadenza
+        var pmo = e.price.promo = e.price.promo || {};
+        var pon = el("input", { type: "checkbox" }); pon.checked = !!(pmo.price || pmo.until);
+        pon.addEventListener("change", function () { if (!pon.checked) { delete e.price.promo; } else { e.price.promo = { price: "", until: "" }; } touch(); draw(); });
+        box.appendChild(el("h3", { class: "sec", text: "Promo a scadenza" }));
+        box.appendChild(el("label", { class: "check" }, [pon, document.createTextNode(" C’è un prezzo promo (es. Promo Natale)")]));
+        if (pon.checked) {
+          box.appendChild(el("div", { class: "grid", style: "margin-top:10px;max-width:640px" }, [
+            field("Prezzo promo (€)", inp(pmo, "price", { type: "number", min: 0, step: 1, inputmode: "numeric" })),
+            field("Valido dal (opzionale)", inp(pmo, "from", { type: "date", min: "2000-01-01", max: "2100-12-31" })),
+            field("Valido fino al giorno incluso", inp(pmo, "until", { type: "date", min: "2000-01-01", max: "2100-12-31" }))
+          ]));
+          box.appendChild(el("p", { class: "hint", text: "Finché è attiva, il sito mostra il prezzo promo e la scadenza (calendario, schede, pagina). Dopo la data sparisce da sola e restano early bird e prezzo intero. Nei testi puoi usare {promo}, {promoUntil} e {promoline}." }));
+        } else {
+          box.appendChild(el("p", { class: "hint", text: "Spunta per aggiungere un prezzo promo con data di fine: dopo la scadenza sparisce da solo." }));
+        }
         box.appendChild(el("p", { class: "sub", style: "font-size:13px", text: "Il prezzo si aggiorna in automatico in calendario, nelle date e nelle pagine che usano {early} {regular} {days}." }));
       }
       draw();
@@ -1327,7 +1371,7 @@ dialog#pick{width:min(860px,96vw)}
     var SITEPAGES = [
       ["index", "Home", "index.html"], ["esperienze", "Esperienze (catalogo)", "esperienze.html"], ["calendario", "Calendario", "calendario.html"],
       ["chi-sono", "Chi sono", "chi-sono.html"], ["scuole-gruppi", "Scuole & Gruppi", "scuole-gruppi.html"], ["aziende", "Aziende", "aziende.html"],
-      ["metodologia", "Metodo", "metodologia.html"], ["testimonianze", "Testimonianze", "testimonianze.html"]
+      ["metodologia", "Metodo", "metodologia.html"], ["testimonianze", "Testimonianze", "testimonianze.html"], ["international-schools", "International Schools (EN)", "international-schools.html"]
     ];
     var pageCache = {};
     function fetchText(file) {
@@ -1531,7 +1575,7 @@ dialog#pick{width:min(860px,96vw)}
         "calendario": [["calendario", "Sfondo in alto della pagina", ["hero"]]],
         "testimonianze": [["testimonianze", "Sfondo in alto della pagina", ["hero"]]]
       };
-      ["scuole-gruppi", "aziende", "metodologia", "chi-sono"].forEach(function (k) { PM[k] = [[k, "Media: header, slider sotto l’header e galleria"]]; });
+      ["scuole-gruppi", "aziende", "metodologia", "chi-sono", "international-schools"].forEach(function (k) { PM[k] = [[k, "Media: header, slider sotto l’header e galleria"]]; });
       (PM[p[0]] || []).forEach(function (pm, pi) {
         if (!data.pagemedia[pm[0]]) data.pagemedia[pm[0]] = { media: {} };
         var md = el("details", { class: "pgrp", open: pi === 0 }, [el("summary", { text: pm[1] })]);
@@ -1543,7 +1587,7 @@ dialog#pick{width:min(860px,96vw)}
     }
     /* ---- pulsante WhatsApp */
     function waControl() {
-      var DEF_HIDE = ["scuole-gruppi", "aziende"];
+      var DEF_HIDE = ["scuole-gruppi", "aziende", "international-schools"];
       data.whatsapp = data.whatsapp || {};
       var W = data.whatsapp;
       var wrap = el("div", { class: "pgrp", style: "padding:14px 16px;margin-bottom:14px" });
@@ -1573,9 +1617,12 @@ dialog#pick{width:min(860px,96vw)}
       return wrap;
     }
     /* ---- popup promo */
-    var POP_DEF = { pages: ["index", "escape-the-city"], freq: "session", to: "2026-12-31", eyebrow: "Promo Natale",
-      title: "Escape the City 2027\n//€115 fino al 31 dicembre.//", text: "Iscriviti entro il 31 dicembre: due giorni e una notte nel selvatico, in un piccolo gruppo, senza segnale.",
-      img: "images/escape-the-city.jpg", cta: "Prenota il tuo posto", href: "escape-the-city.html#date" };
+    var POP_DEF = { pages: ["index", "esperienze"], freq: "session", to: "2026-12-31", eyebrow: "Cos’è Escape the City",
+      title: "Due giorni nel bosco,\n//senza telefono.//",
+      text: "Escape the City è un weekend per uscire dal rumore: si cammina, ci si orienta, si accende un fuoco e si dorme nel bosco, in un piccolo gruppo. Non serve esperienza né allenamento.",
+      points: "Da sabato mattina a domenica pranzo\nPiccoli gruppi, max 12 persone\nNessun segnale: il telefono resta in tasca\nToscana, Emilia, Lombardia",
+      badge: "Promo Natale: €{promo} fino al {promoUntil} · poi €{early}",
+      img: "images/escape-the-city.jpg", cta: "Scopri Escape the City", href: "escape-the-city.html" };
     function viewPopup() {
       data.popup = data.popup || {};
       var P = data.popup;
@@ -1599,7 +1646,11 @@ dialog#pick{width:min(860px,96vw)}
         el("div", { style: "height:8px" }),
         field("Titolo — invio per andare a capo, //corsivo//", area(P, "title", 2)),
         el("div", { style: "height:8px" }),
-        field("Testo", area(P, "text", 3)),
+        field("Testo (spiega l’esperienza a chi non la conosce)", area(P, "text", 3)),
+        el("div", { style: "height:8px" }),
+        field("Punti chiave — uno per riga (con la spunta)", area(P, "points", 4)),
+        el("div", { style: "height:8px" }),
+        field("Etichetta promo — puoi usare {promo} {promoUntil} {early} {regular} dal prezzo di Escape", inp(P, "badge", { ph: "Promo Natale: €{promo} fino al {promoUntil}" })),
         el("div", { style: "height:8px" }),
         el("div", { class: "grid" }, [field("Testo del pulsante", inp(P, "cta", { ph: "Prenota il tuo posto" })), field("Link del pulsante", inp(P, "href", { ph: "escape-the-city.html#date" }))])
       ]));
@@ -1625,12 +1676,27 @@ dialog#pick{width:min(860px,96vw)}
       return panel;
     }
 
+    /* ---- barra annunci: scadenza */
+    function topbarControl() {
+      data.topbar = data.topbar || {};
+      var T = data.topbar;
+      if (T.until === undefined) T.until = "2026-12-31";
+      var wrap = el("div", { class: "pgrp", style: "padding:14px 16px;margin-bottom:14px" });
+      wrap.appendChild(el("h3", { class: "sec", style: "margin-top:0", text: "Barra annunci in alto" }));
+      var on = el("input", { type: "checkbox" }); on.checked = T.show !== false;
+      on.addEventListener("change", function () { if (on.checked) delete T.show; else T.show = false; touch(); });
+      wrap.appendChild(el("label", { class: "check" }, [on, document.createTextNode(" Mostra la barra")]));
+      wrap.appendChild(el("div", { class: "grid", style: "margin-top:10px;max-width:420px" }, [field("Mostra fino al giorno incluso (vuoto = sempre)", inp(T, "until", { type: "date", min: "2000-01-01", max: "2100-12-31" }))]));
+      wrap.appendChild(el("p", { class: "hint", text: "Dopo la data la barra sparisce da sola (di default il 31/12/2026, fine della Promo Natale). Il testo si modifica qui sotto." }));
+      return wrap;
+    }
     function viewGlobal() {
       var panel = el("div", { class: "panel" });
       panel.appendChild(el("div", { class: "row", style: "justify-content:space-between" }, [
         el("div", {}, [el("h2", { text: "Globale" }), el("p", { class: "sub", text: "Barra annunci in alto e footer: valgono per tutte le pagine" })]),
         el("div", { class: "row" }, [el("button", { class: "btn sm", type: "button", text: "Anteprima", onclick: function () { preview("index.html"); } })])
       ]));
+      panel.appendChild(topbarControl());
       panel.appendChild(waControl());
       panel.appendChild(viewPageEditor("index.html", "_global", "global"));
       return panel;
@@ -1742,7 +1808,36 @@ dialog#pick{width:min(860px,96vw)}
         ]));
       });
     }
+    function pendingPatches() { var done = data.patchesApplied || []; return (window.AIS_PATCHES || []).filter(function (p) { return done.indexOf(p.id) < 0; }); }
+    var patchReport = null;
+    function renderPatchBar() {
+      var box = $("patchbar"); if (!box) return;
+      box.innerHTML = "";
+      var pend = pendingPatches();
+      if (patchReport) {
+        var ul = el("ul", {}, patchReport.items.map(function (r) { return el("li", { class: r.ok ? "" : "skip", text: (r.ok ? "✓ " : "• ") + r.label + (r.note ? " — " + r.note : "") }); }));
+        box.appendChild(el("div", { class: "patchbar" }, [
+          el("h3", { text: "Aggiornamento applicato: " + patchReport.title }),
+          el("p", { style: "margin:0;font-size:13.5px", text: "Ora le modifiche sono nei tuoi dati. Controlla e poi usa “Pubblica sul sito” (o salva in locale). Le righe con • sono state lasciate come le avevi." }),
+          ul, el("div", { class: "row" }, [el("button", { class: "btn sm", type: "button", text: "Chiudi", onclick: function () { patchReport = null; renderPatchBar(); } })])
+        ]));
+        return;
+      }
+      if (!pend.length) return;
+      box.appendChild(el("div", { class: "patchbar" }, [
+        el("h3", { text: "Aggiornamento dei contenuti disponibile" }),
+        el("ul", {}, pend.map(function (p) { return el("li", { text: p.title }); })),
+        el("p", { style: "margin:8px 0 0;font-size:13.5px", text: "Applica le modifiche ai tuoi dati senza toccare quello che hai cambiato tu: dove hai già modificato un valore lo lascio com’è e te lo dico." }),
+        el("div", { class: "row" }, [el("button", { class: "btn primary sm", type: "button", text: "Applica l’aggiornamento", onclick: function () {
+          var items = [], titles = [];
+          pend.forEach(function (p) { titles.push(p.title); window.AIS_PATCH_LIB.apply(data, p).forEach(function (r) { items.push(r); }); });
+          patchReport = { title: titles.join("; "), items: items };
+          touch(); render();
+        } })])
+      ]));
+    }
     function render() {
+      renderPatchBar();
       renderSide();
       var m = $("main"); m.innerHTML = "";
       if (cur === MEDIA) { m.appendChild(viewMedia()); status(); return; }
